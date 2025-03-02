@@ -27,6 +27,7 @@ CREATE TABLE users (
                        weight DOUBLE PRECISION NOT NULL,
                        height DOUBLE PRECISION NOT NULL,
                        target_kcal INT NOT NULL,
+                       gender VARCHAR(10) CHECK (gender IN ('MALE', 'FEMALE')),
                        current_training_program_id INT REFERENCES trainings_program(id) ON DELETE SET NULL,
                        current_nutrition_program_id INT REFERENCES nutrition_program(id) ON DELETE SET NULL,
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

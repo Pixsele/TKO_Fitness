@@ -26,6 +26,9 @@ public class UsersEntity {
     private double height;
     private int targetKcal;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @ManyToOne
     @JoinColumn(name = "current_training_program_id")
     private TrainingsProgramEntity currentTrainingProgram;
@@ -42,4 +45,8 @@ public class UsersEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PlannedWorkoutEntity> plannedWorkouts;
+
+    public enum Gender {
+        MALE, FEMALE
+    }
 }
