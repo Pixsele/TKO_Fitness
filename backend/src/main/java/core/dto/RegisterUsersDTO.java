@@ -1,5 +1,6 @@
 package core.dto;
 
+import core.database.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,4 +15,5 @@ public class RegisterUsersDTO {
     private Integer age;
     private Double weight;
     private Double height;
+    private Gender gender;
 }

@@ -1,5 +1,6 @@
 package core.dto;
 
+import core.database.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,11 +14,11 @@ public class UsersDTO {
     private Long id;
     private String name;
     private String login;
-    private String password;
     private Integer age;
     private Double weight;
     private Double height;
     private Integer targetKcal;
+    private Gender gender;
 
     private Long currentTrainingProgramId;
     private Long currentNutritionProgramId;

@@ -7,52 +7,33 @@ import core.database.entity.UsersEntity;
 import core.database.repository.NutritionProgramRepository;
 import core.database.repository.TrainingsProgramRepository;
 import core.database.repository.UsersRepository;
-import core.dto.RegisterUsersDTO;
 import core.dto.UsersDTO;
 import core.mapper.UsersMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class UsersService {
     private final UsersRepository usersRepository;
     private final TrainingsProgramRepository trainingsProgramRepository;
     private final NutritionProgramRepository nutritionProgramRepository;
+    private final UsersMapper usersMapper;
 
     @Autowired
-    public UsersService(UsersRepository usersRepository, TrainingsProgramRepository trainingsProgramRepository, NutritionProgramRepository nutritionProgramRepository) {
+    public UsersService(UsersRepository usersRepository, TrainingsProgramRepository trainingsProgramRepository, NutritionProgramRepository nutritionProgramRepository, UsersMapper usersMapper) {
         this.usersRepository = usersRepository;
         this.trainingsProgramRepository = trainingsProgramRepository;
         this.nutritionProgramRepository = nutritionProgramRepository;
+        this.usersMapper = usersMapper;
     }
 
     public UsersDTO getUser(Long id) {
         UsersEntity usersEntity = usersRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("User not found"));
-
-        return UsersMapper.toUsersDTO(usersEntity);
-    }
-
-    public UsersDTO registerUser(RegisterUsersDTO registerUsersDTO) {
-        UsersEntity usersEntity = new UsersEntity();
-
-        usersEntity.setName(registerUsersDTO.getName());
-        usersEntity.setLogin(registerUsersDTO.getLogin());
-        //TODO
-        usersEntity.setPassword(registerUsersDTO.getPassword());
-        usersEntity.setAge(registerUsersDTO.getAge());
-        usersEntity.setWeight(registerUsersDTO.getWeight());
-        usersEntity.setHeight(registerUsersDTO.getHeight());
-        usersEntity.setTargetKcal(1900);
-        usersEntity.setCurrentTrainingProgram(null);
-        usersEntity.setCurrentNutritionProgram(null);
-        usersEntity.setCreatedAt(LocalDateTime.now());
-
-        UsersEntity savedUser = usersRepository.save(usersEntity);
-
-        return UsersMapper.toUsersDTO(savedUser);
+        UsersDTO usersDTO= usersMapper.toDTO(usersEntity);
+        UsersEntity usersEntity1 = usersMapper.toEntity(usersDTO);
+        System.out.println(usersEntity1);
+        return usersDTO;
     }
 
     public UsersDTO updateUser(Long id, UsersDTO usersDTO) {
@@ -61,10 +42,6 @@ public class UsersService {
 
         if(usersDTO.getName()!=null) {
             usersEntity.setName(usersDTO.getName());
-        }
-        //TODO
-        if(usersDTO.getPassword()!=null) {
-            usersEntity.setPassword(usersDTO.getPassword());
         }
         if (usersDTO.getLogin()!=null) {
             usersEntity.setLogin(usersDTO.getLogin());
@@ -99,12 +76,12 @@ public class UsersService {
 
         UsersEntity savedUser = usersRepository.save(usersEntity);
 
-        return UsersMapper.toUsersDTO(savedUser);
+        return usersMapper.toDTO(savedUser);
     }
 
     public UsersDTO deleteUser(Long id) {
         UsersEntity usersEntity = usersRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("User not found"));
         usersRepository.delete(usersEntity);
-        return UsersMapper.toUsersDTO(usersEntity);
+        return usersMapper.toDTO(usersEntity);
     }
 }

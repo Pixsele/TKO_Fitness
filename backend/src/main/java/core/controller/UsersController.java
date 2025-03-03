@@ -1,7 +1,9 @@
 package core.controller;
 
+import core.dto.AuthRequest;
 import core.dto.RegisterUsersDTO;
 import core.dto.UsersDTO;
+import core.mapper.UsersMapper;
 import core.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +20,9 @@ public class UsersController {
         this.usersService = usersService;
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<UsersDTO> getUser(@PathVariable Long id){
         UsersDTO usersDTO = usersService.getUser(id);
         return ResponseEntity.ok(usersDTO);
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<UsersDTO> registerUser(@RequestBody RegisterUsersDTO RegisterUsersDTO){
-        UsersDTO newUser = usersService.registerUser(RegisterUsersDTO);
-        return ResponseEntity.ok(newUser);
     }
 }

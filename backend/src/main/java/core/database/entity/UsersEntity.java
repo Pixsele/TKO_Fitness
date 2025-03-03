@@ -1,5 +1,6 @@
 package core.database.entity;
 
+import core.database.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,8 +46,4 @@ public class UsersEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PlannedWorkoutEntity> plannedWorkouts;
-
-    public enum Gender {
-        MALE, FEMALE
-    }
 }
