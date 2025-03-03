@@ -1,12 +1,14 @@
 package tko.service.workout;
 
-import org.hibernate.annotations.NotFound;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tko.database.entity.workout.ExerciseEntity;
 import tko.database.repository.workout.ExerciseRepository;
 import tko.model.dto.workout.ExerciseDTO;
 import tko.model.mapper.ExerciseMapper;
+
+import java.time.LocalDateTime;
 
 @Service
 public class ExerciseService {
@@ -21,6 +23,7 @@ public class ExerciseService {
 
     public ExerciseDTO create(ExerciseDTO exerciseDTO) {
         ExerciseEntity exerciseEntity = exerciseMapper.toEntity(exerciseDTO);
+        exerciseEntity.setCreatedAt(LocalDateTime.now());
         ExerciseEntity saveEntity = exerciseRepository.save(exerciseEntity);
         return exerciseMapper.toDto(saveEntity);
     }
@@ -29,7 +32,7 @@ public class ExerciseService {
         if(id == null) {
             throw new IllegalArgumentException("id cannot be null");
         }
-        ExerciseEntity exerciseEntity = exerciseRepository.findById(id).orElseThrow(() -> new RuntimeException("Id not found"));
+        ExerciseEntity exerciseEntity = exerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
         return exerciseMapper.toDto(exerciseEntity);
     }
 
@@ -39,14 +42,14 @@ public class ExerciseService {
             ExerciseEntity saveEntity = exerciseRepository.save(exerciseEntity);
             return exerciseMapper.toDto(saveEntity);
         }
-        throw new IllegalArgumentException("Exercise not found");
+        throw new EntityNotFoundException("Exercise not found");
     }
 
     public ExerciseDTO delete(Long id) {
         if(id == null) {
             throw new IllegalArgumentException("id cannot be null");
         }
-        ExerciseEntity exerciseEntity = exerciseRepository.findById(id).orElseThrow(() -> new RuntimeException("Id not found"));
+        ExerciseEntity exerciseEntity = exerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
         exerciseRepository.delete(exerciseEntity);
         return exerciseMapper.toDto(exerciseEntity);
     }
