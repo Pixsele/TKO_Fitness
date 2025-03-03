@@ -17,6 +17,6 @@ public class ExerciseDTO {
     private String difficult;
     private String specialEquipment;
     private String muscularGroup;
-    private int kcal;
+    private Integer kcal;
     private LocalDateTime createdAt;
 }

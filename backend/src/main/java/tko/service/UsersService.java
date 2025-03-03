@@ -1,6 +1,7 @@
 package tko.service;
 
 
+import org.apache.catalina.User;
 import tko.database.entity.nutrition.NutritionProgramEntity;
 import tko.database.entity.workout.TrainingsProgramEntity;
 import tko.database.entity.user.UsersEntity;
@@ -26,6 +27,12 @@ public class UsersService {
         this.trainingsProgramRepository = trainingsProgramRepository;
         this.nutritionProgramRepository = nutritionProgramRepository;
         this.usersMapper = usersMapper;
+    }
+
+    public UsersDTO create(UsersDTO usersDTO) {
+        UsersEntity usersEntity = usersMapper.toEntity(usersDTO);
+        usersRepository.save(usersEntity);
+        return usersMapper.toDTO(usersEntity);
     }
 
     public UsersDTO getUser(Long id) {

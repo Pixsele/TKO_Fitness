@@ -10,7 +10,6 @@ import org.mapstruct.factory.Mappers;
 public interface UsersMapper {
     UsersMapper userMapper = Mappers.getMapper(UsersMapper.class);
 
-    @Mapping(target = "id",ignore = true)
     UsersEntity toEntity(UsersDTO usersDTO);
 
     UsersDTO toDTO(UsersEntity usersEntity);

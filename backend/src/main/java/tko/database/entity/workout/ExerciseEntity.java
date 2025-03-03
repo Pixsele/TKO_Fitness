@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tko.utils.DifficultyLevel;
 
 import java.time.LocalDateTime;
 
@@ -31,7 +32,5 @@ public class ExerciseEntity {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public enum DifficultyLevel {
-        EASY, MEDIUM, HARD
-    }
+
 }
