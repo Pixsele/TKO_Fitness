@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import tko.database.entity.workout.ExerciseEntity;
 import tko.database.repository.workout.ExerciseRepository;
 import tko.model.dto.workout.ExerciseDTO;
-import tko.model.mapper.ExerciseMapper;
+import tko.model.mapper.workout.ExerciseMapper;
 
 import java.time.LocalDateTime;
 
@@ -53,7 +53,4 @@ public class ExerciseService {
         exerciseRepository.delete(exerciseEntity);
         return exerciseMapper.toDto(exerciseEntity);
     }
-
-
-
 }
