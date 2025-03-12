@@ -6,7 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tko.model.dto.workout.WorkoutDTO;
+import tko.model.dto.workout.WorkoutExerciseDTO;
 import tko.service.workout.WorkoutService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/workout")
@@ -43,5 +46,15 @@ public class WorkoutController {
         return new ResponseEntity<>(deletedWorkout,HttpStatus.OK);
     }
 
+    @GetMapping("/WorkoutExercises/{id}")
+    public ResponseEntity<List<WorkoutExerciseDTO>> withWorkoutExercise(@PathVariable Long id) {
+        List<WorkoutExerciseDTO> workoutExerciseDTOList = workoutService.readWorkoutExerciseById(id);
+        return new ResponseEntity<>(workoutExerciseDTOList,HttpStatus.OK);
+    }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<WorkoutDTO>> getAll() {
+        List<WorkoutDTO> workoutDTOList = workoutService.readAllWorkout();
+        return new ResponseEntity<>(workoutDTOList,HttpStatus.OK);
+    }
 }
