@@ -36,6 +36,10 @@ public class UsersService {
     }
 
     public UsersDTO getUser(Long id) {
+        //special for Dima( ˘ ³˘)♥︎
+        if(id == null) {
+            throw new IllegalArgumentException("Id cannot be null");
+        }
         UsersEntity usersEntity = usersRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("User not found"));
         UsersDTO usersDTO= usersMapper.toDTO(usersEntity);
         UsersEntity usersEntity1 = usersMapper.toEntity(usersDTO);
