@@ -30,6 +30,7 @@ CREATE TABLE users (
                        gender VARCHAR(10) CHECK (gender IN ('MALE', 'FEMALE')),
                        current_training_program_id INT REFERENCES trainings_program(id) ON DELETE SET NULL,
                        current_nutrition_program_id INT REFERENCES nutrition_program(id) ON DELETE SET NULL,
+                       photo_url VARCHAR(255),
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -45,6 +46,7 @@ CREATE TABLE product (
                          name VARCHAR(255) NOT NULL,
                          kcal INT NOT NULL,
                          unit VARCHAR(50) NOT NULL,
+                         photo_url VARCHAR(255),
                          created_by VARCHAR(255),
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -69,6 +71,8 @@ CREATE TABLE exercise (
                           special_equipment VARCHAR(255),
                           muscular_group VARCHAR(255),
                           kcal INT NOT NULL,
+                          photo_url VARCHAR(255),
+                          video_url VARCHAR(255),
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -129,6 +133,7 @@ CREATE TABLE likes_trainings_program (
                                          id SERIAL PRIMARY KEY,
                                          user_id INT NOT NULL,
                                          trainings_program_id INT NOT NULL,
+                                         like_count INT DEFAULT 0,
                                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                                          FOREIGN KEY (trainings_program_id) REFERENCES trainings_program(id) ON DELETE CASCADE,
@@ -139,6 +144,7 @@ CREATE TABLE likes_nutrition_program (
                                          id SERIAL PRIMARY KEY,
                                          user_id INT NOT NULL,
                                          nutrition_program_id INT NOT NULL,
+                                         like_count INT DEFAULT 0,
                                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                                          FOREIGN KEY (nutrition_program_id) REFERENCES nutrition_program(id) ON DELETE CASCADE,
@@ -149,6 +155,7 @@ CREATE TABLE likes_product (
                                id SERIAL PRIMARY KEY,
                                user_id INT NOT NULL,
                                product_id INT NOT NULL,
+                               like_count INT DEFAULT 0,
                                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                                FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
@@ -159,6 +166,7 @@ CREATE TABLE likes_exercise (
                                 id SERIAL PRIMARY KEY,
                                 user_id INT NOT NULL,
                                 exercise_id INT NOT NULL,
+                                like_count INT DEFAULT 0,
                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                                 FOREIGN KEY (exercise_id) REFERENCES exercise(id) ON DELETE CASCADE,
@@ -169,6 +177,7 @@ CREATE TABLE likes_workout (
                                id SERIAL PRIMARY KEY,
                                user_id INT NOT NULL,
                                workout_id INT NOT NULL,
+                               like_count INT DEFAULT 0,
                                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                                FOREIGN KEY (workout_id) REFERENCES workout(id) ON DELETE CASCADE,

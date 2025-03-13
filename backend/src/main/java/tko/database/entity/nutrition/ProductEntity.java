@@ -21,6 +21,9 @@ public class ProductEntity {
     private int kcal;
     private String unit;
 
+    @Column(name = "photo_url")
+    private String photoUrl;
+
     @Column(name = "created_by")
     private String createdBy;
 

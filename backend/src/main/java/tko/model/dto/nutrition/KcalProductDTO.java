@@ -13,7 +13,7 @@ public class KcalProductDTO {
     private Long id;
     private Long kcalTrackerId;
     private Long productId;
-    private int count;
+    private Integer count;
     private String typeMeal;
     private LocalDate date;
 }

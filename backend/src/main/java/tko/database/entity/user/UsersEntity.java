@@ -26,10 +26,10 @@ public class UsersEntity {
     private String name;
     private String login;
     private String password;
-    private int age;
-    private double weight;
-    private double height;
-    private int targetKcal;
+    private Integer age;
+    private Double weight;
+    private Double height;
+    private Integer targetKcal;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -41,6 +41,9 @@ public class UsersEntity {
     @ManyToOne
     @JoinColumn(name = "current_nutrition_program_id")
     private NutritionProgramEntity currentNutritionProgram;
+
+    @Column(name = "photo_url")
+    private String photoUrl;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

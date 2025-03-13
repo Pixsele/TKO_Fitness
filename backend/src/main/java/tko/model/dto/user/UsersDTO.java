@@ -19,6 +19,7 @@ public class UsersDTO {
     private Double height;
     private Integer targetKcal;
     private Gender gender;
+    private String photoUrl;
 
     private Long currentTrainingProgramId;
     private Long currentNutritionProgramId;

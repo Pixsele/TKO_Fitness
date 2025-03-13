@@ -18,5 +18,7 @@ public class ExerciseDTO {
     private String specialEquipment;
     private String muscularGroup;
     private Integer kcal;
+    private String photoUrl;
+    private String videoUrl;
     private LocalDateTime createdAt;
 }

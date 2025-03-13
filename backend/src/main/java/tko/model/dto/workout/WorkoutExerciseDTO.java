@@ -11,9 +11,9 @@ public class WorkoutExerciseDTO {
     private Long id;
     private Long workoutId;
     private Long exerciseId;
-    private int sets;
-    private int reps;
-    private double distance;
-    private double duration;
-    private int restTime;
+    private Integer sets;
+    private Integer reps;
+    private Double distance;
+    private Double duration;
+    private Integer restTime;
 }
