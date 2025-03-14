@@ -13,7 +13,7 @@ public class NutritionPlanProductDTO {
     private Long id;
     private Long nutritionProgramId;
     private Long productId;
-    private int count;
+    private Integer count;
     private String typeMeal;
     private LocalDate date;
 }

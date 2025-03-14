@@ -25,7 +25,7 @@ public class NutritionPlanProductEntity {
     @JoinColumn(name = "product_id")
     private ProductEntity product;
 
-    private int count;
+    private Integer count;
     private String typeMeal;
     private LocalDate date;
 }

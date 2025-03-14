@@ -5,7 +5,8 @@ CREATE TABLE trainings_program (
                                    type VARCHAR(255) NOT NULL,
                                    difficult VARCHAR(50) NOT NULL,
                                    created_by VARCHAR(255),
-                                   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                   like_count INT DEFAULT 0
 );
 
 CREATE TABLE nutrition_program (
@@ -15,7 +16,8 @@ CREATE TABLE nutrition_program (
                                    type VARCHAR(100) NOT NULL,
                                    difficulty VARCHAR(50),
                                    created_by VARCHAR(255),
-                                   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                   like_count INT DEFAULT 0
 );
 
 CREATE TABLE users (
@@ -30,6 +32,7 @@ CREATE TABLE users (
                        gender VARCHAR(10) CHECK (gender IN ('MALE', 'FEMALE')),
                        current_training_program_id INT REFERENCES trainings_program(id) ON DELETE SET NULL,
                        current_nutrition_program_id INT REFERENCES nutrition_program(id) ON DELETE SET NULL,
+                       photo_url VARCHAR(255),
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -45,8 +48,10 @@ CREATE TABLE product (
                          name VARCHAR(255) NOT NULL,
                          kcal INT NOT NULL,
                          unit VARCHAR(50) NOT NULL,
+                         photo_url VARCHAR(255),
                          created_by VARCHAR(255),
-                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                         like_count INT DEFAULT 0
 );
 
 CREATE TABLE kcal_product (
@@ -68,7 +73,10 @@ CREATE TABLE exercise (
                           special_equipment VARCHAR(255),
                           muscular_group VARCHAR(255),
                           kcal INT NOT NULL,
-                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                          photo_url VARCHAR(255),
+                          video_url VARCHAR(255),
+                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          like_count INT DEFAULT 0
 );
 
 CREATE TABLE workout (
@@ -77,7 +85,8 @@ CREATE TABLE workout (
                          description TEXT,
                          difficult VARCHAR(50) NOT NULL,
                          created_by VARCHAR(255),
-                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                         like_count INT DEFAULT 0
 );
 
 CREATE TABLE workout_exercises (

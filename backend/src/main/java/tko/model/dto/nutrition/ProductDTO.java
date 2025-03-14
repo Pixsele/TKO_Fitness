@@ -12,8 +12,9 @@ import java.time.LocalDateTime;
 public class ProductDTO {
     private Long id;
     private String name;
-    private int kcal;
+    private Integer kcal;
     private String unit;
+    private String photoUrl;
     private String createdBy;
     private LocalDateTime createdAt;
 }

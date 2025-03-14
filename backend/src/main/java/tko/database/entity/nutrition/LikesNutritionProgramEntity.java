@@ -29,4 +29,5 @@ public class LikesNutritionProgramEntity {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
 }

@@ -21,9 +21,15 @@ public class ProductEntity {
     private int kcal;
     private String unit;
 
+    @Column(name = "photo_url")
+    private String photoUrl;
+
     @Column(name = "created_by")
     private String createdBy;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "like_count")
+    private Integer likeCount;
 }
