@@ -2,9 +2,11 @@ package tko.service.workout;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 import tko.database.entity.workout.WorkoutEntity;
 import tko.database.entity.workout.WorkoutExerciseEntity;
 import tko.database.repository.workout.WorkoutRepository;
@@ -45,6 +47,7 @@ public class WorkoutService {
         return workoutMapper.toDTO(workoutEntity);
     }
 
+    //TODO
     public WorkoutDTO updateWorkout(WorkoutDTO workoutDTO) {
         WorkoutEntity workoutEntity = workoutMapper.toEntity(workoutDTO);
         if(workoutRepository.existsById(workoutDTO.getId())) {
@@ -65,7 +68,7 @@ public class WorkoutService {
 
     public List<WorkoutExerciseDTO> readWorkoutExerciseById(@PathVariable Long id) {
         if(id == null) {
-            throw new IllegalArgumentException("id cannot be null");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id must not be null");
         }
 
         List<WorkoutExerciseEntity> workoutExerciseEntityList = workoutRepository.findExercisesByWorkoutId(id);

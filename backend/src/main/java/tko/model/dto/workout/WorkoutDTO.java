@@ -18,5 +18,4 @@ public class WorkoutDTO {
     private String difficult;
     private String createdBy;
     private LocalDateTime createdAt;
-    //private List<WorkoutExerciseDTO> workoutExercises;
 }

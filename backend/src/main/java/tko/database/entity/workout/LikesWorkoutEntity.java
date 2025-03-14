@@ -29,7 +29,4 @@ public class LikesWorkoutEntity {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    @Column(name = "like_count")
-    private Integer likeCount;
 }

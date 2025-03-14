@@ -7,13 +7,12 @@
   <name>Archetype - backend</name>
   <url>http://maven.apache.org</url>
 
-
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.3.5</version>
+    <version>3.4.3</version>
+    <relativePath/>
   </parent>
-
 
   <dependencies>
     <dependency>
@@ -74,14 +73,18 @@
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter-actuator</artifactId>
       </dependency>
+    <dependency>
+      <groupId>com.formdev</groupId>
+      <artifactId>svgSalamander</artifactId>
+      <version>1.1.4</version>
+    </dependency>
   </dependencies>
+
   <build>
     <plugins>
-
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-
         <configuration>
           <excludes>
             <exclude>
@@ -91,7 +94,6 @@
           </excludes>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 </project>

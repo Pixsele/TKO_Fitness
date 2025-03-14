@@ -46,7 +46,7 @@ public class WorkoutController {
         return new ResponseEntity<>(deletedWorkout,HttpStatus.OK);
     }
 
-    @GetMapping("/WorkoutExercises/{id}")
+    @GetMapping("/workout-exercises/{id}")
     public ResponseEntity<List<WorkoutExerciseDTO>> withWorkoutExercise(@PathVariable Long id) {
         List<WorkoutExerciseDTO> workoutExerciseDTOList = workoutService.readWorkoutExerciseById(id);
         return new ResponseEntity<>(workoutExerciseDTOList,HttpStatus.OK);

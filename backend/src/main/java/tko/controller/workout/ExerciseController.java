@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import tko.model.dto.workout.ExerciseDTO;
 import tko.service.workout.ExerciseService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/exercise")
 public class ExerciseController {
@@ -41,4 +43,9 @@ public class ExerciseController {
         return new ResponseEntity<>(deletedExercise, HttpStatus.OK);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<ExerciseDTO>> readAllExercises() {
+        List<ExerciseDTO> exercises = exerciseService.readAll();
+        return new ResponseEntity<>(exercises, HttpStatus.OK);
+    }
 }

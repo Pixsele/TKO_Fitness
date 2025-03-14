@@ -2,6 +2,8 @@ package tko.service;
 
 
 import org.apache.catalina.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import tko.database.entity.nutrition.NutritionProgramEntity;
 import tko.database.entity.workout.TrainingsProgramEntity;
 import tko.database.entity.user.UsersEntity;
@@ -36,9 +38,9 @@ public class UsersService {
     }
 
     public UsersDTO getUser(Long id) {
-        //special for Dima( ˘ ³˘)♥︎
+        //special for Dima( ˘ ³˘)♥ x2︎
         if(id == null) {
-            throw new IllegalArgumentException("Id cannot be null");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
         }
         UsersEntity usersEntity = usersRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("User not found"));
         UsersDTO usersDTO= usersMapper.toDTO(usersEntity);
@@ -49,7 +51,6 @@ public class UsersService {
 
     public UsersDTO updateUser(Long id, UsersDTO usersDTO) {
         UsersEntity usersEntity = usersRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("User not found"));
-
 
         if(usersDTO.getName()!=null) {
             usersEntity.setName(usersDTO.getName());

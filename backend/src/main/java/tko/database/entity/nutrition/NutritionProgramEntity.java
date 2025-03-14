@@ -22,4 +22,7 @@ public class NutritionProgramEntity {
     private String type;
     private String createdBy;
     private LocalDateTime createdAt;
+
+    @Column(name = "like_count")
+    private Integer likeCount;
 }
