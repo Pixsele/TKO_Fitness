@@ -1,7 +1,6 @@
 package tko.model.dto.workout;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,19 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExerciseDTO {
-    @NotNull
-    private Long id;
+public class WorkoutCreateDTO {
     @NotBlank
-    private String instruction;
+    private String description;
     @NotBlank
     private String name;
     @NotBlank
     private String difficult;
-    @NotBlank
-    private String specialEquipment;
-    @NotBlank
-    private String muscularGroup;
-    @NotNull
-    private Integer kcal;
 }

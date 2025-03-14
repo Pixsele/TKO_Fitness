@@ -1,6 +1,7 @@
 package tko.service;
 
 
+import jakarta.validation.constraints.NotNull;
 import org.apache.catalina.User;
 import tko.database.entity.nutrition.NutritionProgramEntity;
 import tko.database.entity.workout.TrainingsProgramEntity;
@@ -13,6 +14,8 @@ import tko.model.mapper.UsersMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class UsersService {
@@ -37,9 +40,8 @@ public class UsersService {
 
     public UsersDTO getUser(Long id) {
         //special for Dima( ˘ ³˘)♥︎
-        if(id == null) {
-            throw new IllegalArgumentException("Id cannot be null");
-        }
+        Objects.requireNonNull(id);
+
         UsersEntity usersEntity = usersRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("User not found"));
         UsersDTO usersDTO= usersMapper.toDTO(usersEntity);
         UsersEntity usersEntity1 = usersMapper.toEntity(usersDTO);
@@ -48,8 +50,9 @@ public class UsersService {
     }
 
     public UsersDTO updateUser(Long id, UsersDTO usersDTO) {
-        UsersEntity usersEntity = usersRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("User not found"));
+        Objects.requireNonNull(id);
 
+        UsersEntity usersEntity = usersRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("User not found"));
 
         if(usersDTO.getName()!=null) {
             usersEntity.setName(usersDTO.getName());
@@ -91,6 +94,9 @@ public class UsersService {
     }
 
     public UsersDTO deleteUser(Long id) {
+        if(id == null) {
+            throw new IllegalArgumentException("Id cannot be null");
+        }
         UsersEntity usersEntity = usersRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("User not found"));
         usersRepository.delete(usersEntity);
         return usersMapper.toDTO(usersEntity);

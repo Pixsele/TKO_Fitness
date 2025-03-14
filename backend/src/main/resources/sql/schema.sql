@@ -64,7 +64,6 @@ CREATE TABLE exercise (
                           id SERIAL PRIMARY KEY,
                           instruction TEXT NOT NULL,
                           name VARCHAR(255) NOT NULL,
-                          type VARCHAR(255) NOT NULL,
                           difficult VARCHAR(10) CHECK (difficult IN ('EASY', 'MEDIUM', 'HARD')),
                           special_equipment VARCHAR(255),
                           muscular_group VARCHAR(255),
@@ -76,7 +75,6 @@ CREATE TABLE workout (
                          id SERIAL PRIMARY KEY,
                          name VARCHAR(255) NOT NULL,
                          description TEXT,
-                         type VARCHAR(255) NOT NULL,
                          difficult VARCHAR(50) NOT NULL,
                          created_by VARCHAR(255),
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

@@ -1,5 +1,7 @@
 package tko.model.dto.workout;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,12 +13,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WorkoutDTO {
+    @NotNull
     private Long id;
+    @NotBlank
     private String description;
+    @NotBlank
     private String name;
-    private String type;
+    @NotBlank
     private String difficult;
-    private String createdBy;
-    private LocalDateTime createdAt;
-    //private List<WorkoutExerciseDTO> workoutExercises;
 }
