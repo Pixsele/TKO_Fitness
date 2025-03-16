@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WorkoutDTO {
-    @NotNull
     private Long id;
     @NotBlank
     private String description;

@@ -2,8 +2,8 @@ package tko.model.mapper.workout;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import tko.database.entity.workout.WorkoutEntity;
-import tko.model.dto.workout.WorkoutCreateDTO;
 import tko.model.dto.workout.WorkoutDTO;
 
 @Mapper(componentModel = "spring")
@@ -12,5 +12,5 @@ public interface WorkoutMapper {
     WorkoutDTO toDTO(WorkoutEntity entity);
 
     @Mapping(target = "id",ignore = true)
-    WorkoutEntity toEntity(WorkoutCreateDTO dto);
+    void updateEntity(WorkoutDTO dto,@MappingTarget WorkoutEntity entity);
 }

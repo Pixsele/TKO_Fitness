@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExerciseDTO {
-    @NotNull
     private Long id;
     @NotBlank
     private String instruction;

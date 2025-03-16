@@ -3,18 +3,15 @@ package tko.service.workout;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import tko.database.entity.workout.ExerciseEntity;
 import tko.database.repository.workout.ExerciseRepository;
-import tko.model.dto.workout.ExerciseCreateDTO;
+import tko.database.repository.workout.WorkoutExerciseRepository;
 import tko.model.dto.workout.ExerciseDTO;
 import tko.model.mapper.workout.ExerciseMapper;
-import tko.utils.DifficultyLevel;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,15 +21,20 @@ import java.util.List;
 public class ExerciseService {
     private final ExerciseRepository exerciseRepository;
     private final ExerciseMapper exerciseMapper;
+    private final WorkoutExerciseRepository workoutExerciseRepository;
 
     @Autowired
-    public ExerciseService(ExerciseRepository exerciseRepository, ExerciseMapper exerciseMapper) {
+    public ExerciseService(ExerciseRepository exerciseRepository, ExerciseMapper exerciseMapper, WorkoutExerciseRepository workoutExerciseRepository) {
         this.exerciseRepository = exerciseRepository;
         this.exerciseMapper = exerciseMapper;
+        this.workoutExerciseRepository = workoutExerciseRepository;
     }
 
-    public ExerciseDTO create(ExerciseCreateDTO exerciseCreateDTO) {
-        ExerciseEntity exerciseEntity = exerciseMapper.toEntity(exerciseCreateDTO);
+    public ExerciseDTO create(ExerciseDTO exerciseDTO) {
+        if(exerciseDTO.getId() != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Id must be null");
+        }
+        ExerciseEntity exerciseEntity = exerciseMapper.toEntity(exerciseDTO);
         exerciseEntity.setCreatedAt(LocalDateTime.now());
         ExerciseEntity saveEntity = exerciseRepository.save(exerciseEntity);
         return exerciseMapper.toDto(saveEntity);
@@ -46,13 +48,16 @@ public class ExerciseService {
         return exerciseMapper.toDto(exerciseEntity);
     }
 
-    public ExerciseDTO update(ExerciseDTO exerciseDTO) {
-        ExerciseEntity exerciseEntity = exerciseMapper.toEntity(exerciseDTO);
-        if(exerciseRepository.existsById(exerciseDTO.getId())) {
-            ExerciseEntity saveEntity = exerciseRepository.save(exerciseEntity);
-            return exerciseMapper.toDto(saveEntity);
+    public ExerciseDTO update(Long id, ExerciseDTO exerciseDTO) {
+        if(id == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
         }
-        throw new EntityNotFoundException("Exercise not found");
+
+        ExerciseEntity exerciseEntity = exerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+
+        exerciseMapper.updateEntity(exerciseDTO,exerciseEntity);
+        ExerciseEntity saveEntity = exerciseRepository.save(exerciseEntity);
+        return exerciseMapper.toDto(saveEntity);
     }
 
     public ExerciseDTO delete(Long id) {
@@ -60,27 +65,20 @@ public class ExerciseService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
         }
         ExerciseEntity exerciseEntity = exerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+
+        boolean hasDependencies = workoutExerciseRepository.existsByExercise_Id(id);
+
+        if(hasDependencies) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Cannot delete exercise: it is used in workout");
+        }
+
         exerciseRepository.delete(exerciseEntity);
         return exerciseMapper.toDto(exerciseEntity);
     }
 
-    public List<ExerciseDTO> readAll() {
-        List<ExerciseEntity> exerciseEntities = exerciseRepository.findAll();
-        List<ExerciseDTO> exerciseDTOS = new ArrayList<>();
-        for(ExerciseEntity exerciseEntity : exerciseEntities) {
-            exerciseDTOS.add(exerciseMapper.toDto(exerciseEntity));
-        }
-        return exerciseDTOS;
-    }
-
-    public List<ExerciseDTO> readPageable(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-
+    public Page<ExerciseDTO> readPageable(Pageable pageable) {
         Page<ExerciseEntity> exerciseEntities = exerciseRepository.findAll(pageable);
-        List<ExerciseDTO> exerciseDTOS = new ArrayList<>();
-        for (ExerciseEntity exerciseEntity : exerciseEntities.getContent()) {
-            exerciseDTOS.add(exerciseMapper.toDto(exerciseEntity));
-        }
-        return exerciseDTOS;
+
+        return (exerciseEntities.map(exerciseMapper::toDto));
     }
 }

@@ -3,15 +3,15 @@ package tko.controller.workout;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tko.model.dto.workout.WorkoutCreateDTO;
 import tko.model.dto.workout.WorkoutDTO;
-import tko.model.dto.workout.WorkoutExerciseDTO;
 import tko.service.workout.WorkoutService;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/workout")
@@ -25,7 +25,7 @@ public class WorkoutController {
     }
 
     @PostMapping
-    public ResponseEntity<WorkoutDTO> createWorkout(@Valid @RequestBody WorkoutCreateDTO workoutDTO) {
+    public ResponseEntity<WorkoutDTO> createWorkout(@Valid @RequestBody WorkoutDTO workoutDTO) {
         WorkoutDTO createdWorkout = workoutService.createWorkout(workoutDTO);
         return new ResponseEntity<>(createdWorkout,HttpStatus.CREATED);
     }
@@ -36,9 +36,9 @@ public class WorkoutController {
         return new ResponseEntity<>(workoutDTO,HttpStatus.OK);
     }
 
-    @PutMapping
-    public ResponseEntity<WorkoutDTO> updateWorkout(@Valid @RequestBody WorkoutDTO workoutDTO) {
-        WorkoutDTO updatedWorkout = workoutService.updateWorkout(workoutDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity<WorkoutDTO> updateWorkout(@PathVariable Long id, @Valid @RequestBody WorkoutDTO workoutDTO) {
+        WorkoutDTO updatedWorkout = workoutService.updateWorkout(id,workoutDTO);
         return new ResponseEntity<>(updatedWorkout,HttpStatus.OK);
     }
 
@@ -48,15 +48,10 @@ public class WorkoutController {
         return new ResponseEntity<>(deletedWorkout,HttpStatus.OK);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<WorkoutDTO>> getAll() {
-        List<WorkoutDTO> workoutDTOList = workoutService.readAllWorkout();
-        return new ResponseEntity<>(workoutDTOList,HttpStatus.OK);
-    }
+    @GetMapping("/page")
+    public PagedModel<WorkoutDTO> readWorkoutPage(Pageable pageable) {
+        Page<WorkoutDTO> workoutDTOPage = workoutService.readWorkoutWithPageable(pageable);
 
-    @GetMapping("/exercises")
-    public ResponseEntity<List<WorkoutExerciseDTO>> withWorkoutExercise(@RequestParam Long id) {
-        List<WorkoutExerciseDTO> workoutExerciseDTOList = workoutService.readWorkoutExerciseById(id);
-        return new ResponseEntity<>(workoutExerciseDTOList,HttpStatus.OK);
+        return new PagedModel<>(workoutDTOPage);
     }
 }
