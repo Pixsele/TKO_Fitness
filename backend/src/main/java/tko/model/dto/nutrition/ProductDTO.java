@@ -17,4 +17,5 @@ public class ProductDTO {
     private String photoUrl;
     private String createdBy;
     private LocalDateTime createdAt;
+    private Integer likeCount;
 }

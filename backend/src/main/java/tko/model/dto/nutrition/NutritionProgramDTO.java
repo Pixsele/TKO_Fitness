@@ -16,4 +16,5 @@ public class NutritionProgramDTO {
     private String type;
     private String createdBy;
     private LocalDateTime createdAt;
+    private Integer likeCount;
 }

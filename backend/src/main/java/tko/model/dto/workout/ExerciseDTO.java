@@ -23,4 +23,5 @@ public class ExerciseDTO {
     private String muscularGroup;
     @NotNull
     private Integer kcal;
+    private Integer likeCount;
 }

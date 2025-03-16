@@ -19,4 +19,5 @@ public class TrainingsProgramDTO {
     private String createdBy;
     private LocalDateTime createdAt;
     private List<WorkoutProgramDTO> workoutPrograms;
+    private Integer likeCount;
 }

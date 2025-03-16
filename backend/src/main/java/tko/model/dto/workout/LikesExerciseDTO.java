@@ -14,5 +14,4 @@ public class LikesExerciseDTO {
     private Long userId;
     private Long exerciseId;
     private LocalDateTime createdAt;
-    private Integer likeCount;
 }

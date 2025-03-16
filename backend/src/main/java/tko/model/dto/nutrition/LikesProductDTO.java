@@ -14,5 +14,4 @@ public class LikesProductDTO {
     private Long userId;
     private Long productId;
     private LocalDateTime createdAt;
-    private Integer likeCount;
 }

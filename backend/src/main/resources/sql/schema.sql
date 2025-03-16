@@ -98,6 +98,8 @@ CREATE TABLE workout_exercises (
                                    distance DOUBLE PRECISION,
                                    duration DOUBLE PRECISION,
                                    rest_time INT NOT NULL,
+                                   exercise_order INT NOT NULL,
+                                   UNIQUE (workout_id, exercise_order),
                                    FOREIGN KEY (workout_id) REFERENCES workout(id) ON DELETE CASCADE,
                                    FOREIGN KEY (exercise_id) REFERENCES exercise(id) ON DELETE CASCADE
 );
