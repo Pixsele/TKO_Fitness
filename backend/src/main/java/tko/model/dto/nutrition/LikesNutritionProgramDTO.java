@@ -14,5 +14,4 @@ public class LikesNutritionProgramDTO {
     private Long userId;
     private Long nutritionProgramId;
     private LocalDateTime createdAt;
-    private Integer likeCount;
 }

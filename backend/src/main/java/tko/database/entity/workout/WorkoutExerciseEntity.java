@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "workout_exercises")
+@Table(name = "workout_exercises", uniqueConstraints = @UniqueConstraint(columnNames = {"workout_id", "exercise_order"}))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +22,9 @@ public class WorkoutExerciseEntity {
     @ManyToOne
     @JoinColumn(name = "exercise_id")
     private ExerciseEntity exercise;
+
+    @Column(name = "exercise_order")
+    private Integer exerciseOrder;
 
     private Integer sets;
     private Integer reps;
