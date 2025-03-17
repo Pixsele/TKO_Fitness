@@ -2,7 +2,6 @@ CREATE TABLE trainings_program (
                                    id SERIAL PRIMARY KEY,
                                    name VARCHAR(255) NOT NULL,
                                    description TEXT,
-                                   type VARCHAR(255) NOT NULL,
                                    difficult VARCHAR(50) NOT NULL,
                                    created_by VARCHAR(255),
                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -116,7 +115,6 @@ CREATE TABLE workout_program (
                                  id SERIAL PRIMARY KEY,
                                  program_id BIGINT NOT NULL,
                                  workout_id BIGINT NOT NULL,
-                                 date DATE NOT NULL,
                                  FOREIGN KEY (program_id) REFERENCES trainings_program(id) ON DELETE CASCADE,
                                  FOREIGN KEY (workout_id) REFERENCES workout(id) ON DELETE CASCADE
 );

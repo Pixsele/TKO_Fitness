@@ -20,4 +20,5 @@ public class WorkoutDTO {
     private String name;
     @NotBlank
     private String difficult;
+    private Integer likeCount;
 }

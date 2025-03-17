@@ -37,9 +37,13 @@ public class WorkoutService {
         if (workoutDTO.getId() != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Id must be null");
         }
+        if(workoutDTO.getLikeCount() != null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Like count must be null");
+        }
 
         WorkoutEntity workoutEntity = workoutMapper.toEntity(workoutDTO);
         workoutEntity.setCreatedAt(LocalDateTime.now());
+        workoutEntity.setLikeCount(0);
         WorkoutEntity saveEntity = workoutRepository.save(workoutEntity);
         return workoutMapper.toDTO(saveEntity);
     }
@@ -55,6 +59,9 @@ public class WorkoutService {
     public WorkoutDTO updateWorkout(Long id,WorkoutDTO workoutDTO) {
         if (id == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
+        }
+        if(workoutDTO.getLikeCount() != null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Like count must be null");
         }
 
         WorkoutEntity workoutEntity = workoutRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
@@ -80,6 +87,9 @@ public class WorkoutService {
     }
 
     public Page<WorkoutDTO> readWorkoutWithPageable(Pageable pageable) {
+        if(pageable == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pageable must not be null");
+        }
         Page<WorkoutEntity> workoutEntityList = workoutRepository.findAll(pageable);
 
         return (workoutEntityList.map(workoutMapper::toDTO));

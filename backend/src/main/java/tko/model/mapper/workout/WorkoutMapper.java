@@ -12,5 +12,7 @@ public interface WorkoutMapper {
     WorkoutDTO toDTO(WorkoutEntity entity);
 
     @Mapping(target = "id",ignore = true)
+    @Mapping(target = "likeCount",ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     void updateEntity(WorkoutDTO dto,@MappingTarget WorkoutEntity entity);
 }

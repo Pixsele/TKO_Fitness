@@ -8,13 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import tko.database.entity.workout.ExerciseEntity;
+import tko.database.entity.workout.LikesExerciseEntity;
 import tko.database.repository.workout.ExerciseRepository;
+import tko.database.repository.workout.LikesExerciseRepository;
 import tko.database.repository.workout.WorkoutExerciseRepository;
 import tko.model.dto.workout.ExerciseDTO;
 import tko.model.mapper.workout.ExerciseMapper;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,20 +23,28 @@ public class ExerciseService {
     private final ExerciseRepository exerciseRepository;
     private final ExerciseMapper exerciseMapper;
     private final WorkoutExerciseRepository workoutExerciseRepository;
+    private final LikesExerciseRepository likesExerciseRepository;
 
     @Autowired
-    public ExerciseService(ExerciseRepository exerciseRepository, ExerciseMapper exerciseMapper, WorkoutExerciseRepository workoutExerciseRepository) {
+    public ExerciseService(ExerciseRepository exerciseRepository, ExerciseMapper exerciseMapper, WorkoutExerciseRepository workoutExerciseRepository, LikesExerciseRepository likesExerciseRepository) {
         this.exerciseRepository = exerciseRepository;
         this.exerciseMapper = exerciseMapper;
         this.workoutExerciseRepository = workoutExerciseRepository;
+        this.likesExerciseRepository = likesExerciseRepository;
     }
 
     public ExerciseDTO create(ExerciseDTO exerciseDTO) {
         if(exerciseDTO.getId() != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Id must be null");
         }
+
+        if(exerciseDTO.getLikeCount() != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Like count must be null");
+        }
+
         ExerciseEntity exerciseEntity = exerciseMapper.toEntity(exerciseDTO);
         exerciseEntity.setCreatedAt(LocalDateTime.now());
+        exerciseEntity.setLikeCount(0);
         ExerciseEntity saveEntity = exerciseRepository.save(exerciseEntity);
         return exerciseMapper.toDto(saveEntity);
     }
@@ -51,6 +60,9 @@ public class ExerciseService {
     public ExerciseDTO update(Long id, ExerciseDTO exerciseDTO) {
         if(id == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
+        }
+        if(exerciseDTO.getLikeCount() != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Like count must be null");
         }
 
         ExerciseEntity exerciseEntity = exerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
@@ -72,11 +84,17 @@ public class ExerciseService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Cannot delete exercise: it is used in workout");
         }
 
+        List<LikesExerciseEntity> likesExerciseEntities = likesExerciseRepository.findAllByExercise_Id(id);
+
+        likesExerciseRepository.deleteAll(likesExerciseEntities);
         exerciseRepository.delete(exerciseEntity);
         return exerciseMapper.toDto(exerciseEntity);
     }
 
     public Page<ExerciseDTO> readPageable(Pageable pageable) {
+        if(pageable == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pageable must not be null");
+        }
         Page<ExerciseEntity> exerciseEntities = exerciseRepository.findAll(pageable);
 
         return (exerciseEntities.map(exerciseMapper::toDto));
