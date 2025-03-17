@@ -9,17 +9,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import tko.database.entity.user.UsersEntity;
+import tko.database.entity.workout.ExerciseEntity;
 import tko.database.entity.workout.LikesExerciseEntity;
 import tko.database.repository.user.UsersRepository;
 import tko.database.repository.workout.ExerciseRepository;
 import tko.database.repository.workout.LikesExerciseRepository;
-import tko.database.repository.workout.WorkoutRepository;
 import tko.model.dto.workout.LikesExerciseDTO;
-import tko.model.mapper.workout.ExerciseMapper;
 import tko.model.mapper.workout.LikesExerciseMapper;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class LikesExerciseService {
@@ -28,13 +27,15 @@ public class LikesExerciseService {
     private final LikesExerciseMapper likesExerciseMapper;
     private final ExerciseRepository exerciseRepository;
     private final UsersRepository usersRepository;
+    private final ExerciseService exerciseService;
 
     @Autowired
-    public LikesExerciseService(LikesExerciseRepository likesExerciseRepository, LikesExerciseMapper likesExerciseMapper, ExerciseRepository exerciseRepository, UsersRepository usersRepository) {
+    public LikesExerciseService(LikesExerciseRepository likesExerciseRepository, LikesExerciseMapper likesExerciseMapper, ExerciseRepository exerciseRepository, UsersRepository usersRepository, ExerciseService exerciseService) {
         this.likesExerciseRepository = likesExerciseRepository;
         this.likesExerciseMapper = likesExerciseMapper;
         this.exerciseRepository = exerciseRepository;
         this.usersRepository = usersRepository;
+        this.exerciseService = exerciseService;
     }
 
     public LikesExerciseDTO createLikesExercise(LikesExerciseDTO likesExerciseDTO) {
@@ -45,6 +46,7 @@ public class LikesExerciseService {
         if(!(exerciseRepository.existsById(likesExerciseDTO.getExerciseId()))) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise does not exist");
         }
+
         if(!(usersRepository.existsById(likesExerciseDTO.getUserId()))){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
         }
@@ -53,6 +55,7 @@ public class LikesExerciseService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Like in this exercise by this user is already exists");
         }
 
+        exerciseService.addLike(likesExerciseDTO.getExerciseId());
         LikesExerciseEntity likesExerciseEntity =  likesExerciseMapper.toEntity(likesExerciseDTO);
         likesExerciseEntity.setCreatedAt(LocalDateTime.now());
         likesExerciseRepository.save(likesExerciseEntity);
@@ -74,19 +77,25 @@ public class LikesExerciseService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id must not be null");
         }
 
-        if(!(usersRepository.existsById(likesExerciseDTO.getUserId()))){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
-        }
-        if(!(exerciseRepository.existsById(likesExerciseDTO.getExerciseId()))) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise does not exist");
-        }
+        UsersEntity usersEntity = usersRepository.findById(likesExerciseDTO.getUserId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist"));
+
+        ExerciseEntity exerciseEntity = exerciseRepository.findById(likesExerciseDTO.getExerciseId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise does not exist"));
 
         if(likesExerciseRepository.existsByUser_IdAndExercise_Id(likesExerciseDTO.getUserId(), likesExerciseDTO.getExerciseId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Like in this exercise by this user is already exists");
         }
+        LikesExerciseEntity likesExerciseEntity = likesExerciseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Id not found"));
 
-        LikesExerciseEntity likesExerciseEntity = likesExerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
-        likesExerciseMapper.updateEntity(likesExerciseDTO, likesExerciseEntity);
+
+        exerciseService.removeLike(likesExerciseEntity.getExercise().getId());
+
+        likesExerciseEntity.setUser(usersEntity);
+        likesExerciseEntity.setExercise(exerciseEntity);
+
+        exerciseService.addLike(likesExerciseEntity.getExercise().getId());
         return likesExerciseMapper.toDTO(likesExerciseEntity);
     }
 
@@ -97,6 +106,7 @@ public class LikesExerciseService {
 
         LikesExerciseEntity likesExerciseEntity = likesExerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
         likesExerciseRepository.delete(likesExerciseEntity);
+        exerciseService.removeLike(likesExerciseEntity.getExercise().getId());
         return likesExerciseMapper.toDTO(likesExerciseEntity);
     }
 

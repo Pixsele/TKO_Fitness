@@ -12,12 +12,9 @@ import tko.database.entity.workout.WorkoutExerciseEntity;
 import tko.database.repository.workout.WorkoutExerciseRepository;
 import tko.database.repository.workout.WorkoutRepository;
 import tko.model.dto.workout.WorkoutDTO;
-import tko.model.dto.workout.WorkoutExerciseDTO;
-import tko.model.mapper.workout.WorkoutExerciseMapper;
 import tko.model.mapper.workout.WorkoutMapper;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -93,5 +90,29 @@ public class WorkoutService {
         Page<WorkoutEntity> workoutEntityList = workoutRepository.findAll(pageable);
 
         return (workoutEntityList.map(workoutMapper::toDTO));
+    }
+
+    public void addLike(Long id) {
+        if(id == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
+        }
+
+        WorkoutEntity workoutEntity = workoutRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+        Integer likeCount = workoutEntity.getLikeCount();
+        likeCount = likeCount + 1;
+        workoutEntity.setLikeCount(likeCount);
+        workoutRepository.save(workoutEntity);
+    }
+
+    public void removeLike(Long id) {
+        if(id == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
+        }
+
+        WorkoutEntity workoutEntity = workoutRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+        Integer likeCount = workoutEntity.getLikeCount();
+        likeCount = likeCount - 1;
+        workoutEntity.setLikeCount(likeCount);
+        workoutRepository.save(workoutEntity);
     }
 }

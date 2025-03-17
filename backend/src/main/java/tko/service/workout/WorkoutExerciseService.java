@@ -2,8 +2,6 @@ package tko.service.workout;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -34,15 +32,15 @@ public class WorkoutExerciseService {
     }
 
     public WorkoutExerciseDTO create(WorkoutExerciseDTO workoutExerciseDTO) {
-        if(workoutExerciseDTO.getId() != null) {
+        if (workoutExerciseDTO.getId() != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Id must be null");
         }
 
-        if(!(workoutRepository.existsById(workoutExerciseDTO.getWorkoutId()))) {
+        if (!(workoutRepository.existsById(workoutExerciseDTO.getWorkoutId()))) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "WorkoutId not found");
         }
 
-        if(!(exerciseRepository.existsById(workoutExerciseDTO.getExerciseId()))) {
+        if (!(exerciseRepository.existsById(workoutExerciseDTO.getExerciseId()))) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ExerciseId not found");
         }
 
@@ -52,27 +50,27 @@ public class WorkoutExerciseService {
     }
 
     public WorkoutExerciseDTO read(Long id) {
-        if(id==null) {
+        if (id == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id must not be null");
         }
-        WorkoutExerciseEntity workoutExerciseEntity = workoutExerciseRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Id not found"));
+        WorkoutExerciseEntity workoutExerciseEntity = workoutExerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
         return workoutExerciseMapper.toDTO(workoutExerciseEntity);
     }
 
-    public WorkoutExerciseDTO update(Long id,WorkoutExerciseDTO workoutExerciseDTO) {
-        if(id==null) {
+    public WorkoutExerciseDTO update(Long id, WorkoutExerciseDTO workoutExerciseDTO) {
+        if (id == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id must not be null");
         }
 
-        if(!(workoutRepository.existsById(workoutExerciseDTO.getWorkoutId()))) {
+        if (!(workoutRepository.existsById(workoutExerciseDTO.getWorkoutId()))) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "WorkoutId not found");
         }
 
-        if(!(exerciseRepository.existsById(workoutExerciseDTO.getExerciseId()))) {
+        if (!(exerciseRepository.existsById(workoutExerciseDTO.getExerciseId()))) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ExerciseId not found");
         }
 
-        WorkoutExerciseEntity workoutExerciseEntity = workoutExerciseRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Id not found"));
+        WorkoutExerciseEntity workoutExerciseEntity = workoutExerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
 
         workoutExerciseMapper.updateEntity(workoutExerciseDTO, workoutExerciseEntity);
         WorkoutExerciseEntity savedEntity = workoutExerciseRepository.save(workoutExerciseEntity);
@@ -80,21 +78,21 @@ public class WorkoutExerciseService {
     }
 
     public WorkoutExerciseDTO delete(Long id) {
-        if(id==null) {
+        if (id == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id must not be null");
         }
 
-        WorkoutExerciseEntity deleteEntity = workoutExerciseRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Id not found"));
+        WorkoutExerciseEntity deleteEntity = workoutExerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
         workoutExerciseRepository.delete(deleteEntity);
         return workoutExerciseMapper.toDTO(deleteEntity);
     }
 
     public List<WorkoutExerciseDTO> findAllByWorkoutId(Long workoutId) {
-        if(workoutId==null) {
+        if (workoutId == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id must not be null");
         }
 
-        if(!(workoutRepository.existsById(workoutId))) {
+        if (!(workoutRepository.existsById(workoutId))) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "WorkoutId not found");
         }
 

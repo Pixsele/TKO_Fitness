@@ -93,4 +93,28 @@ public class TrainingsProgramService {
         return (trainingsProgramEntityList.map(trainingsProgramMapper::toDto));
     }
 
+    public void addLike(Long id) {
+        if(id == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
+        }
+
+        TrainingsProgramEntity trainingsProgramEntity = trainingsProgramRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+        Integer likeCount = trainingsProgramEntity.getLikeCount();
+        likeCount = likeCount + 1;
+        trainingsProgramEntity.setLikeCount(likeCount);
+        trainingsProgramRepository.save(trainingsProgramEntity);
+    }
+
+    public void removeLike(Long id) {
+        if(id == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
+        }
+
+        TrainingsProgramEntity trainingsProgramEntity = trainingsProgramRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+        Integer likeCount = trainingsProgramEntity.getLikeCount();
+        likeCount = likeCount - 1;
+        trainingsProgramEntity.setLikeCount(likeCount);
+        trainingsProgramRepository.save(trainingsProgramEntity);
+    }
+
 }

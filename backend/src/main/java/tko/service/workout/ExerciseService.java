@@ -99,4 +99,28 @@ public class ExerciseService {
 
         return (exerciseEntities.map(exerciseMapper::toDto));
     }
+
+    public void addLike(Long id) {
+        if(id == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
+        }
+
+        ExerciseEntity exerciseEntity = exerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+        Integer likeCount = exerciseEntity.getLikeCount();
+        likeCount = likeCount + 1;
+        exerciseEntity.setLikeCount(likeCount);
+        exerciseRepository.save(exerciseEntity);
+    }
+
+    public void removeLike(Long id) {
+        if(id == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
+        }
+
+        ExerciseEntity exerciseEntity = exerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+        Integer likeCount = exerciseEntity.getLikeCount();
+        likeCount = likeCount - 1;
+        exerciseEntity.setLikeCount(likeCount);
+        exerciseRepository.save(exerciseEntity);
+    }
 }
