@@ -23,8 +23,8 @@ public class PersonGeneratorSVG {
     private static final String sourceWomanBack  = "src/main/resources/peopleSVG/woman_back.svg";
     private static final String sourceWomanFront  = "src/main/resources/peopleSVG/woman_front.svg";
 
-    private static final String sourceManBack  = "";
-    private static final String sourceManFront  = "";
+    private static final String sourceManBack  = "src/main/resources/peopleSVG/man_back.svg";
+    private static final String sourceManFront  = "src/main/resources/peopleSVG/man_front.svg";
 
 
     public String GetPersonWithChangesByIdElements(Gender genderPerson, List<Muscle> muscleList) throws Exception {
