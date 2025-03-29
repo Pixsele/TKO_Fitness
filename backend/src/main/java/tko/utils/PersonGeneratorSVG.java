@@ -27,7 +27,7 @@ public class PersonGeneratorSVG {
     private static final String sourceManFront  = "src/main/resources/peopleSVG/man_front.svg";
 
 
-    public String GetPersonWithChangesByIdElements(Gender genderPerson, List<Muscle> muscleList) throws Exception {
+    public List<String> GetPersonWithChangesByIdElements(Gender genderPerson, List<Muscle> muscleList) throws ParserConfigurationException, IOException, SAXException, TransformerException {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -39,32 +39,25 @@ public class PersonGeneratorSVG {
             documentFront = builder.parse(sourceWomanFront);
             documentBack = builder.parse(sourceWomanBack);
         }
-        if(genderPerson == Gender.MALE) {
+        else if(genderPerson == Gender.MALE) {
             documentFront = builder.parse(sourceManFront);
             documentBack = builder.parse(sourceManBack);
         }
+        else {
+            throw new IllegalArgumentException("Invalid gender");
+        }
 
+        documentSvgHelper(documentBack);
+        documentSvgHelper(documentFront);
 
+        changeByElementId(documentBack,documentFront,muscleList);
 
-
-
-
-
-
-        String res = documentToString(document);
-
-
-
-        return "";
+        String stringSVG_front = documentToString(documentFront);
+        String stringSVG_back = documentToString(documentBack);
+        return List.of(stringSVG_front,stringSVG_back);
     }
 
-    public static Document readSvgFromInputStream(InputStream inputStream) throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = dbf.newDocumentBuilder();
-        return builder.parse(inputStream);
-    }
-
-    private static Document documentSvgHelper(Document document) {
+    private static void documentSvgHelper(Document document) {
         NodeList nodes = document.getElementsByTagName("*");
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
@@ -75,7 +68,20 @@ public class PersonGeneratorSVG {
                 }
             }
         }
-        return document;
+    }
+
+    private static void changeByElementId(Document documentBack,Document documentFront,List<Muscle> muscleList){
+        for(Muscle muscle : muscleList){
+            Element elementFront = documentFront.getElementById(muscle.getId());
+            Element elementBack = documentBack.getElementById(muscle.getId()+"_b");
+            if(elementFront != null){
+                elementFront.setAttribute("fill", color);
+            }
+            if(elementBack != null){
+                elementBack.setAttribute("fill", color);
+
+            }
+        }
     }
 
     public static String documentToString(Document document) throws TransformerException {
@@ -95,8 +101,7 @@ public class PersonGeneratorSVG {
 
     public static void main(String[] args) throws Exception {
         PersonGeneratorSVG pg = new PersonGeneratorSVG();
-        pg.ChangePersonElements();
+        List<Muscle> list  = List.of(Muscle.CRUS,Muscle.BICEPS_FEMORIS);
+        List<String> result = pg.GetPersonWithChangesByIdElements(Gender.FEMALE, list);
     }
-
-
 }
