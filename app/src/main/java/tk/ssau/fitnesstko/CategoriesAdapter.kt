@@ -14,6 +14,7 @@ class CategoriesAdapter(
             binding.mbCategory.text = category
         }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCategoryBinding.inflate(inflater, parent, false)

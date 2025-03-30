@@ -7,22 +7,27 @@ import tk.ssau.fitnesstko.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    lateinit var prefs: PreferencesManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        prefs = PreferencesManager(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
         val profileFragment = FragmentProfile()
         val collectionFragment = FragmentCollection()
+        val workoutFragment = FragmentWorkout()
 
-        setCurrentFragment(profileFragment)
+        setCurrentFragment(workoutFragment)
 
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener{
-            when(it.itemId) {
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
                 R.id.miCollection -> setCurrentFragment(collectionFragment)
                 R.id.miProfile -> setCurrentFragment(profileFragment)
+                R.id.miWorkout -> setCurrentFragment(workoutFragment)
             }
             true
         }

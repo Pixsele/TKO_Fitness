@@ -3,7 +3,8 @@
     <item
         android:id="@+id/miWorkout"
         android:title=""
-        android:icon="@drawable/group_8"/>
+        android:icon="@drawable/group_8"
+        />
     <item
         android:id="@+id/miCollection"
         android:title=""

@@ -23,14 +23,15 @@ class FragmentCollection : Fragment(R.layout.collection) {
             Exercises("Название упражнения", true, 0),
             Exercises("Название упражнения", true, 0),
             Exercises("Название упражнения", true, 0)
-            )
+        )
         val adapter2 = ExercisesAdapter(exercises)
         binding = CollectionBinding.inflate(inflater, container, false)
         binding.rvExercises.adapter = adapter2
         binding.rvExercises.layoutManager = LinearLayoutManager(requireContext())
         binding.rvCategories.adapter = adapter
         binding.rvCategories.layoutManager = LinearLayoutManager(
-            requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            requireContext(), LinearLayoutManager.HORIZONTAL, false
+        )
 
         binding.ibAddExercises.setOnClickListener {
             exercises.add(Exercises("Название упражнения", true, 0))
