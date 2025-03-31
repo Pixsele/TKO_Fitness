@@ -1,10 +1,11 @@
-package tko.utils;
+package tko.utils.personSVG;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import tko.utils.Gender;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,6 +16,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class PersonGeneratorSVG {
@@ -27,7 +32,7 @@ public class PersonGeneratorSVG {
     private static final String sourceManFront  = "src/main/resources/peopleSVG/man_front.svg";
 
 
-    public List<String> GetPersonWithChangesByIdElements(Gender genderPerson, List<Muscle> muscleList) throws ParserConfigurationException, IOException, SAXException, TransformerException {
+    public static List<String> GetPersonWithChangesByIdElements(Gender genderPerson, List<Muscle> muscleList) throws ParserConfigurationException, IOException, SAXException, TransformerException {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -57,6 +62,21 @@ public class PersonGeneratorSVG {
         return List.of(stringSVG_front,stringSVG_back);
     }
 
+    public static void CreatePersonSVGWithChangesByIdElements(Gender genderPerson, List<Muscle> muscleList,String fileName, String targetSource) throws IOException, ParserConfigurationException, TransformerException, SAXException {
+
+        String output = targetSource + "/" + fileName + ".svg";
+
+        Path path = Paths.get(output);
+        Files.createDirectories(path.getParent());
+
+        List<String> stringList = PersonGeneratorSVG.GetPersonWithChangesByIdElements(genderPerson,muscleList);
+
+        try(BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)){
+            writer.write(stringList.get(0));
+        }
+
+    }
+
     private static void documentSvgHelper(Document document) {
         NodeList nodes = document.getElementsByTagName("*");
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -84,7 +104,7 @@ public class PersonGeneratorSVG {
         }
     }
 
-    public static String documentToString(Document document) throws TransformerException {
+    private static String documentToString(Document document) throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
 
@@ -96,12 +116,5 @@ public class PersonGeneratorSVG {
         transformer.transform(source,result);
 
         return writer.toString();
-    }
-
-
-    public static void main(String[] args) throws Exception {
-        PersonGeneratorSVG pg = new PersonGeneratorSVG();
-        List<Muscle> list  = List.of(Muscle.CRUS,Muscle.BICEPS_FEMORIS);
-        List<String> result = pg.GetPersonWithChangesByIdElements(Gender.FEMALE, list);
     }
 }

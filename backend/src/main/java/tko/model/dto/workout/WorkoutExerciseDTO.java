@@ -24,4 +24,5 @@ public class WorkoutExerciseDTO {
     private Double duration;
     @NotNull
     private Integer restTime;
+    private Integer exerciseOrder;
 }

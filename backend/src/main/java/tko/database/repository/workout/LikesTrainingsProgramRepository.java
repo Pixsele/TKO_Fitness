@@ -11,4 +11,6 @@ public interface LikesTrainingsProgramRepository extends JpaRepository<LikesTrai
     boolean existsByUser_IdAndTrainingsProgram_Id(Long userId, Long trainingsProgramId);
 
     Page<LikesTrainingsProgramEntity> findByUser_Id(Long userId, Pageable pageable);
+
+    boolean existsByUser_IdAndId(Long userId, Long id);
 }

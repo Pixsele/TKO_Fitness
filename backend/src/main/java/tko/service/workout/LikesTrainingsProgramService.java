@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import tko.database.entity.user.UsersEntity;
@@ -16,6 +17,7 @@ import tko.model.dto.workout.LikesTrainingsProgramDTO;
 import tko.model.mapper.workout.LikesTrainingsProgramMapper;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 public class LikesTrainingsProgramService {
@@ -50,6 +52,10 @@ public class LikesTrainingsProgramService {
 
         if(likesTrainingsProgramRepository.existsByUser_IdAndTrainingsProgram_Id(likesTrainingsProgramDTO.getUserId(), likesTrainingsProgramDTO.getTrainingsProgramId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Like in this training program by this user is already exists");
+        }
+
+        if(!Objects.equals(SecurityContextHolder.getContext().getAuthentication().getName(), usersRepository.findById(likesTrainingsProgramDTO.getUserId()).get().getLogin())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Access denied");
         }
 
         trainingsProgramService.addLike(likesTrainingsProgramDTO.getTrainingsProgramId());
@@ -113,6 +119,10 @@ public class LikesTrainingsProgramService {
 
         Page<LikesTrainingsProgramEntity> likesTrainingsProgramEntityPage = likesTrainingsProgramRepository.findByUser_Id(id,pageable);
         return likesTrainingsProgramEntityPage.map(likesTrainingsProgramMapper::toDTO);
+    }
+
+    public boolean isLikeOwner(Long likeId, String username) {
+        return likesTrainingsProgramRepository.existsByUser_IdAndId(usersRepository.findByLogin(username).getId(), likeId);
     }
     
 }

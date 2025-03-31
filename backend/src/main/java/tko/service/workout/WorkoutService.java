@@ -3,18 +3,24 @@ package tko.service.workout;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import tko.database.entity.workout.WorkoutEntity;
 import tko.database.entity.workout.WorkoutExerciseEntity;
+import tko.database.repository.user.UsersRepository;
+import tko.database.repository.workout.LikesWorkoutRepository;
 import tko.database.repository.workout.WorkoutExerciseRepository;
 import tko.database.repository.workout.WorkoutRepository;
 import tko.model.dto.workout.WorkoutDTO;
+import tko.model.dto.workout.WorkoutForPageDTO;
 import tko.model.mapper.workout.WorkoutMapper;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,12 +28,16 @@ public class WorkoutService {
     private final WorkoutRepository workoutRepository;
     private final WorkoutMapper workoutMapper;
     private final WorkoutExerciseRepository workoutExerciseRepository;
+    private final LikesWorkoutRepository likesWorkoutRepository;
+    private final UsersRepository usersRepository;
 
     @Autowired
-    public WorkoutService(WorkoutRepository workoutRepository, WorkoutMapper workoutMapper, WorkoutExerciseRepository workoutExerciseRepository) {
+    public WorkoutService(WorkoutRepository workoutRepository, WorkoutMapper workoutMapper, WorkoutExerciseRepository workoutExerciseRepository, LikesWorkoutRepository likesWorkoutRepository, UsersRepository usersRepository) {
         this.workoutRepository = workoutRepository;
         this.workoutMapper = workoutMapper;
         this.workoutExerciseRepository = workoutExerciseRepository;
+        this.likesWorkoutRepository = likesWorkoutRepository;
+        this.usersRepository = usersRepository;
     }
 
     public WorkoutDTO createWorkout(WorkoutDTO workoutDTO) {
@@ -83,13 +93,27 @@ public class WorkoutService {
         return workoutMapper.toDTO(deleteEntity);
     }
 
-    public Page<WorkoutDTO> readWorkoutWithPageable(Pageable pageable) {
+    public Page<WorkoutForPageDTO> readWorkoutWithPageable(Pageable pageable) {
         if(pageable == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pageable must not be null");
         }
         Page<WorkoutEntity> workoutEntityList = workoutRepository.findAll(pageable);
 
-        return (workoutEntityList.map(workoutMapper::toDTO));
+        List<WorkoutForPageDTO> list = new ArrayList<>();
+        for(WorkoutEntity workoutEntity : workoutEntityList){
+            WorkoutForPageDTO dto = new WorkoutForPageDTO();
+            dto.setId(workoutEntity.getId());
+            dto.setName(workoutEntity.getName());
+            dto.setLikeCount(workoutEntity.getLikeCount());
+            dto.setLiked(likesWorkoutRepository.existsByUser_IdAndWorkout_Id(
+                    usersRepository.findByLogin(SecurityContextHolder.getContext().getAuthentication().getName()).getId(),
+                    workoutEntity.getId()
+            ));
+
+            list.add(dto);
+        }
+
+        return new PageImpl<>(list);
     }
 
     public void addLike(Long id) {

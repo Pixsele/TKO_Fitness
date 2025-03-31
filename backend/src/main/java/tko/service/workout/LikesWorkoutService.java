@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +20,7 @@ import tko.model.dto.workout.LikesWorkoutDTO;
 import tko.model.mapper.workout.LikesWorkoutMapper;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 public class LikesWorkoutService {
@@ -53,6 +55,10 @@ public class LikesWorkoutService {
 
         if(likesWorkoutRepository.existsByUser_IdAndWorkout_Id(likesWorkoutDTO.getUserId(), likesWorkoutDTO.getWorkoutId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Like in this workout by this user is already exists");
+        }
+
+        if(!Objects.equals(SecurityContextHolder.getContext().getAuthentication().getName(), usersRepository.findById(likesWorkoutDTO.getUserId()).get().getLogin())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Access denied");
         }
 
         workoutService.addLike(likesWorkoutDTO.getWorkoutId());
@@ -119,5 +125,8 @@ public class LikesWorkoutService {
         return likesWorkoutEntityPage.map(likesWorkoutMapper::toDTO);
     }
 
+    public boolean isLikeOwner(Long likeId, String username) {
+        return likesWorkoutRepository.existsByUser_IdAndId(usersRepository.findByLogin(username).getId(), likeId);
+    }
 
 }

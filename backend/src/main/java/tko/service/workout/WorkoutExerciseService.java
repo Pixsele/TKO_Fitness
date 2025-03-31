@@ -12,6 +12,7 @@ import tko.database.repository.workout.WorkoutRepository;
 import tko.model.dto.workout.WorkoutExerciseDTO;
 import tko.model.mapper.workout.WorkoutExerciseMapper;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,10 @@ public class WorkoutExerciseService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Id must be null");
         }
 
+        if(workoutExerciseDTO.getExerciseOrder() != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Exercise order must be null");
+        }
+
         if (!(workoutRepository.existsById(workoutExerciseDTO.getWorkoutId()))) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "WorkoutId not found");
         }
@@ -45,6 +50,8 @@ public class WorkoutExerciseService {
         }
 
         WorkoutExerciseEntity workoutExerciseEntity = workoutExerciseMapper.toEntity(workoutExerciseDTO);
+        Integer count_of_exercise = workoutExerciseRepository.findAllByWorkout_Id(workoutExerciseDTO.getWorkoutId()).size();
+        workoutExerciseEntity.setExerciseOrder(count_of_exercise);
         WorkoutExerciseEntity result = workoutExerciseRepository.save(workoutExerciseEntity);
         return workoutExerciseMapper.toDTO(result);
     }
@@ -70,6 +77,10 @@ public class WorkoutExerciseService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ExerciseId not found");
         }
 
+        if(workoutExerciseDTO.getExerciseOrder() != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Exercise order cannot change in this method");
+        }
+
         WorkoutExerciseEntity workoutExerciseEntity = workoutExerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
 
         workoutExerciseMapper.updateEntity(workoutExerciseDTO, workoutExerciseEntity);
@@ -84,6 +95,19 @@ public class WorkoutExerciseService {
 
         WorkoutExerciseEntity deleteEntity = workoutExerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
         workoutExerciseRepository.delete(deleteEntity);
+        Integer count_of_exercise = deleteEntity.getExerciseOrder();
+
+        List<WorkoutExerciseEntity> list = workoutExerciseRepository.findAllByWorkout_Id(deleteEntity.getWorkout().getId());
+
+        for(WorkoutExerciseEntity workoutExerciseEntity : list) {
+            if(workoutExerciseEntity.getExerciseOrder() >= count_of_exercise) {
+                workoutExerciseEntity.setExerciseOrder(count_of_exercise);
+                workoutExerciseRepository.save(workoutExerciseEntity);
+                count_of_exercise++;
+            }
+        }
+
+
         return workoutExerciseMapper.toDTO(deleteEntity);
     }
 
@@ -97,7 +121,9 @@ public class WorkoutExerciseService {
         }
 
         List<WorkoutExerciseEntity> workoutExerciseEntityList = workoutExerciseRepository.findAllByWorkout_Id(workoutId);
+        workoutExerciseEntityList.sort(Comparator.comparing(WorkoutExerciseEntity::getExerciseOrder));
 
         return workoutExerciseEntityList.stream().map(workoutExerciseMapper::toDTO).collect(Collectors.toList());
     }
+
 }

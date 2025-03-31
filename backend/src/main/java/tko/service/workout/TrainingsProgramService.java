@@ -4,18 +4,24 @@ package tko.service.workout;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import tko.database.entity.workout.TrainingsProgramEntity;
 import tko.database.entity.workout.WorkoutProgramEntity;
+import tko.database.repository.user.UsersRepository;
+import tko.database.repository.workout.LikesTrainingsProgramRepository;
 import tko.database.repository.workout.TrainingsProgramRepository;
 import tko.database.repository.workout.WorkoutProgramRepository;
 import tko.model.dto.workout.TrainingsProgramDTO;
+import tko.model.dto.workout.TrainingsProgramForPageDTO;
 import tko.model.mapper.workout.TrainingsProgramMapper;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,12 +30,16 @@ public class TrainingsProgramService {
     private final TrainingsProgramRepository trainingsProgramRepository;
     private final TrainingsProgramMapper trainingsProgramMapper;
     private final WorkoutProgramRepository workoutProgramRepository;
+    private final LikesTrainingsProgramRepository likesTrainingsProgramRepository;
+    private final UsersRepository usersRepository;
 
     @Autowired
-    public TrainingsProgramService(TrainingsProgramRepository trainingsProgramRepository, TrainingsProgramMapper trainingsProgramMapper, WorkoutProgramRepository workoutProgramRepository) {
+    public TrainingsProgramService(TrainingsProgramRepository trainingsProgramRepository, TrainingsProgramMapper trainingsProgramMapper, WorkoutProgramRepository workoutProgramRepository, LikesTrainingsProgramRepository likesTrainingsProgramRepository, UsersRepository usersRepository) {
         this.trainingsProgramRepository = trainingsProgramRepository;
         this.trainingsProgramMapper = trainingsProgramMapper;
         this.workoutProgramRepository = workoutProgramRepository;
+        this.likesTrainingsProgramRepository = likesTrainingsProgramRepository;
+        this.usersRepository = usersRepository;
     }
 
     public TrainingsProgramDTO createTrainingsProgram(TrainingsProgramDTO trainingsProgramDTO) {
@@ -84,13 +94,27 @@ public class TrainingsProgramService {
         return trainingsProgramMapper.toDto(deleteEntity);
     }
 
-    public Page<TrainingsProgramDTO> readTrainingsProgramPageable(Pageable pageable) {
+    public Page<TrainingsProgramForPageDTO> readTrainingsProgramPageable(Pageable pageable) {
         if(pageable == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pageable must not be null");
         }
         Page<TrainingsProgramEntity> trainingsProgramEntityList = trainingsProgramRepository.findAll(pageable);
 
-        return (trainingsProgramEntityList.map(trainingsProgramMapper::toDto));
+        List<TrainingsProgramForPageDTO> list = new ArrayList<>();
+        for(TrainingsProgramEntity trainingsProgramEntity : trainingsProgramEntityList) {
+            TrainingsProgramForPageDTO dto = new TrainingsProgramForPageDTO();
+            dto.setId(trainingsProgramEntity.getId());
+            dto.setName(trainingsProgramEntity.getName());
+            dto.setLikeCount(trainingsProgramEntity.getLikeCount());
+            dto.setLiked(likesTrainingsProgramRepository.existsByUser_IdAndTrainingsProgram_Id(
+                    usersRepository.findByLogin(SecurityContextHolder.getContext().getAuthentication().getName()).getId(),
+                    trainingsProgramEntity.getId()
+            ));
+
+            list.add(dto);
+        }
+
+        return new PageImpl<>(list);
     }
 
     public void addLike(Long id) {

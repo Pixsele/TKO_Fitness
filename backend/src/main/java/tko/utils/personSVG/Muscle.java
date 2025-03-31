@@ -1,4 +1,4 @@
-package tko.utils;
+package tko.utils.personSVG;
 
 import lombok.Getter;
 

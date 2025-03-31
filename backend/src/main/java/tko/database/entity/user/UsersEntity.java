@@ -53,4 +53,6 @@ public class UsersEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PlannedWorkoutEntity> plannedWorkouts;
+
+    private String role;
 }

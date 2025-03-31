@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import tko.utils.DifficultyLevel;
+import tko.utils.personSVG.Muscle;
+import tko.utils.personSVG.MuscularConverter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "exercise")
@@ -26,7 +29,9 @@ public class ExerciseEntity {
     private DifficultyLevel difficult;
 
     private String specialEquipment;
-    private String muscularGroup;
+
+    @Convert(converter = MuscularConverter.class)
+    private List<Muscle> muscularGroup;
     private Integer kcal;
 
     @Column(name = "photo_url")

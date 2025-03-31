@@ -29,11 +29,13 @@ CREATE TABLE users (
                        height DOUBLE PRECISION NOT NULL,
                        target_kcal INT NOT NULL,
                        gender VARCHAR(10) CHECK (gender IN ('MALE', 'FEMALE')),
+                       role VARCHAR(255) CHECK ( role IN('ROLE_ADMIN','ROLE_USER')),
                        current_training_program_id INT REFERENCES trainings_program(id) ON DELETE SET NULL,
                        current_nutrition_program_id INT REFERENCES nutrition_program(id) ON DELETE SET NULL,
                        photo_url VARCHAR(255),
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 CREATE TABLE kcal_tracker (
                               id SERIAL PRIMARY KEY,
@@ -82,7 +84,7 @@ CREATE TABLE workout (
                          id SERIAL PRIMARY KEY,
                          name VARCHAR(255) NOT NULL,
                          description TEXT,
-                         difficult VARCHAR(50) NOT NULL,
+                         difficult VARCHAR(10) CHECK (difficult IN ('EASY', 'MEDIUM', 'HARD')),
                          created_by VARCHAR(255),
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                          like_count INT DEFAULT 0

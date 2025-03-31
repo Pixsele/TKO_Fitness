@@ -20,6 +20,7 @@ public class UsersDTO {
     private Integer targetKcal;
     private Gender gender;
     private String photoUrl;
+    private String role;
 
     private Long currentTrainingProgramId;
     private Long currentNutritionProgramId;

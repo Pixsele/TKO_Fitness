@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tko.model.dto.workout.TrainingsProgramDTO;
+import tko.model.dto.workout.TrainingsProgramForPageDTO;
 import tko.service.workout.TrainingsProgramService;
 
 @RestController
@@ -48,8 +49,8 @@ public class TrainingsProgramController {
     }
 
     @GetMapping("/page")
-    public PagedModel<TrainingsProgramDTO> readTrainingProgramsPageable(Pageable pageable) {
-        Page<TrainingsProgramDTO> trainingsProgramDTOPage = trainingsProgramService.readTrainingsProgramPageable(pageable);
+    public PagedModel<TrainingsProgramForPageDTO> readTrainingProgramsPageable(Pageable pageable) {
+        Page<TrainingsProgramForPageDTO> trainingsProgramDTOPage = trainingsProgramService.readTrainingsProgramPageable(pageable);
 
         return new PagedModel<>(trainingsProgramDTOPage);
     }

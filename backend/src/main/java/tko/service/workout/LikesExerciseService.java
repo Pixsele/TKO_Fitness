@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +20,7 @@ import tko.model.dto.workout.LikesExerciseDTO;
 import tko.model.mapper.workout.LikesExerciseMapper;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 public class LikesExerciseService {
@@ -39,6 +41,7 @@ public class LikesExerciseService {
     }
 
     public LikesExerciseDTO createLikesExercise(LikesExerciseDTO likesExerciseDTO) {
+
         if(likesExerciseDTO.getId() != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Id must be null");
         }
@@ -53,6 +56,10 @@ public class LikesExerciseService {
 
         if(likesExerciseRepository.existsByUser_IdAndExercise_Id(likesExerciseDTO.getUserId(), likesExerciseDTO.getExerciseId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Like in this exercise by this user is already exists");
+        }
+
+        if(!Objects.equals(SecurityContextHolder.getContext().getAuthentication().getName(),usersRepository.findById(likesExerciseDTO.getUserId()).get().getLogin() )) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Access denied");
         }
 
         exerciseService.addLike(likesExerciseDTO.getExerciseId());
@@ -119,4 +126,7 @@ public class LikesExerciseService {
         return likesExerciseEntityPage.map(likesExerciseMapper::toDTO);
     }
 
+    public boolean isLikeOwner(Long likeId, String username) {
+        return likesExerciseRepository.existsByUser_IdAndId(usersRepository.findByLogin(username).getId(), likeId);
+    }
 }

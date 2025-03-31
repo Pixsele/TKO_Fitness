@@ -44,6 +44,7 @@ public class AuthService {
         usersEntity.setCurrentTrainingProgram(null);
         usersEntity.setCurrentNutritionProgram(null);
         usersEntity.setCreatedAt(LocalDateTime.now());
+        usersEntity.setRole("ROLE_USER");
 
         UsersEntity savedUser = usersRepository.save(usersEntity);
 
