@@ -17,4 +17,5 @@ public class WorkoutProgramDTO {
     private Long programId;
     @NotBlank
     private Long workoutId;
+    private Integer workoutOrder;
 }

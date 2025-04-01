@@ -119,6 +119,7 @@ CREATE TABLE workout_program (
                                  id SERIAL PRIMARY KEY,
                                  program_id BIGINT NOT NULL,
                                  workout_id BIGINT NOT NULL,
+                                 workout_order INT NOT NULL,
                                  FOREIGN KEY (program_id) REFERENCES trainings_program(id) ON DELETE CASCADE,
                                  FOREIGN KEY (workout_id) REFERENCES workout(id) ON DELETE CASCADE
 );

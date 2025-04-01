@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PersonGeneratorSVG {
@@ -116,5 +117,10 @@ public class PersonGeneratorSVG {
         transformer.transform(source,result);
 
         return writer.toString();
+    }
+
+    public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException, TransformerException {
+        List<Muscle> muscleList = List.of(Muscle.BICEPS, Muscle.CRUS,Muscle.BICEPS_FEMORIS);
+        List<String> list = PersonGeneratorSVG.GetPersonWithChangesByIdElements(Gender.MALE, muscleList);
     }
 }

@@ -24,4 +24,6 @@ public class WorkoutProgramEntity {
     @ManyToOne
     @JoinColumn(name = "workout_id")
     private WorkoutEntity workout;
+
+    private Integer workoutOrder;
 }
