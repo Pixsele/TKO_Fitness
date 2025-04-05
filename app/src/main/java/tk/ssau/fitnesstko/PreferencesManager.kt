@@ -13,12 +13,25 @@ class PreferencesManager(context: Context) {
             putString("age", age)
         }
     }
+
     fun saveWeight(weight: String) {
         sharedPreferences.edit {
             putString("lastWeight", weight)
         }
     }
-    fun getLastWeight(): String = sharedPreferences.getString("lastWeight", "Нет данных") ?: "Нет данных"
+
+    fun getFullName(): String {
+        val firstName = getFirstName()
+        val lastName = getLastName()
+        return if (firstName.isNotEmpty() && lastName.isNotEmpty()) {
+            "$firstName $lastName"
+        } else {
+            "Имя Фамилия"
+        }
+    }
+
+    fun getLastWeight(): String =
+        sharedPreferences.getString("lastWeight", "Нет данных") ?: "Нет данных"
 
     fun getFirstName() = sharedPreferences.getString("firstName", "") ?: ""
     fun getLastName() = sharedPreferences.getString("lastName", "") ?: ""
