@@ -53,7 +53,7 @@ dependencies {
     implementation ("com.jakewharton.threetenabp:threetenabp:1.4.4")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation ("com.github.kirich1409:viewbindingpropertydelegate:1.5.9")
+    implementation("androidx.gridlayout:gridlayout:1.0.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
