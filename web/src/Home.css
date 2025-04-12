@@ -1,0 +1,95 @@
+/* Home.css */
+.home-container, body {
+  background-color: #212121;
+  font-family: 'Montserrat-ExtraBold', sans-serif;
+  min-height: 100vh;
+
+}
+/* Общая стилизация для контейнера */
+.logo-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.logo {
+  font-family: 'Montserrat-ExtraBold', sans-serif; /* Используем шрифт */
+  font-size: 36px;
+  font-weight: 800;
+  color: #d6ffa4;
+  font-style: normal;
+  text-decoration: none;
+}
+
+.logo:hover {
+  color: #121063; /* Цвет при наведении */
+}
+
+/* Стилизация для кнопок навигации */
+.navigation-buttons {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+
+.nav-button {
+  padding: 10px 20px;
+  font-family: 'Montserrat-ExtraBold', sans-serif; /* Используем шрифт */
+  margin: 5px;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  font-style: normal;
+  text-decoration: none;
+}
+
+.nav-button:hover {
+  background-color: #3ab7bf;
+}
+
+/* Стилизация для кнопок регистрации и входа */
+.auth-buttons {
+  margin-bottom: 30px;
+}
+
+.auth-button {
+  padding: 10px 20px;
+  margin: 5px;
+  background-color: #78dcca;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.auth-button:hover {
+  background-color: #3ab7bf;
+}
+
+/* Стилизация для изображений */
+.image-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+/* Стилизация для текста */
+.text-container {
+  margin-top: 20px;
+}
+
+.main-text {
+  font-size: 24px;
+  color: #121063;
+  font-weight: bold;
+}
