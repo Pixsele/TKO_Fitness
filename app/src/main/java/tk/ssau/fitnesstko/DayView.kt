@@ -2,7 +2,6 @@ package tk.ssau.fitnesstko
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
@@ -12,46 +11,44 @@ class DayView @JvmOverloads constructor(
     attrs: AttributeSet? = null
 ) : AppCompatTextView(context, attrs) {
 
+    enum class WorkoutState {
+        NONE,
+        PLANNED,    // Серная рамка
+        TODAY,       // Зеленая рамка
+        COMPLETED    // Черная рамка
+    }
+
     var state: WorkoutState = WorkoutState.NONE
         set(value) {
             field = value
-            updateState()
+            updateAppearance()
         }
 
-    private fun updateState() {
-        when (state) {
-            WorkoutState.PLANNED -> {
-                background = createDashedCircle()
-                setTextColor(Color.BLACK)
-            }
+    init {
+        setTextColor(Color.BLACK)
+        textSize = 16f
+        gravity = android.view.Gravity.CENTER
+        setPadding(32, 32, 32, 32)
+    }
 
-            WorkoutState.TODAY -> {
-                background = createSolidCircle(Color.GREEN)
-                setTextColor(Color.WHITE)
-            }
-
-            WorkoutState.COMPLETED -> {
-                background = createSolidCircle(Color.GRAY)
-                setTextColor(Color.WHITE)
-            }
-
-            else -> background = null
+    private fun updateAppearance() {
+        background = when (state) {
+            WorkoutState.PLANNED -> createBorderDrawable(Color.GRAY)
+            WorkoutState.TODAY -> createBorderDrawable(Color.GREEN)
+            WorkoutState.COMPLETED -> createBorderDrawable(Color.BLACK)
+            else -> null
         }
     }
 
-    private fun createDashedCircle(): Drawable {
-        val shape = GradientDrawable()
-        shape.shape = GradientDrawable.OVAL
-        shape.setStroke(2, Color.BLACK, 5f, 10f)
-        return shape
+    private fun createBorderDrawable(color: Int): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setStroke(4.dpToPx(), color)
+            setColor(Color.TRANSPARENT)
+        }
     }
 
-    private fun createSolidCircle(color: Int): Drawable {
-        val shape = GradientDrawable()
-        shape.shape = GradientDrawable.OVAL
-        shape.setColor(color)
-        return shape
+    private fun Int.dpToPx(): Int {
+        return (this * context.resources.displayMetrics.density).toInt()
     }
-
-    enum class WorkoutState { NONE, PLANNED, TODAY, COMPLETED }
 }

@@ -57,26 +57,27 @@
             app:rowCount="6"
             app:useDefaultMargins="true"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Название программы"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
-
-        <ProgressBar
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:progress="75"
-            android:layout_marginVertical="8dp"/>
-
         <Button
             android:id="@+id/btnPlanWorkout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Запланировать тренировку"
             android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="График веса"
+            android:textSize="20sp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/weightChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"/>
 
     </LinearLayout>
 </ScrollView>

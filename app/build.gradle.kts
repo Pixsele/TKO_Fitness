@@ -30,6 +30,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -41,7 +42,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -49,14 +49,15 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.javafaker)
     implementation(libs.glide)
-    implementation ("com.google.android.material:material:1.12.0")
-    implementation ("com.jakewharton.threetenabp:threetenabp:1.4.4")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.4")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("androidx.gridlayout:gridlayout:1.0.0")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     runtimeOnly(libs.androidx.recyclerview)
-
 }

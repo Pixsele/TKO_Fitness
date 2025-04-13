@@ -2,10 +2,14 @@ package tk.ssau.fitnesstko
 
 import android.content.Context
 import androidx.core.content.edit
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class PreferencesManager(context: Context) {
-    private val sharedPreferences =
-        context.getSharedPreferences("fitness_prefs", Context.MODE_PRIVATE)
+    private val sharedPreferences = context.getSharedPreferences("fitness_prefs", Context.MODE_PRIVATE)
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     // Сохранение данных пользователя
     fun saveUserData(firstName: String, lastName: String, age: String) {
@@ -16,17 +20,45 @@ class PreferencesManager(context: Context) {
         }
     }
 
-    fun getFirstName() = sharedPreferences.getString("firstName", "") ?: ""
-    fun getLastName() = sharedPreferences.getString("lastName", "") ?: ""
+    fun saveWeight(weight: Float) {
+        val currentTime = System.currentTimeMillis() // Используем текущее время с миллисекундами
 
-    // Получение полного имени
-    fun getFullName(): String {
-        val firstName = sharedPreferences.getString("firstName", "") ?: ""
-        val lastName = sharedPreferences.getString("lastName", "") ?: ""
-        return if (firstName.isNotEmpty() && lastName.isNotEmpty()) "$firstName $lastName" else "Имя Фамилия"
+        sharedPreferences.edit {
+            putStringSet("weightHistory",
+                getWeightsRaw().plus("$currentTime|$weight").toSet()
+            )
+            apply()
+        }
     }
 
-    // Сохранение тренировки
+    private fun getWeightsRaw() = getWeights()
+        .map { "${it.first}|${it.second}" }
+
+    fun getWeights(): List<Pair<Long, Float>> {
+        return sharedPreferences.getStringSet("weightHistory", emptySet())
+            ?.toList()
+            ?.mapNotNull {
+                val parts = it.split("|")
+                if (parts.size == 2) {
+                    try {
+                        val timestamp = parts[0].toLong()
+                        val weight = parts[1].toFloat()
+                        Pair(timestamp, weight)
+                    } catch (e: Exception) {
+                        null
+                    }
+                } else null
+            }
+            ?.sortedBy { it.first } ?: emptyList()
+    }
+    // Получение последнего веса
+    fun getLastWeight(): String {
+        return getWeights().lastOrNull()?.let {
+            "%.1f кг (${dateFormat.format(Date(it.first))})".format(it.second)
+        } ?: "Нет данных"
+    }
+
+    // Сохранение тренировок
     fun saveWorkout(date: String, type: String) {
         val workouts = getWorkouts().toMutableSet()
         workouts.add("$date|$type")
@@ -35,20 +67,12 @@ class PreferencesManager(context: Context) {
         }
     }
 
-    fun saveWeight(weight: String) {
-        sharedPreferences.edit {
-            putString("lastWeight", weight)
-        }
+    // Получение тренировок
+    fun getWorkouts(): Set<String> {
+        return sharedPreferences.getStringSet("workouts", emptySet()) ?: emptySet()
     }
 
-    fun getLastWeight(): String =
-        sharedPreferences.getString("lastWeight", "Нет данных") ?: "Нет данных"
-
-    // Получение всех тренировок
-    fun getWorkouts(): Set<String> =
-        sharedPreferences.getStringSet("workouts", emptySet()) ?: emptySet()
-
-    // Получение возраста
-    fun getAge(): String =
-        sharedPreferences.getString("age", "") ?: ""
+    fun getFirstName() = sharedPreferences.getString("firstName", "") ?: ""
+    fun getLastName() = sharedPreferences.getString("lastName", "") ?: ""
+    fun getAge() = sharedPreferences.getString("age", "") ?: ""
 }
