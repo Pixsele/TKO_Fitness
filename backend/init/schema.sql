@@ -58,10 +58,11 @@ CREATE TABLE product (
                          kcal INT NOT NULL,
                          unit VARCHAR(50) NOT NULL,
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                         like_count INT DEFAULT 0,
                          fats DECIMAL(10, 2) NOT NULL,
                          carbs DECIMAL(10, 2) NOT NULL,
-                         proteins DECIMAL(10, 2) NOT NULL
+                         proteins DECIMAL(10, 2) NOT NULL,
+                         grams DECIMAL(10, 2) NOT NULL,
+                         portion DECIMAL(10, 2) NOT NULL
 );
 
 CREATE TABLE kcal_product (
@@ -69,8 +70,7 @@ CREATE TABLE kcal_product (
                               kcal_tracker_id BIGINT NOT NULL,
                               product_id BIGINT NOT NULL,
                               count INT NOT NULL,
-                              type_meal VARCHAR(255) NOT NULL,
-                              date DATE NOT NULL,
+                              type_meal VARCHAR(15) CHECK ( type_meal in ('BREAKFAST','LUNCH','DINNER','SNACK')),
                               FOREIGN KEY (kcal_tracker_id) REFERENCES kcal_tracker(id) ON DELETE CASCADE,
                               FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );

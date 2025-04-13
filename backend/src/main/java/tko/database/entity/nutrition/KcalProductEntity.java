@@ -30,5 +30,4 @@ public class KcalProductEntity {
 
     @Enumerated(EnumType.STRING)
     private MealType typeMeal;
-    private LocalDate date;
 }

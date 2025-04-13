@@ -70,8 +70,7 @@ CREATE TABLE kcal_product (
                               kcal_tracker_id BIGINT NOT NULL,
                               product_id BIGINT NOT NULL,
                               count INT NOT NULL,
-                              type_meal VARCHAR(255) NOT NULL,
-                              date DATE NOT NULL,
+                              type_meal VARCHAR(15) CHECK ( type_meal in ('BREAKFAST','LUNCH','DINNER','SNACK')),
                               FOREIGN KEY (kcal_tracker_id) REFERENCES kcal_tracker(id) ON DELETE CASCADE,
                               FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
