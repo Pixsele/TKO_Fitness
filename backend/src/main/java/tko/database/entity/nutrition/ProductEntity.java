@@ -1,6 +1,7 @@
 package tko.database.entity.nutrition;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,14 +22,14 @@ public class ProductEntity {
     private String name;
     private int kcal;
     private String unit;
+    private BigDecimal grams;
+    private BigDecimal portion;
 
     private BigDecimal fats;
     private BigDecimal carbs;
     private BigDecimal proteins;
 
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    @Column(name = "like_count")
-    private Integer likeCount;
 }

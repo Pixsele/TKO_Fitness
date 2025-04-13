@@ -6,7 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tko.model.dto.nutrition.ProductDTO;
+import tko.model.dto.nutrition.ProductForPageDTO;
 import tko.service.nutrition.ProductService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -41,5 +44,11 @@ public class ProductController {
     public ResponseEntity<ProductDTO> deleteProduct(@PathVariable Long id) {
         ProductDTO deletedProduct = productService.deleteProduct(id);
         return new ResponseEntity<>(deletedProduct, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductForPageDTO>> searchProduct(@RequestParam String keyword) {
+        List<ProductForPageDTO> productForPageDTOList = productService.searchProducts(keyword);
+        return new ResponseEntity<>(productForPageDTOList, HttpStatus.OK);
     }
 }

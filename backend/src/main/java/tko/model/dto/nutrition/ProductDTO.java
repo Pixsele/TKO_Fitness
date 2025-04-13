@@ -20,10 +20,13 @@ public class ProductDTO {
     private Integer kcal;
     @NotBlank
     private String unit;
+    @NotNull
+    private BigDecimal grams;
+    @NotNull
+    private BigDecimal portion;
 
     private LocalDateTime createdAt;
 
-    private Integer likeCount;
     @NotNull
     private BigDecimal fats;
     @NotNull

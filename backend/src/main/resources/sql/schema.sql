@@ -58,10 +58,11 @@ CREATE TABLE product (
                          kcal INT NOT NULL,
                          unit VARCHAR(50) NOT NULL,
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                         like_count INT DEFAULT 0,
                          fats DECIMAL(10, 2) NOT NULL,
                          carbs DECIMAL(10, 2) NOT NULL,
-                         proteins DECIMAL(10, 2) NOT NULL
+                         proteins DECIMAL(10, 2) NOT NULL,
+                         grams DECIMAL(10, 2) NOT NULL,
+                         portion DECIMAL(10, 2) NOT NULL
 );
 
 CREATE TABLE kcal_product (

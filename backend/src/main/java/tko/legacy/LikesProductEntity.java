@@ -1,5 +1,6 @@
-package tko.database.entity.nutrition;
+package tko.legacy;
 
+import tko.database.entity.nutrition.ProductEntity;
 import tko.database.entity.user.UsersEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

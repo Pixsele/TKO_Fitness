@@ -1,6 +1,7 @@
-package tko.model.mapper;
+package tko.model.mapper.nutrition;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import tko.database.entity.nutrition.ProductEntity;
 import tko.model.dto.nutrition.ProductDTO;
