@@ -36,7 +36,7 @@ public class AuthService {
         }
         usersEntity.setLogin(registerUsersDTO.getLogin());
         usersEntity.setPassword(passwordEncoder.encode(registerUsersDTO.getPassword()));
-        usersEntity.setAge(registerUsersDTO.getAge());
+        usersEntity.setBirthDay(registerUsersDTO.getBirthDay());
         usersEntity.setWeight(registerUsersDTO.getWeight());
         usersEntity.setHeight(registerUsersDTO.getHeight());
         usersEntity.setTargetKcal(1900);

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,11 +22,9 @@ public class ProductEntity {
     private int kcal;
     private String unit;
 
-    @Column(name = "photo_url")
-    private String photoUrl;
-
-    @Column(name = "created_by")
-    private String createdBy;
+    private BigDecimal fats;
+    private BigDecimal carbs;
+    private BigDecimal proteins;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

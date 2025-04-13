@@ -24,7 +24,7 @@ CREATE TABLE users (
                        name VARCHAR(255) NOT NULL,
                        login VARCHAR(255) UNIQUE NOT NULL,
                        password VARCHAR(255) NOT NULL,
-                       age INT NOT NULL,
+                       birth_day DATE NOT NULL,
                        weight DOUBLE PRECISION NOT NULL,
                        height DOUBLE PRECISION NOT NULL,
                        target_kcal INT NOT NULL,
@@ -44,15 +44,24 @@ CREATE TABLE kcal_tracker (
                               FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE weight_tracker (
+                                id SERIAL PRIMARY KEY,
+                                user_id BIGINT NOT NULL,
+                                date DATE NOT NULL,
+                                weight DOUBLE PRECISION NOT NULL,
+                                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE product (
                          id SERIAL PRIMARY KEY,
                          name VARCHAR(255) NOT NULL,
                          kcal INT NOT NULL,
                          unit VARCHAR(50) NOT NULL,
-                         photo_url VARCHAR(255),
-                         created_by VARCHAR(255),
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                         like_count INT DEFAULT 0
+                         like_count INT DEFAULT 0,
+                         fats DECIMAL(10, 2) NOT NULL,
+                         carbs DECIMAL(10, 2) NOT NULL,
+                         proteins DECIMAL(10, 2) NOT NULL
 );
 
 CREATE TABLE kcal_product (

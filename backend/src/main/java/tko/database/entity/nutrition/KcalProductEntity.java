@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tko.utils.MealType;
 
 import java.time.LocalDate;
 
@@ -26,6 +27,8 @@ public class KcalProductEntity {
     private ProductEntity product;
 
     private Integer count;
-    private String typeMeal;
+
+    @Enumerated(EnumType.STRING)
+    private MealType typeMeal;
     private LocalDate date;
 }

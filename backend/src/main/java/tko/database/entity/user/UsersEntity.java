@@ -2,7 +2,7 @@ package tko.database.entity.user;
 
 import tko.utils.Gender;
 import tko.database.entity.nutrition.KcalTrackerEntity;
-import tko.database.entity.nutrition.NutritionProgramEntity;
+import tko.legacy.NutritionProgramEntity;
 import tko.database.entity.workout.PlannedWorkoutEntity;
 import tko.database.entity.workout.TrainingsProgramEntity;
 import jakarta.persistence.*;
@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class UsersEntity {
     private String name;
     private String login;
     private String password;
-    private Integer age;
+    private LocalDate birthDay;
     private Double weight;
     private Double height;
     private Integer targetKcal;
@@ -55,4 +56,7 @@ public class UsersEntity {
     private List<PlannedWorkoutEntity> plannedWorkouts;
 
     private String role;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<WeightTrackerEntity> weightTrackerEntities;
 }

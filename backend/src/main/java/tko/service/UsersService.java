@@ -1,12 +1,10 @@
 package tko.service;
 
 
-import jakarta.validation.constraints.NotNull;
-import org.apache.catalina.User;
-import tko.database.entity.nutrition.NutritionProgramEntity;
+import tko.legacy.NutritionProgramEntity;
 import tko.database.entity.workout.TrainingsProgramEntity;
 import tko.database.entity.user.UsersEntity;
-import tko.database.repository.nutrition.NutritionProgramRepository;
+import tko.legacy.NutritionProgramRepository;
 import tko.database.repository.workout.TrainingsProgramRepository;
 import tko.database.repository.user.UsersRepository;
 import tko.model.dto.user.UsersDTO;
@@ -49,6 +47,16 @@ public class UsersService {
         return usersDTO;
     }
 
+    public UsersDTO updateWeight(Double weight, Long userId) {
+        Objects.requireNonNull(weight);
+        Objects.requireNonNull(userId);
+
+        UsersEntity usersEntity = usersRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User not found"));
+        usersEntity.setWeight(weight);
+        usersRepository.save(usersEntity);
+        return usersMapper.toDTO(usersEntity);
+    }
+
     public UsersDTO updateUser(Long id, UsersDTO usersDTO) {
         Objects.requireNonNull(id);
 
@@ -60,8 +68,8 @@ public class UsersService {
         if (usersDTO.getLogin()!=null) {
             usersEntity.setLogin(usersDTO.getLogin());
         }
-        if(usersDTO.getAge()!=null){
-            usersEntity.setAge(usersDTO.getAge());
+        if(usersDTO.getBirthDay()!=null){
+            usersEntity.setBirthDay(usersDTO.getBirthDay());
         }
         if(usersDTO.getWeight()!=null){
             usersEntity.setWeight(usersDTO.getWeight());

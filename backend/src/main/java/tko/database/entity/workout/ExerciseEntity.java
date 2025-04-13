@@ -45,6 +45,4 @@ public class ExerciseEntity {
 
     @Column(name = "like_count")
     private Integer likeCount;
-
-
 }

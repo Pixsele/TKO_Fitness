@@ -3,6 +3,7 @@ package tko.model.dto.nutrition;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tko.utils.MealType;
 
 import java.time.LocalDate;
 
@@ -14,6 +15,6 @@ public class KcalProductDTO {
     private Long kcalTrackerId;
     private Long productId;
     private Integer count;
-    private String typeMeal;
+    private MealType typeMeal;
     private LocalDate date;
 }

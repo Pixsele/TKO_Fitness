@@ -1,9 +1,11 @@
-package tko.database.entity.nutrition;
+package tko.legacy;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tko.database.entity.nutrition.ProductEntity;
+
 import java.time.LocalDate;
 
 @Entity

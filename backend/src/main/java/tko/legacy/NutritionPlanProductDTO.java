@@ -1,4 +1,4 @@
-package tko.model.dto.nutrition;
+package tko.legacy;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

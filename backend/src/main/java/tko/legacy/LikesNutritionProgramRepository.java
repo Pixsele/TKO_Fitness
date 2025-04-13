@@ -1,6 +1,5 @@
-package tko.database.repository.nutrition;
+package tko.legacy;
 
-import tko.database.entity.nutrition.LikesNutritionProgramEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
