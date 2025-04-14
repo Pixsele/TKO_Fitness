@@ -94,7 +94,6 @@ CREATE TABLE workout (
                          name VARCHAR(255) NOT NULL,
                          description TEXT,
                          difficult VARCHAR(10) CHECK (difficult IN ('EASY', 'MEDIUM', 'HARD')),
-                         created_by VARCHAR(255),
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                          like_count INT DEFAULT 0
 );

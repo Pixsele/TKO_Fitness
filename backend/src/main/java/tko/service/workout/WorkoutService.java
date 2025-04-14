@@ -84,7 +84,7 @@ public class WorkoutService {
         }
         WorkoutEntity deleteEntity = workoutRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
 
-        List<WorkoutExerciseEntity> workoutExerciseEntities = workoutExerciseRepository.findByWorkout_Id(deleteEntity.getId());
+        List<WorkoutExerciseEntity> workoutExerciseEntities = workoutExerciseRepository.findByWorkout_Id(id);
 
         //TODO Check Dependencies with Training Program
 

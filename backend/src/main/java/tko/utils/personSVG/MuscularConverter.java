@@ -17,6 +17,12 @@ public class MuscularConverter implements AttributeConverter<List<Muscle>,String
 
     @Override
     public List<Muscle> convertToEntityAttribute(String s) {
-        return Arrays.stream(s.split(",")).map(Muscle::getById).collect(Collectors.toList());
+
+
+
+        return Arrays.stream(s.split(","))
+                .map(String::trim)
+                .map(Muscle::getById)
+                .collect(Collectors.toList());
     }
 }

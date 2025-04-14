@@ -22,11 +22,7 @@ public class WorkoutEntity {
 
     private String description;
     private String name;
-    private String type;
     private String difficult;
-
-    @Column(name = "created_by")
-    private String createdBy;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

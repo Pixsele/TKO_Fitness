@@ -30,7 +30,7 @@ CREATE TABLE users (
                        target_kcal INT NOT NULL,
                        gender VARCHAR(10) CHECK (gender IN ('MALE', 'FEMALE')),
                        role VARCHAR(255) CHECK ( role IN('ROLE_ADMIN','ROLE_USER')),
-                       current_training_program_id INT REFERENCES trainings_program(id) ON DELETE SET NULL,
+                       current_training_program_id INT REFERENCES current_training_program(id) ON DELETE SET NULL,
                        current_nutrition_program_id INT REFERENCES nutrition_program(id) ON DELETE SET NULL,
                        photo_url VARCHAR(255),
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -94,7 +94,6 @@ CREATE TABLE workout (
                          name VARCHAR(255) NOT NULL,
                          description TEXT,
                          difficult VARCHAR(10) CHECK (difficult IN ('EASY', 'MEDIUM', 'HARD')),
-                         created_by VARCHAR(255),
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                          like_count INT DEFAULT 0
 );
@@ -119,9 +118,25 @@ CREATE TABLE planned_workout (
                                  user_id BIGINT NOT NULL,
                                  workout_id BIGINT NOT NULL,
                                  date DATE NOT NULL,
-                                 status VARCHAR(20) CHECK (status IN ('PLANNED', 'COMPLETED', 'SKIPPED')),
+                                 status VARCHAR(20) CHECK (status IN ('PLANNED', 'COMPLETED')),
                                  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                                  FOREIGN KEY (workout_id) REFERENCES workout(id) ON DELETE CASCADE
+);
+
+CREATE TABLE current_training_program (
+                                          id SERIAL PRIMARY KEY,
+                                          user_id BIGINT NOT NULL UNIQUE,
+                                          training_program_id BIGINT NOT NULL,
+                                          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                                          FOREIGN KEY (training_program_id) REFERENCES trainings_program(id) ON DELETE CASCADE
+);
+
+CREATE TABLE program_planned (
+                                 id SERIAL PRIMARY KEY,
+                                 training_program_id BIGINT NOT NULL,
+                                 planned_workout_id BIGINT NOT NULL,
+                                 FOREIGN KEY (training_program_id) REFERENCES trainings_program(id) ON DELETE CASCADE,
+                                 FOREIGN KEY (planned_workout_id) REFERENCES planned_workout(id) ON DELETE CASCADE
 );
 
 CREATE TABLE workout_program (

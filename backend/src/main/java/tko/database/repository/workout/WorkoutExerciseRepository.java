@@ -8,9 +8,13 @@ import java.util.List;
 
 @Repository
 public interface WorkoutExerciseRepository extends JpaRepository<WorkoutExerciseEntity, Long> {
-    List<WorkoutExerciseEntity> findByWorkout_Id(Long workoutId);
 
     boolean existsByExercise_Id(Long exerciseId);
 
+
+    Integer countByWorkout_Id(Long workoutId);
+
     List<WorkoutExerciseEntity> findAllByWorkout_Id(Long workoutId);
+
+    List<WorkoutExerciseEntity> findByWorkout_Id(Long workoutId);
 }

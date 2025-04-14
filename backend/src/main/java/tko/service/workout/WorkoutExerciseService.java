@@ -50,7 +50,9 @@ public class WorkoutExerciseService {
         }
 
         WorkoutExerciseEntity workoutExerciseEntity = workoutExerciseMapper.toEntity(workoutExerciseDTO);
-        Integer count_of_exercise = workoutExerciseRepository.findAllByWorkout_Id(workoutExerciseDTO.getWorkoutId()).size();
+
+
+        Integer count_of_exercise = workoutExerciseRepository.countByWorkout_Id(workoutExerciseDTO.getWorkoutId());
         workoutExerciseEntity.setExerciseOrder(count_of_exercise);
         WorkoutExerciseEntity result = workoutExerciseRepository.save(workoutExerciseEntity);
         return workoutExerciseMapper.toDTO(result);
