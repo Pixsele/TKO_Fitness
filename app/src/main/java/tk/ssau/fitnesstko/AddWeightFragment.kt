@@ -29,7 +29,8 @@ class AddWeightFragment : Fragment(R.layout.fragment_add_weight) {
         prefs.getWeights().lastOrNull()?.let { (timestamp, weight) ->
             binding.tvLastWeight.text = "Последнее: %.1f кг\n(%s)".format(
                 weight,
-                timestampFormat.format(Date(timestamp)))
+                timestampFormat.format(Date(timestamp))
+            )
         } ?: run {
             binding.tvLastWeight.text = "Нет предыдущих измерений"
         }

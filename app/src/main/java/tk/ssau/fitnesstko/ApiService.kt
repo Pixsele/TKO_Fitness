@@ -42,6 +42,19 @@ object ApiService {
         retrofit.create(WorkoutApi::class.java)
     }
 
+    val exerciseService: ExerciseApi by lazy {
+        retrofit.create(ExerciseApi::class.java)
+    }
+
+    interface ExerciseApi {
+        @GET("api/exercise/page")
+        fun getExercises(
+            @Query("page") page: Int = 0,
+            @Query("size") size: Int = 20
+        ): Call<PagedResponse<Exercise>>
+    }
+
+
     // Пример интерфейса API
     interface WorkoutApi {
         @GET("api/workout/page")
@@ -55,11 +68,12 @@ object ApiService {
 data class PagedResponse<T>(
     val content: List<T>,
     val pageable: PageInfo,
-    val totalPages: Int,
-    val totalElements: Int
 )
 
 data class PageInfo(
-    val pageNumber: Int,
-    val pageSize: Int
+    val size: Int,
+    val number: Int,
+    val totalElements: Int,
+    val totalPages: Int
 )
+//"size":20,"number":0,"totalElements":20,"totalPages":1

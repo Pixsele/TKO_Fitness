@@ -9,8 +9,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class CustomMarkerView(context: Context, layoutResource: Int)
-    : MarkerView(context, layoutResource) {
+class CustomMarkerView(context: Context, layoutResource: Int) :
+    MarkerView(context, layoutResource) {
 
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         e?.data?.let { timestamp ->

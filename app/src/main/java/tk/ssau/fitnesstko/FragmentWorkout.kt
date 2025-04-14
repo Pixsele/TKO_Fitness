@@ -2,8 +2,8 @@ package tk.ssau.fitnesstko
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.gridlayout.widget.GridLayout
 import com.github.mikephil.charting.components.XAxis
@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import androidx.core.graphics.toColorInt
 
 class FragmentWorkout : Fragment(R.layout.workout) {
 
@@ -116,7 +115,8 @@ class FragmentWorkout : Fragment(R.layout.workout) {
                 valueFormatter = object : ValueFormatter() {
                     private val dateFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
                     override fun getFormattedValue(value: Float): String {
-                        val timestamp = displayedWeights.getOrNull(value.toInt())?.first ?: return ""
+                        val timestamp =
+                            displayedWeights.getOrNull(value.toInt())?.first ?: return ""
                         return dateFormat.format(Date(timestamp))
                     }
                 }
@@ -130,6 +130,7 @@ class FragmentWorkout : Fragment(R.layout.workout) {
             invalidate()
         }
     }
+
     private fun setupCalendar() {
         binding.calendarGrid.removeAllViews()
         updateMonthHeader()

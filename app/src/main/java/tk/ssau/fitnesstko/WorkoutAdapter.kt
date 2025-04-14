@@ -33,8 +33,8 @@ class WorkoutAdapter(
             binding.tvWorkoutName.text = workout.name
             binding.tvLikeCount.text = workout.likeCount.toString()
             //binding.ivLike.setImageResource(
-                //if (workout.liked) R.drawable.ic_liked
-                //else R.drawable.ic_like
+            //if (workout.liked) R.drawable.ic_liked
+            //else R.drawable.ic_like
             //)
         }
     }

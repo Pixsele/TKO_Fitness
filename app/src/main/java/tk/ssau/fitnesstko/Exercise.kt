@@ -1,11 +1,8 @@
 package tk.ssau.fitnesstko
 
-data class Workout(
+data class Exercise(
     val id: Long,
     val name: String,
-    val description: String,
-    val difficulty: String,
-    val exercises: List<Exercise>,
     var likeCount: Int,
     var liked: Boolean
 )

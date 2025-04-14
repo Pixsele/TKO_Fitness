@@ -37,18 +37,24 @@ class FragmentCollection : Fragment(R.layout.collection) {
             LinearLayoutManager.HORIZONTAL,
             false
         )
+        binding.ibAddExercises.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.flFragment, CreateWorkoutFragment())
+                .addToBackStack(null)
+                .commit()
+        }
 
         // Список тренировок
         workoutAdapter = WorkoutAdapter(workouts) { workout ->
             // Обработка клика на тренировку
             //WorkoutDetailsFragment.newInstance(workout.id)
-                //.show(parentFragmentManager, "workout_details")
+            //.show(parentFragmentManager, "workout_details")
         }
         binding.rvWorkouts.adapter = workoutAdapter
         binding.rvWorkouts.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    private fun loadWorkouts() {
+    internal fun loadWorkouts() {
         ApiService.workoutService.getWorkouts()
             .enqueue(object : Callback<PagedResponse<Workout>> {
                 override fun onResponse(
@@ -56,18 +62,21 @@ class FragmentCollection : Fragment(R.layout.collection) {
                     response: Response<PagedResponse<Workout>>
                 ) {
                     if (response.isSuccessful) {
-                        response.body()?.content?.let { newWorkouts ->
-                            workouts.clear()
-                            workouts.addAll(newWorkouts)
-                            workoutAdapter.notifyDataSetChanged()
-                        }
-                    } else {
-                        // Обработка ошибок
+                        val serverWorkouts = response.body()?.content ?: emptyList()
+                        val localWorkouts = (activity as? MainActivity)?.prefs?.getLocalWorkouts() ?: emptyList()
+
+                        // Объединяем и обновляем список
+                        workouts.clear()
+                        workouts.addAll(serverWorkouts + localWorkouts)
+                        workoutAdapter.notifyDataSetChanged()
                     }
                 }
-
                 override fun onFailure(call: Call<PagedResponse<Workout>>, t: Throwable) {
-                    // Обработка ошибок сети
+                    // Показать только локальные данные при ошибке сети
+                    val localWorkouts = (activity as? MainActivity)?.prefs?.getLocalWorkouts() ?: emptyList()
+                    workouts.clear()
+                    workouts.addAll(localWorkouts)
+                    workoutAdapter.notifyDataSetChanged()
                 }
             })
     }

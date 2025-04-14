@@ -39,4 +39,12 @@ class MainActivity : AppCompatActivity() {
             replace(R.id.flFragment, fragment)
             commit()
         }
+
+    fun refreshWorkouts() {
+        supportFragmentManager.fragments.forEach {
+            if (it is FragmentCollection) {
+                it.loadWorkouts()
+            }
+        }
+    }
 }

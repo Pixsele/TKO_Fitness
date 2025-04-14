@@ -2,13 +2,14 @@ package tk.ssau.fitnesstko
 
 import android.content.Context
 import androidx.core.content.edit
+import com.google.gson.Gson
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
 class PreferencesManager(context: Context) {
-    private val sharedPreferences = context.getSharedPreferences("fitness_prefs", Context.MODE_PRIVATE)
+    private val sharedPreferences =
+        context.getSharedPreferences("fitness_prefs", Context.MODE_PRIVATE)
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     // Сохранение данных пользователя
@@ -24,7 +25,8 @@ class PreferencesManager(context: Context) {
         val currentTime = System.currentTimeMillis() // Используем текущее время с миллисекундами
 
         sharedPreferences.edit {
-            putStringSet("weightHistory",
+            putStringSet(
+                "weightHistory",
                 getWeightsRaw().plus("$currentTime|$weight").toSet()
             )
             apply()
@@ -51,6 +53,7 @@ class PreferencesManager(context: Context) {
             }
             ?.sortedBy { it.first } ?: emptyList()
     }
+
     // Получение последнего веса
     fun getLastWeight(): String {
         return getWeights().lastOrNull()?.let {
@@ -75,4 +78,23 @@ class PreferencesManager(context: Context) {
     fun getFirstName() = sharedPreferences.getString("firstName", "") ?: ""
     fun getLastName() = sharedPreferences.getString("lastName", "") ?: ""
     fun getAge() = sharedPreferences.getString("age", "") ?: ""
+
+
+    fun saveLocalWorkout(workout: Workout) {
+        val workouts = getLocalWorkouts().toMutableList()
+        workouts.add(workout)
+        sharedPreferences.edit {
+            putStringSet("local_workouts", workouts.toJsonSet())
+        }
+    }
+
+    private fun List<Workout>.toJsonSet(): Set<String> {
+        return map { Gson().toJson(it) }.toSet()
+    }
+
+    fun getLocalWorkouts(): List<Workout> {
+        return sharedPreferences.getStringSet("local_workouts", emptySet())
+            ?.mapNotNull { Gson().fromJson(it, Workout::class.java) }
+            ?: emptyList()
+    }
 }
