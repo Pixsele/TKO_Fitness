@@ -59,7 +59,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvExercises"
+        android:id="@+id/rvWorkouts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"

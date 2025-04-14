@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        ApiService.initialize(applicationContext)
 
         val profileFragment = FragmentProfile()
         val collectionFragment = FragmentCollection()
