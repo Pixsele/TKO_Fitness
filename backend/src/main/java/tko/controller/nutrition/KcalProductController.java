@@ -31,6 +31,12 @@ public class KcalProductController {
         return new ResponseEntity<>(readKcalProduct, HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<KcalProductDTO> update(@PathVariable Long id,@Valid @RequestBody KcalProductDTO kcalProductDTO) {
+        KcalProductDTO updatedKcalProduct = kcalProductService.updateKcalProduct(id,kcalProductDTO);
+        return new ResponseEntity<>(updatedKcalProduct, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<KcalProductDTO> delete(@PathVariable Long id) {
         KcalProductDTO deleteKcalProduct = kcalProductService.deleteKcalProductById(id);

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import tko.utils.DifficultyLevel;
+import tko.utils.ExerciseType;
 import tko.utils.personSVG.Muscle;
 import tko.utils.personSVG.MuscularConverter;
 
@@ -23,16 +24,17 @@ public class ExerciseEntity {
 
     private String instruction;
     private String name;
-    private String type;
+
+    @Enumerated(EnumType.STRING)
+    private ExerciseType type;
 
     @Enumerated(EnumType.STRING)
     private DifficultyLevel difficult;
 
-    private String specialEquipment;
+    private Boolean requiresEquipment;
 
     @Convert(converter = MuscularConverter.class)
     private List<Muscle> muscularGroup;
-    private Integer kcal;
 
     @Column(name = "photo_url")
     private String photoUrl;

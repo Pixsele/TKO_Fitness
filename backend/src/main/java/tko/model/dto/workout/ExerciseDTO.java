@@ -18,10 +18,10 @@ public class ExerciseDTO {
     @NotBlank
     private String difficult;
     @NotBlank
-    private String specialEquipment;
-    @NotBlank
     private String muscularGroup;
-    @NotNull
-    private Integer kcal;
     private Integer likeCount;
+    @NotNull
+    private Boolean requiresEquipment;
+    @NotBlank
+    private String type;
 }

@@ -55,21 +55,26 @@ public class KcalProductService {
 
         return kcalProductMapper.toDto(kcalProductEntity);
     }
-    //TODO
-//    public KcalProductDTO updateKcalProduct(Long id, KcalProductDTO kcalProductDTO) {
-//        if(id == null){
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id must not be null");
-//        }
-//
-//        if(!(kcalTrackerRepository.existsById(kcalProductDTO.getKcalTrackerId()))) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "KcalTracker not found");
-//        }
-//
-//        if(!(productRepository.existsById(kcalProductDTO.getProductId()))) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
-//        }
-//
-//    }
+
+    public KcalProductDTO updateKcalProduct(Long id, KcalProductDTO kcalProductDTO) {
+        if(id == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id must not be null");
+        }
+
+        if(!(kcalTrackerRepository.existsById(kcalProductDTO.getKcalTrackerId()))) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "KcalTracker not found");
+        }
+
+        if(!(productRepository.existsById(kcalProductDTO.getProductId()))) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+        }
+
+        KcalProductEntity kcalProductEntity = kcalProductRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "KcalProduct does not exist"));
+
+        kcalProductMapper.updateEntity(kcalProductDTO, kcalProductEntity);
+        return kcalProductMapper.toDto(kcalProductEntity);
+    }
 
     public KcalProductDTO deleteKcalProductById(Long id) {
         if(id == null){
@@ -77,8 +82,12 @@ public class KcalProductService {
         }
 
         KcalProductEntity kcalProductEntity = kcalProductRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist"));
+
+        if(kcalTrackerRepository.existsById(kcalProductEntity.getId())){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "KcalTracker cannot be deleted");
+        }
+
         kcalProductRepository.delete(kcalProductEntity);
         return kcalProductMapper.toDto(kcalProductEntity);
     }
-
 }

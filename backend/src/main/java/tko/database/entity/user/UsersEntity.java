@@ -1,5 +1,6 @@
 package tko.database.entity.user;
 
+import tko.database.entity.workout.CurrentTrainingProgramEntity;
 import tko.utils.Gender;
 import tko.database.entity.nutrition.KcalTrackerEntity;
 import tko.legacy.NutritionProgramEntity;
@@ -37,7 +38,7 @@ public class UsersEntity {
 
     @ManyToOne
     @JoinColumn(name = "current_training_program_id")
-    private TrainingsProgramEntity currentTrainingProgram;
+    private CurrentTrainingProgramEntity currentTrainingProgram;
 
     @ManyToOne
     @JoinColumn(name = "current_nutrition_program_id")

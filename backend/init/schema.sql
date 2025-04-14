@@ -80,11 +80,11 @@ CREATE TABLE exercise (
                           instruction TEXT NOT NULL,
                           name VARCHAR(255) NOT NULL,
                           difficult VARCHAR(10) CHECK (difficult IN ('EASY', 'MEDIUM', 'HARD')),
-                          special_equipment VARCHAR(255),
+                          requires_equipment BOOLEAN NOT NULL DEFAULT FALSE,
                           muscular_group VARCHAR(255),
-                          kcal INT NOT NULL,
                           photo_url VARCHAR(255),
                           video_url VARCHAR(255),
+                          type VARCHAR(50) CHECK (type IN ('STRENGTH', 'CARDIO', 'FLEXIBILITY', 'BALANCE', 'ENDURANCE')),
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                           like_count INT DEFAULT 0
 );

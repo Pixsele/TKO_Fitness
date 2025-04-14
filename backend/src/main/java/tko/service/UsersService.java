@@ -1,6 +1,8 @@
 package tko.service;
 
 
+import tko.database.entity.workout.CurrentTrainingProgramEntity;
+import tko.database.repository.workout.CurrentTrainingProgramRepository;
 import tko.legacy.NutritionProgramEntity;
 import tko.database.entity.workout.TrainingsProgramEntity;
 import tko.database.entity.user.UsersEntity;
@@ -21,13 +23,15 @@ public class UsersService {
     private final TrainingsProgramRepository trainingsProgramRepository;
     private final NutritionProgramRepository nutritionProgramRepository;
     private final UsersMapper usersMapper;
+    private final CurrentTrainingProgramRepository currentTrainingProgramRepository;
 
     @Autowired
-    public UsersService(UsersRepository usersRepository, TrainingsProgramRepository trainingsProgramRepository, NutritionProgramRepository nutritionProgramRepository, UsersMapper usersMapper) {
+    public UsersService(UsersRepository usersRepository, TrainingsProgramRepository trainingsProgramRepository, NutritionProgramRepository nutritionProgramRepository, UsersMapper usersMapper, CurrentTrainingProgramRepository currentTrainingProgramRepository) {
         this.usersRepository = usersRepository;
         this.trainingsProgramRepository = trainingsProgramRepository;
         this.nutritionProgramRepository = nutritionProgramRepository;
         this.usersMapper = usersMapper;
+        this.currentTrainingProgramRepository = currentTrainingProgramRepository;
     }
 
     public UsersDTO create(UsersDTO usersDTO) {
@@ -85,10 +89,10 @@ public class UsersService {
         }
 
         if(usersDTO.getCurrentTrainingProgramId() != null){
-            TrainingsProgramEntity trainingsProgramEntity = trainingsProgramRepository.findById(usersDTO
+           CurrentTrainingProgramEntity currentTrainingProgramEntity = currentTrainingProgramRepository.findById(usersDTO
                     .getCurrentTrainingProgramId()).orElseThrow(()-> new EntityNotFoundException("Training program not found"));
 
-            usersEntity.setCurrentTrainingProgram(trainingsProgramEntity);
+            usersEntity.setCurrentTrainingProgram(currentTrainingProgramEntity);
         }
 
         if(usersDTO.getCurrentNutritionProgramId() != null){
