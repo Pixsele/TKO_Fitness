@@ -1,51 +1,75 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
+import { useAuth } from './contexts/AuthContext.jsx';
+import AuthModal from './AuthModal.jsx';
 
 const Home = () => {
+    const { user, isAuthenticated, login, logout } = useAuth();
+
+    // Состояние для модального окна с режимом (login или register)
+    const [authModalMode, setAuthModalMode] = useState(null);  // null - закрыто, 'login' - вход, 'register' - регистрация
+
+    // Открытие и закрытие модального окна
+    const openLoginModal = () => {
+        setAuthModalMode('login');
+    };
+
+    const openRegisterModal = () => {
+        setAuthModalMode('register');
+    };
+
+    const closeAuthModal = () => {
+        setAuthModalMode(null);  // Закрытие модалки
+    };
+
     return (
         <div className="home-container">
-                {/* Логотип, который ведет на главную страницу */}
+            <div className="top-bar">
                 <div className="logo-container">
                     <Link to="/" className="logo">
-                        TKO Fitness {/* Логотип — это текст */}
+                        TKO Fitness
                     </Link>
                 </div>
 
-            {/* Три кнопки, ведущие на другие страницы */}
-            <div className="navigation-buttons">
-                <div className="nav-button">
-                    <Link to="/catalog" className="nav-button">
-                    Тренировки
-                    </Link>
+                <div className="navigation-links">
+                    <Link to="/catalog" className="nav-link">Тренировки</Link>
+                    <Link to="/programm" className="nav-link">Программы</Link>
+                    <Link to="/kcal" className="nav-link">Расчет ккал</Link>
                 </div>
-                <div className="nav-button">
-                    <Link to="/programm" className="nav-button">
-                    Программы
-                    </Link>
-                </div>
-                <div className="nav-button">
-                    <Link to="/kcal" className="nav-button">
-                    Расчет ккал
-                    </Link>
-                </div>
+
+                {isAuthenticated ? (
+                    <div className="user-info">
+                        <img src="/assets/Group%202.svg" alt="User Icon" />
+                        <Link to="/profile" className="user-name">{user?.name}</Link>
+                        <button onClick={logout} className="auth-button">Выйти</button>
+                    </div>
+                ) : (
+                    <div className="auth-buttons">
+                        <button onClick={openRegisterModal} className="auth-button">Регистрация</button>
+                        <button onClick={openLoginModal} className="auth-button">Вход</button>
+                    </div>
+                )}
             </div>
 
-            {/* Кнопки регистрации и входа */}
-            <div className="auth-buttons">
-                <button className="auth-button">Регистрация</button>
-                <button className="auth-button">Вход</button>
-            </div>
+            {/* Модальное окно */}
+            {authModalMode && (
+                <AuthModal
+                    mode={authModalMode}
+                    onClose={closeAuthModal}
+                    onSwitchMode={setAuthModalMode}
+                    onSuccess={closeAuthModal}// Передаем функцию для изменения режима
+                />
+            )}
 
-            {/* Два SVG изображения */}
-            <div className="image-container">
-                <img src="/assets/Composition.svg" alt="Image 1" className="mockup" />
-                <img src="/assets/play.svg" alt="Image 2" className="google_play" />
-            </div>
-
-            {/* Текст */}
-            <div className="text-container">
-                <p className="main-text">Добро пожаловать на главную страницу!</p>
+            <div className="main-section">
+                <div className="left-content">
+                    <p className="main-text">Total<br />Kinetic<br />Output</p>
+                    <img src="/assets/play.svg" alt="Google Play" className="google-play" width={200} />
+                </div>
+                <div className="right-content">
+                    <img src="/assets/Composition.svg" alt="Mockup" className="mockup" />
+                </div>
             </div>
         </div>
     );
