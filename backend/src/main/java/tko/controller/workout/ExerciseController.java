@@ -2,25 +2,35 @@ package tko.controller.workout;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tko.model.dto.workout.ExerciseDTO;
 import tko.model.dto.workout.ExerciseForPageDTO;
+import tko.model.dto.workout.ExerciseMediaDTO;
+import tko.model.dto.workout.PersonSVGDTO;
+import tko.service.PersonSVGService;
 import tko.service.workout.ExerciseService;
+import tko.utils.Gender;
+
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/exercise")
 public class ExerciseController {
     private final ExerciseService exerciseService;
+    private final PersonSVGService personSVGService;
 
     @Autowired
-    public ExerciseController(ExerciseService exerciseService) {
+    public ExerciseController(ExerciseService exerciseService, PersonSVGService personSVGService) {
         this.exerciseService = exerciseService;
+        this.personSVGService = personSVGService;
     }
 
     @PostMapping
@@ -53,4 +63,40 @@ public class ExerciseController {
 
         return new PagedModel<>(exerciseDTOList);
     }
+
+    @GetMapping("meta-data/{id}")
+    public ResponseEntity<ExerciseMediaDTO> readMetaData(@PathVariable Long id) {
+        ExerciseMediaDTO dto = exerciseService.getMetaData(id);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @PutMapping("/meta-data/{id}")
+    public ResponseEntity<ExerciseMediaDTO> update(@PathVariable Long id, @Valid @RequestBody ExerciseMediaDTO dto) {
+        ExerciseDTO updatedto = exerciseService.updateMedia(id,dto);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping("/image/{id}")
+    public ResponseEntity<Resource> getImage(@PathVariable Long id) {
+        Resource file = exerciseService.getImage(id);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);
+    }
+
+    @GetMapping("/video/{id}")
+    public ResponseEntity<Resource> getVideo(@PathVariable Long id) {
+        Resource file = exerciseService.getVideo(id);
+        return ResponseEntity.ok().contentType(MediaType.valueOf("video/mp4")).body(file);
+    }
+
+    @GetMapping("/svg/{id}")
+    public ResponseEntity<PersonSVGDTO> getSvg(@PathVariable Long id, @Valid @RequestParam Gender gender) {
+        List<String> svgList = personSVGService.getSvgToExercise(id, gender);
+        PersonSVGDTO dto = new PersonSVGDTO();
+        dto.setFront(svgList.get(0));
+        dto.setBack(svgList.get(1));
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
 }
+
+
+

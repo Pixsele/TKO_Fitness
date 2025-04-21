@@ -85,8 +85,9 @@ CREATE TABLE exercise (
                           photo_url VARCHAR(255),
                           video_url VARCHAR(255),
                           type VARCHAR(50) CHECK (type IN ('STRENGTH', 'CARDIO', 'FLEXIBILITY', 'BALANCE', 'ENDURANCE')),
-                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                          like_count INT DEFAULT 0
+                          like_count INT DEFAULT 0,
+                          image_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          video_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE workout (

@@ -2,10 +2,14 @@ package tko.service.workout;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,8 +21,11 @@ import tko.database.repository.workout.LikesExerciseRepository;
 import tko.database.repository.workout.WorkoutExerciseRepository;
 import tko.model.dto.workout.ExerciseDTO;
 import tko.model.dto.workout.ExerciseForPageDTO;
+import tko.model.dto.workout.ExerciseMediaDTO;
 import tko.model.mapper.workout.ExerciseMapper;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +57,6 @@ public class ExerciseService {
         }
         try{
             ExerciseEntity exerciseEntity = exerciseMapper.toEntity(exerciseDTO);
-            exerciseEntity.setCreatedAt(LocalDateTime.now());
             exerciseEntity.setLikeCount(0);
             ExerciseEntity saveEntity = exerciseRepository.save(exerciseEntity);
             return exerciseMapper.toDto(saveEntity);
@@ -150,5 +156,102 @@ public class ExerciseService {
         likeCount = likeCount - 1;
         exerciseEntity.setLikeCount(likeCount);
         exerciseRepository.save(exerciseEntity);
+    }
+
+    public ExerciseMediaDTO getMetaData(Long id) {
+        if(id == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
+        }
+
+        ExerciseEntity entity = exerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+        ExerciseMediaDTO dto = new ExerciseMediaDTO();
+
+        dto.setId(entity.getId());
+        dto.setUrlImage(entity.getPhotoUrl());
+        dto.setUrlVideo(entity.getVideoUrl());
+        dto.setImageUpdated(entity.getImageUpdated());
+        dto.setVideoUpdated(entity.getVideoUpdated());
+
+        return dto;
+    }
+
+    public ExerciseDTO updateMedia(Long id, ExerciseMediaDTO exerciseMediaDTO) {
+        if(id == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
+        }
+        ExerciseEntity entity = exerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+
+        if(exerciseMediaDTO.getUrlImage() == null && exerciseMediaDTO.getUrlVideo() == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Invalid url of video and image");
+        }
+
+        if(exerciseMediaDTO.getUrlImage() != null) {
+            entity.setPhotoUrl(exerciseMediaDTO.getUrlImage());
+            entity.setImageUpdated(LocalDateTime.now());
+        }
+        if(exerciseMediaDTO.getUrlVideo() != null) {
+            entity.setVideoUrl(exerciseMediaDTO.getUrlVideo());
+            entity.setVideoUpdated(LocalDateTime.now());
+        }
+
+        exerciseRepository.save(entity);
+        return exerciseMapper.toDto(entity);
+    }
+
+    public Resource getImage(Long id) {
+
+        if(id == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
+        }
+
+        ExerciseEntity entity = exerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+        try {
+            if(entity.getPhotoUrl() == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "VideoUrl must not be null");
+            }
+
+            String fileName = "/app/media/image/" + entity.getPhotoUrl();
+
+            Path file = Paths.get(fileName);
+            Resource resource = new FileSystemResource(file);
+
+            if(resource.exists() && resource.isReadable()) {
+                return resource;
+            }
+            else{
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image not found or not readable");
+            }
+        }catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    public Resource getVideo(Long id) {
+        if(id == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id must not be null");
+        }
+
+        ExerciseEntity entity = exerciseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+
+        try {
+            if(entity.getVideoUrl() == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "VideoUrl must not be null");
+            }
+
+            String fileName = "/app/media/video/" + entity.getVideoUrl();
+
+
+            Path file = Paths.get(fileName);
+            Resource resource = new FileSystemResource(file);
+
+            if(resource.exists() && resource.isReadable()) {
+                return resource;
+            }
+            else{
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image not found or not readable");
+            }
+        }catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 }

@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface ExerciseRepository extends JpaRepository<ExerciseEntity, Long> {
 
     Page<ExerciseEntity> findAll(Pageable pageable);
+
 }

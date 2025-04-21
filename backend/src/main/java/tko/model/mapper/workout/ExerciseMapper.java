@@ -22,7 +22,6 @@ public interface ExerciseMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "likeCount", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
     void updateEntity(ExerciseDTO dto,@MappingTarget ExerciseEntity entity);
 
 
