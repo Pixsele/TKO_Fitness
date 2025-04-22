@@ -71,5 +71,4 @@ public class WorkoutController {
         dto.setBack(svgList.get(1));
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-
 }
