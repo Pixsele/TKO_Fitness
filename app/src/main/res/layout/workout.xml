@@ -2,14 +2,12 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="56dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvGreeting"
@@ -23,7 +21,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:background="#353535">
 
             <ImageButton
                 android:id="@+id/btnPrevMonth"
@@ -55,14 +54,16 @@
             app:alignmentMode="alignBounds"
             app:columnCount="7"
             app:rowCount="6"
-            app:useDefaultMargins="true"/>
+            app:useDefaultMargins="true"
+            android:background="#353535"/>
 
         <Button
             android:id="@+id/btnPlanWorkout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Запланировать тренировку"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#636363"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -70,14 +71,16 @@
             android:text="График веса"
             android:textSize="20sp"
             android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            android:background="#353535"/>
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/weightChart"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="24dp"
+            android:background="#636363"/>
 
     </LinearLayout>
 </ScrollView>

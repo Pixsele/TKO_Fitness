@@ -3,6 +3,7 @@ package tk.ssau.fitnesstko
 import android.content.Context
 import androidx.core.content.edit
 import com.google.gson.Gson
+import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -80,7 +81,7 @@ class PreferencesManager(context: Context) {
     fun getAge() = sharedPreferences.getString("age", "") ?: ""
 
 
-    fun saveLocalWorkout(workout: Workout) {
+    fun saveLocalWorkout(workout: WorkoutForPageDto) {
         val workouts = getLocalWorkouts().toMutableList()
         workouts.add(workout)
         sharedPreferences.edit {
@@ -88,13 +89,13 @@ class PreferencesManager(context: Context) {
         }
     }
 
-    private fun List<Workout>.toJsonSet(): Set<String> {
+    private fun List<WorkoutForPageDto>.toJsonSet(): Set<String> {
         return map { Gson().toJson(it) }.toSet()
     }
 
-    fun getLocalWorkouts(): List<Workout> {
+    fun getLocalWorkouts(): List<WorkoutForPageDto> {
         return sharedPreferences.getStringSet("local_workouts", emptySet())
-            ?.mapNotNull { Gson().fromJson(it, Workout::class.java) }
+            ?.mapNotNull { Gson().fromJson(it, WorkoutForPageDto::class.java) }
             ?: emptyList()
     }
 }

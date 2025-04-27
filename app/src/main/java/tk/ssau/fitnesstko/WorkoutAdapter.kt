@@ -4,10 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import tk.ssau.fitnesstko.databinding.ItemWorkoutBinding
+import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 
 class WorkoutAdapter(
-    private var workouts: List<Workout>,
-    private val onItemClick: (Workout) -> Unit
+    private var workouts: List<WorkoutForPageDto>,
+    private val onItemClick: (WorkoutForPageDto) -> Unit
 ) : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutViewHolder {
@@ -29,7 +30,7 @@ class WorkoutAdapter(
     inner class WorkoutViewHolder(private val binding: ItemWorkoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(workout: Workout) {
+        fun bind(workout: WorkoutForPageDto) {
             binding.tvWorkoutName.text = workout.name
             binding.tvLikeCount.text = workout.likeCount.toString()
             //binding.ivLike.setImageResource(

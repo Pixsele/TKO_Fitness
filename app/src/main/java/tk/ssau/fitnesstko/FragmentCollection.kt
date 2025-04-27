@@ -10,12 +10,13 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import tk.ssau.fitnesstko.databinding.CollectionBinding
+import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 
 class FragmentCollection : Fragment(R.layout.collection) {
 
     private lateinit var binding: CollectionBinding
     private lateinit var workoutAdapter: WorkoutAdapter
-    private var workouts = mutableListOf<Workout>()
+    private var workouts = mutableListOf<WorkoutForPageDto>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,14 +57,15 @@ class FragmentCollection : Fragment(R.layout.collection) {
 
     internal fun loadWorkouts() {
         ApiService.workoutService.getWorkouts()
-            .enqueue(object : Callback<PagedResponse<Workout>> {
+            .enqueue(object : Callback<PagedResponse<WorkoutForPageDto>> {
                 override fun onResponse(
-                    call: Call<PagedResponse<Workout>>,
-                    response: Response<PagedResponse<Workout>>
+                    call: Call<PagedResponse<WorkoutForPageDto>>,
+                    response: Response<PagedResponse<WorkoutForPageDto>>
                 ) {
                     if (response.isSuccessful) {
                         val serverWorkouts = response.body()?.content ?: emptyList()
-                        val localWorkouts = (activity as? MainActivity)?.prefs?.getLocalWorkouts() ?: emptyList()
+                        val localWorkouts =
+                            (activity as? MainActivity)?.prefs?.getLocalWorkouts() ?: emptyList()
 
                         // Объединяем и обновляем список
                         workouts.clear()
@@ -71,9 +73,11 @@ class FragmentCollection : Fragment(R.layout.collection) {
                         workoutAdapter.notifyDataSetChanged()
                     }
                 }
-                override fun onFailure(call: Call<PagedResponse<Workout>>, t: Throwable) {
+
+                override fun onFailure(call: Call<PagedResponse<WorkoutForPageDto>>, t: Throwable) {
                     // Показать только локальные данные при ошибке сети
-                    val localWorkouts = (activity as? MainActivity)?.prefs?.getLocalWorkouts() ?: emptyList()
+                    val localWorkouts =
+                        (activity as? MainActivity)?.prefs?.getLocalWorkouts() ?: emptyList()
                     workouts.clear()
                     workouts.addAll(localWorkouts)
                     workoutAdapter.notifyDataSetChanged()

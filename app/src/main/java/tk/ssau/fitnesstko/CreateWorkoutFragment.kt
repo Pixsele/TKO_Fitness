@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import tk.ssau.fitnesstko.databinding.FragmentCreateWorkoutBinding
+import tk.ssau.fitnesstko.model.dto.ExerciseForPageDto
+import tk.ssau.fitnesstko.model.dto.WorkoutDto
 
 class CreateWorkoutFragment : Fragment(R.layout.fragment_create_workout) {
     private lateinit var binding: FragmentCreateWorkoutBinding
@@ -57,7 +59,7 @@ class CreateWorkoutFragment : Fragment(R.layout.fragment_create_workout) {
         }
     }
 
-    private fun addExerciseToContainer(exercise: Exercise) {
+    private fun addExerciseToContainer(exercise: ExerciseForPageDto) {
         val view = LayoutInflater.from(requireContext())
             .inflate(R.layout.item_selected_exercise, null)
 
@@ -67,14 +69,12 @@ class CreateWorkoutFragment : Fragment(R.layout.fragment_create_workout) {
 
     private fun saveWorkout() {
         if (validateInput()) {
-            val workout = Workout(
-                id = System.currentTimeMillis(), // Уникальный ID для локальных тренировок
+            val workout = WorkoutDto(
+                id = null, // Уникальный ID для локальных тренировок
                 name = binding.etWorkoutName.text.toString(),
                 description = binding.etDescription.text.toString(),
-                difficulty = difficulty,
-                exercises = viewModel.selectedExercises.value?: emptyList(),
-                likeCount = 0,
-                liked = false
+                difficult = difficulty,
+                likeCount = 0
             )
 
             // Сохранение в локальное хранилище

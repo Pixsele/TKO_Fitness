@@ -4,10 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import tk.ssau.fitnesstko.databinding.ItemSelectedExerciseBinding
+import tk.ssau.fitnesstko.model.dto.ExerciseForPageDto
 
 class ExerciseAdapter(
-    private val exercises: List<Exercise>,
-    private val onItemClick: (Exercise) -> Unit
+    private val exercises: List<ExerciseForPageDto>,
+    private val onItemClick: (ExerciseForPageDto) -> Unit
 ) : RecyclerView.Adapter<ExerciseAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemSelectedExerciseBinding) :

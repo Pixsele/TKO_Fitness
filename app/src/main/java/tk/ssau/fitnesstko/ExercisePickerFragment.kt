@@ -10,6 +10,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import tk.ssau.fitnesstko.databinding.FragmentExercisePickerBinding
+import tk.ssau.fitnesstko.model.dto.ExerciseForPageDto
 
 class ExercisePickerFragment() : Fragment(R.layout.fragment_exercise_picker) {
 
@@ -25,28 +26,31 @@ class ExercisePickerFragment() : Fragment(R.layout.fragment_exercise_picker) {
 
     private fun loadExercises() {
         ApiService.exerciseService.getExercises()
-            .enqueue(object : Callback<PagedResponse<Exercise>> {
+            .enqueue(object : Callback<PagedResponse<ExerciseForPageDto>> {
                 override fun onResponse(
-                    call: Call<PagedResponse<Exercise>>,
-                    response: Response<PagedResponse<Exercise>>
+                    call: Call<PagedResponse<ExerciseForPageDto>>,
+                    response: Response<PagedResponse<ExerciseForPageDto>>
                 ) {
                     val allExercises = response.body()?.content ?: emptyList()
                     val unselectedExercises = filterUnselected(allExercises)
                     setupRecycler(unselectedExercises)
                 }
 
-                override fun onFailure(call: Call<PagedResponse<Exercise>>, t: Throwable) {
+                override fun onFailure(
+                    call: Call<PagedResponse<ExerciseForPageDto>>,
+                    t: Throwable
+                ) {
                     Toast.makeText(context, "Ошибка загрузки", Toast.LENGTH_SHORT).show()
                 }
             })
     }
 
-    private fun filterUnselected(allExercises: List<Exercise>): List<Exercise> {
+    private fun filterUnselected(allExercises: List<ExerciseForPageDto>): List<ExerciseForPageDto> {
         val selectedIds = viewModel.selectedExercises.value?.map { it.id } ?: emptyList()
         return allExercises.filter { it.id !in selectedIds }
     }
 
-    private fun setupRecycler(exercises: List<Exercise>) {
+    private fun setupRecycler(exercises: List<ExerciseForPageDto>) {
         binding.rvExercises.layoutManager = LinearLayoutManager(requireContext())
         binding.rvExercises.adapter = ExerciseAdapter(exercises) { exercise ->
             viewModel.addExercise(exercise) // Передача выбранного упражнения

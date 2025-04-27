@@ -6,8 +6,15 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
+import tk.ssau.fitnesstko.model.dto.ExerciseDto
+import tk.ssau.fitnesstko.model.dto.ExerciseForPageDto
+import tk.ssau.fitnesstko.model.dto.WorkoutDto
+import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 
 object ApiService {
     private const val BASE_URL = "http://85.236.187.180:8080/" // Замените на ваш URL
@@ -51,7 +58,10 @@ object ApiService {
         fun getExercises(
             @Query("page") page: Int = 0,
             @Query("size") size: Int = 20
-        ): Call<PagedResponse<Exercise>>
+        ): Call<PagedResponse<ExerciseForPageDto>>
+
+        @GET("api/exercise/{id}")
+        fun getExerciseDetails(@Path("id") id: Long): Call<ExerciseDto>
     }
 
 
@@ -61,7 +71,10 @@ object ApiService {
         fun getWorkouts(
             @Query("page") page: Int = 0,
             @Query("size") size: Int = 10
-        ): Call<PagedResponse<Workout>>
+        ): Call<PagedResponse<WorkoutForPageDto>>
+
+        @POST("api/workout")
+        fun createWorkout(@Body workoutDto: WorkoutDto): Call<WorkoutDto>
     }
 }
 
