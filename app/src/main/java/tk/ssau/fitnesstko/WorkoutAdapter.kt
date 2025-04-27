@@ -8,7 +8,8 @@ import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 
 class WorkoutAdapter(
     private var workouts: List<WorkoutForPageDto>,
-    private val onItemClick: (WorkoutForPageDto) -> Unit
+    private val onItemClick: (WorkoutForPageDto) -> Unit,
+    private val onLikeClick: (WorkoutForPageDto) -> Unit
 ) : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutViewHolder {
@@ -22,7 +23,7 @@ class WorkoutAdapter(
 
     override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
         holder.bind(workouts[position])
-        holder.itemView.setOnClickListener { onItemClick(workouts[position]) }
+        //holder.itemView.setOnClickListener { onItemClick(workouts[position]) }
     }
 
     override fun getItemCount(): Int = workouts.size
@@ -33,10 +34,21 @@ class WorkoutAdapter(
         fun bind(workout: WorkoutForPageDto) {
             binding.tvWorkoutName.text = workout.name
             binding.tvLikeCount.text = workout.likeCount.toString()
-            //binding.ivLike.setImageResource(
-            //if (workout.liked) R.drawable.ic_liked
-            //else R.drawable.ic_like
-            //)
+            binding.ivLike.setImageResource(
+                if (workout.liked) R.drawable.ic_liked
+                else R.drawable.ic_not_liked
+            )
+
+            // Клик на лайк
+            binding.ivLike.setOnClickListener {
+                onLikeClick(workout)
+            }
+
+            binding.tvWorkoutName.setOnClickListener {
+                onItemClick(workout)
+            }
+
         }
     }
+
 }

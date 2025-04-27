@@ -78,7 +78,7 @@ class CreateWorkoutFragment : Fragment(R.layout.fragment_create_workout) {
             )
 
             // Сохранение в локальное хранилище
-            (activity as? MainActivity)?.prefs?.saveLocalWorkout(workout)
+            //(activity as? MainActivity)?.prefs?.saveLocalWorkout(workout)
 
             // Обновление списка тренировок
             (activity as? MainActivity)?.refreshWorkouts()

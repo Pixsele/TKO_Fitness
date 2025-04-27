@@ -4,7 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#353535"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/tvWorkoutName"
@@ -13,14 +17,21 @@
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ivLike"/>
+        app:layout_constraintEnd_toStartOf="@+id/ivLike"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"/>
 
     <ImageView
         android:id="@+id/ivLike"
         android:layout_width="24dp"
         android:layout_height="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_not_liked"
+        android:clickable="true"
+        android:focusable="true"
+    />
 
     <TextView
         android:id="@+id/tvLikeCount"

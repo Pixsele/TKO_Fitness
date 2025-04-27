@@ -12,6 +12,7 @@ class PreferencesManager(context: Context) {
     private val sharedPreferences =
         context.getSharedPreferences("fitness_prefs", Context.MODE_PRIVATE)
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private val gson = Gson()
 
     // Сохранение данных пользователя
     fun saveUserData(firstName: String, lastName: String, age: String) {
@@ -85,17 +86,29 @@ class PreferencesManager(context: Context) {
         val workouts = getLocalWorkouts().toMutableList()
         workouts.add(workout)
         sharedPreferences.edit {
-            putStringSet("local_workouts", workouts.toJsonSet())
+            putString("local_workouts", gson.toJson(workouts))
         }
     }
 
-    private fun List<WorkoutForPageDto>.toJsonSet(): Set<String> {
-        return map { Gson().toJson(it) }.toSet()
-    }
 
     fun getLocalWorkouts(): List<WorkoutForPageDto> {
-        return sharedPreferences.getStringSet("local_workouts", emptySet())
-            ?.mapNotNull { Gson().fromJson(it, WorkoutForPageDto::class.java) }
-            ?: emptyList()
+        val json = sharedPreferences.getString("local_workouts", null)
+        return if (json != null) {
+            gson.fromJson(json, Array<WorkoutForPageDto>::class.java).toList()
+        } else {
+            emptyList()
+        }
+    }
+
+    fun updateLocalWorkout(updatedWorkout: WorkoutForPageDto) {
+        val workouts = getLocalWorkouts().toMutableList()
+        val index = workouts.indexOfFirst { it.id == updatedWorkout.id }
+        if (index != -1) {
+            workouts[index] = updatedWorkout
+            sharedPreferences.edit {
+                putString("local_workouts", gson.toJson(workouts))
+                apply()
+            }
+        }
     }
 }

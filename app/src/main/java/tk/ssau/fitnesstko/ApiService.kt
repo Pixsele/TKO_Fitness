@@ -75,12 +75,17 @@ object ApiService {
 
         @POST("api/workout")
         fun createWorkout(@Body workoutDto: WorkoutDto): Call<WorkoutDto>
+
+        /*
+        @PUT("api/workout/{id}/like")  //Обработка лайка
+        fun toggleLike(@Path("id") id: Long): Call<WorkoutForPageDto>
+         */
     }
 }
 
 data class PagedResponse<T>(
     val content: List<T>,
-    val pageable: PageInfo,
+    val page: PageInfo,
 )
 
 data class PageInfo(

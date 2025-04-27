@@ -46,13 +46,87 @@ class FragmentCollection : Fragment(R.layout.collection) {
         }
 
         // Список тренировок
-        workoutAdapter = WorkoutAdapter(workouts) { workout ->
-            // Обработка клика на тренировку
-            //WorkoutDetailsFragment.newInstance(workout.id)
-            //.show(parentFragmentManager, "workout_details")
-        }
+        workoutAdapter = WorkoutAdapter(
+            workouts,
+            { workout -> /* клик на элемент */ },
+            { workout -> handleLikeClick(workout) } // Передаем обработчик
+        )
         binding.rvWorkouts.adapter = workoutAdapter
         binding.rvWorkouts.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    private fun handleLikeClick(workout: WorkoutForPageDto) {
+
+        /*if (workout.id == null || workout.id <= 0L) {
+            // Локальная тренировка - обновляем локально
+            updateLocalWorkout(workout)
+        }
+
+         */
+        updateLocalWorkout(workout)
+        /*else {
+            // Серверная тренировка - отправляем запрос
+            ApiService.workoutService.toggleLike(workout.id)
+                .enqueue(object : Callback<WorkoutForPageDto> {
+                    override fun onResponse(
+                        call: Call<WorkoutForPageDto>,
+                        response: Response<WorkoutForPageDto>
+                    ) {
+                        if (response.isSuccessful) {
+                            response.body()?.let { updatedWorkout ->
+                                updateWorkoutInList(updatedWorkout)
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<WorkoutForPageDto>, t: Throwable) {
+                        Toast.makeText(context, "Ошибка сети", Toast.LENGTH_SHORT).show()
+                        // Откатываем состояние
+                        revertLikeState(workout)
+                    }
+                })
+                */
+
+        // Временное обновление UI до ответа сервера
+        val tempWorkout = workout.copy(
+            liked = !workout.liked,
+            likeCount = workout.likeCount?.plus(if (workout.liked) -1 else 1)
+        )
+        updateWorkoutInList(tempWorkout)
+    }
+
+    private fun updateLocalWorkout(workout: WorkoutForPageDto) {
+        val updatedWorkout = workout.copy(
+            liked = !workout.liked,
+            likeCount = workout.likeCount?.plus(if (workout.liked) -1 else 1)
+        )
+
+        (activity as? MainActivity)?.prefs?.updateLocalWorkout(updatedWorkout)
+        updateWorkoutInList(updatedWorkout)
+    }
+
+    private fun updateWorkoutInList(updatedWorkout: WorkoutForPageDto) {
+        val index = workouts.indexOfFirst { it.id == updatedWorkout.id }
+        if (index != -1) {
+            workouts[index] = updatedWorkout
+            workoutAdapter.notifyItemChanged(index)
+
+            // Принудительно обновляем источник данных
+            workoutAdapter = WorkoutAdapter(
+                workouts,
+                { workout -> /* клик на элемент */ },
+                { workout -> handleLikeClick(workout) }
+            )
+            binding.rvWorkouts.adapter = workoutAdapter
+        }
+    }
+
+    private fun revertLikeState(workout: WorkoutForPageDto) {
+        val revertedWorkout = workout.copy(
+            liked = !workout.liked,
+            likeCount = workout.likeCount?.plus(if (workout.liked) 1 else -1)
+        )
+        updateWorkoutInList(revertedWorkout)
     }
 
     internal fun loadWorkouts() {
@@ -83,5 +157,10 @@ class FragmentCollection : Fragment(R.layout.collection) {
                     workoutAdapter.notifyDataSetChanged()
                 }
             })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadWorkouts()
     }
 }
