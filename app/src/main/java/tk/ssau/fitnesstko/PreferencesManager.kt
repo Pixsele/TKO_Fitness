@@ -103,6 +103,7 @@ class PreferencesManager(context: Context) {
     fun updateLocalWorkout(updatedWorkout: WorkoutForPageDto) {
         val workouts = getLocalWorkouts().toMutableList()
         val index = workouts.indexOfFirst { it.id == updatedWorkout.id }
+
         if (index != -1) {
             workouts[index] = updatedWorkout
             sharedPreferences.edit {

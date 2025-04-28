@@ -7,7 +7,9 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -94,8 +96,11 @@ object ApiService {
         }
 
         interface LikesApi {
-            @POST("api/likes/workout")
+            @POST("api/like-workout")
             fun likeWorkout(@Body like: LikesWorkoutDto): Call<Unit>
+
+            @HTTP(method = "DELETE", path = "api/like-workout", hasBody = true)
+            fun deleteLikeWorkout(@Body like: LikesWorkoutDto): Call<Unit>
 
             @POST("api/likes/exercise")
             fun likeExercise(@Body like: LikesExerciseDto): Call<Unit>

@@ -59,12 +59,22 @@ class FragmentCollection : Fragment(R.layout.collection) {
     }
 
     private fun handleLikeClick(workout: WorkoutForPageDto) {
-        val tempWorkout = workout.copy(
+        val updatedWorkout = workout.copy(
             liked = !workout.liked,
-            likeCount = (workout.likeCount ?: 0) + (if (workout.liked) -1 else 1)
+            likeCount = (workout.likeCount ?: 0) + if (workout.liked) -1 else 1
         )
-        updateWorkoutInList(tempWorkout)
-        (activity as? MainActivity)?.prefs?.updateLocalWorkout(tempWorkout)
+
+        // Обновляем локальное хранилище
+        (activity as? MainActivity)?.prefs?.updateLocalWorkout(updatedWorkout)
+
+        // Находим позицию и обновляем список
+        val position = workouts.indexOfFirst { it.id == workout.id }
+        if (position != -1) {
+            workouts = workouts.toMutableList().apply {
+                set(position, updatedWorkout)
+            }
+            workoutAdapter.notifyItemChanged(position)
+        }
     }
 
     private fun updateWorkoutInList(updatedWorkout: WorkoutForPageDto) {
