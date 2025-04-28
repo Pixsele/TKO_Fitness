@@ -114,9 +114,4 @@ class FragmentCollection : Fragment(R.layout.collection) {
         (activity as? MainActivity)?.prefs?.getLocalWorkouts() ?: emptyList()
 
     fun getWorkoutNames() = workouts.map { it.name }
-
-    override fun onResume() {
-        super.onResume()
-        loadWorkouts()
-    }
 }
