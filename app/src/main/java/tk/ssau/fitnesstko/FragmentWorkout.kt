@@ -233,7 +233,15 @@ class FragmentWorkout : Fragment(R.layout.workout) {
     }
 
     private fun setupPlanWorkoutButton() {
+
         binding.btnPlanWorkout.setOnClickListener {
+            val workoutNames = (requireActivity() as MainActivity)
+                .supportFragmentManager
+                .findFragmentByTag("collection") // или другой способ получения данных
+                ?.let { it as? FragmentCollection }
+                ?.getWorkoutNames()
+                ?: emptyList()
+
             parentFragmentManager.beginTransaction()
                 .replace(R.id.flFragment, ScheduleWorkoutFragment())
                 .addToBackStack(null)
