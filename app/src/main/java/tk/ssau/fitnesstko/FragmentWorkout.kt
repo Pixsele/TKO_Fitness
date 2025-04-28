@@ -3,6 +3,7 @@ package tk.ssau.fitnesstko
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.gridlayout.widget.GridLayout
@@ -148,6 +149,7 @@ class FragmentWorkout : Fragment(R.layout.workout) {
             DayView(requireContext()).apply {
                 text = day
                 setTextAppearance(android.R.style.TextAppearance_Medium)
+                setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
                 addToGrid()
             }
         }
@@ -163,6 +165,7 @@ class FragmentWorkout : Fragment(R.layout.workout) {
             DayView(requireContext()).apply {
                 text = day.toString()
                 state = calculateDayState(day)
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 setOnClickListener { handleDayClick(day) }
                 addToGrid()
             }
