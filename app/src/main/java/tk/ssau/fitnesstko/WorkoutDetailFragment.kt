@@ -50,7 +50,10 @@ class WorkoutDetailFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        exerciseAdapter = ExerciseDetailAdapter(emptyList())
+        exerciseAdapter = ExerciseDetailAdapter(
+            emptyList(),
+            fragmentManager = parentFragmentManager
+        )
         binding.rvExercises.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = exerciseAdapter

@@ -1,20 +1,48 @@
 package tk.ssau.fitnesstko
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import tk.ssau.fitnesstko.databinding.ItemExerciseDetailBinding
 import tk.ssau.fitnesstko.model.dto.ExerciseDto
 
 class ExerciseDetailAdapter(
-    private var exercises: List<ExerciseDto>
+    private var exercises: List<ExerciseDto>,
+    private val fragmentManager: FragmentManager
 ) : RecyclerView.Adapter<ExerciseDetailAdapter.ExerciseViewHolder>() {
 
-    inner class ExerciseViewHolder(val binding: ItemExerciseDetailBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    inner class ExerciseViewHolder(private val binding: ItemExerciseDetailBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-    // Обновление списка упражнений
+        fun bind(exercise: ExerciseDto) { // Изменено на ExerciseDto
+            binding.root.setOnClickListener {
+                openExerciseDetails(exercise.id)
+            }
+
+            // Загрузка данных в элементы списка
+            binding.tvExerciseName.text = exercise.name
+            Glide.with(binding.root.context)
+                .load("${ApiService.BASE_URL}api/exercise/image/${exercise.id}")
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.cat)
+                .into(binding.ivExerciseImage)
+        }
+
+        private fun openExerciseDetails(exerciseId: Long?) {
+            fragmentManager.beginTransaction()
+                .replace(R.id.flFragment, ExerciseDetailFragment().apply {
+                    arguments = Bundle().apply {
+                        exerciseId?.toLong()?.let { putLong("exerciseId", it) }
+                    }
+                })
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
     fun updateExercises(newExercises: List<ExerciseDto>) {
         exercises = newExercises
         notifyDataSetChanged()
@@ -30,18 +58,7 @@ class ExerciseDetailAdapter(
     }
 
     override fun onBindViewHolder(holder: ExerciseViewHolder, position: Int) {
-        val exercise = exercises[position]
-        with(holder.binding) {
-            // Установка названия упражнения
-            tvExerciseName.text = exercise.name
-
-            // Загрузка изображения через Glide
-            Glide.with(root.context)
-                .load("${ApiService.BASE_URL}api/exercise/image/${exercise.id}")
-                .placeholder(R.drawable.ic_placeholder) // Заглушка на время загрузки
-                .error(R.drawable.cat) // Иконка при ошибке
-                .into(ivExerciseImage)
-        }
+        holder.bind(exercises[position])
     }
 
     override fun getItemCount(): Int = exercises.size

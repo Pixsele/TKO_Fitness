@@ -80,6 +80,11 @@ dependencies {
     implementation ("com.github.bumptech.glide:okhttp3-integration:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
 
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.media3:media3-ui:1.3.1")
+    implementation("androidx.media3:media3-common:1.3.1")
+    implementation("androidx.media3:media3-datasource-okhttp:1.3.1")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
