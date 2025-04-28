@@ -11,9 +11,14 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import tk.ssau.fitnesstko.ApiService.WorkoutApi.LikesApi
+import tk.ssau.fitnesstko.ApiService.WorkoutApi.WorkoutExerciseApi
 import tk.ssau.fitnesstko.model.dto.ExerciseDto
 import tk.ssau.fitnesstko.model.dto.ExerciseForPageDto
+import tk.ssau.fitnesstko.model.dto.LikesExerciseDto
+import tk.ssau.fitnesstko.model.dto.LikesWorkoutDto
 import tk.ssau.fitnesstko.model.dto.WorkoutDto
+import tk.ssau.fitnesstko.model.dto.WorkoutExerciseDto
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 
 object ApiService {
@@ -53,6 +58,9 @@ object ApiService {
         retrofit.create(ExerciseApi::class.java)
     }
 
+    val workoutExerciseService: WorkoutExerciseApi by lazy { retrofit.create(WorkoutExerciseApi::class.java) }
+    val likesService: LikesApi by lazy { retrofit.create(LikesApi::class.java) }
+
     interface ExerciseApi {
         @GET("api/exercise/page")
         fun getExercises(
@@ -80,6 +88,19 @@ object ApiService {
         @PUT("api/workout/{id}/like")  //Обработка лайка
         fun toggleLike(@Path("id") id: Long): Call<WorkoutForPageDto>
          */
+        interface WorkoutExerciseApi {
+            @POST("api/workout-exercise")
+            fun createWorkoutExercise(@Body dto: WorkoutExerciseDto): Call<Unit>
+        }
+
+        interface LikesApi {
+            @POST("api/likes/workout")
+            fun likeWorkout(@Body like: LikesWorkoutDto): Call<Unit>
+
+            @POST("api/likes/exercise")
+            fun likeExercise(@Body like: LikesExerciseDto): Call<Unit>
+        }
+
     }
 }
 

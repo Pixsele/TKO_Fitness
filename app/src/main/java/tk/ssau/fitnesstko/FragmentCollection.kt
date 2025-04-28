@@ -30,7 +30,6 @@ class FragmentCollection : Fragment(R.layout.collection) {
     }
 
     private fun setupRecyclers() {
-        // Категории
         val categories = listOf("Тренировки", "Программы")
         binding.rvCategories.adapter = CategoriesAdapter(categories)
         binding.rvCategories.layoutManager = LinearLayoutManager(
@@ -38,71 +37,34 @@ class FragmentCollection : Fragment(R.layout.collection) {
             LinearLayoutManager.HORIZONTAL,
             false
         )
+
+        workoutAdapter = WorkoutAdapter(
+            workouts,
+            { workout -> openWorkoutDetails(workout) },
+            { workout -> handleLikeClick(workout) }
+        )
+        binding.rvWorkouts.adapter = workoutAdapter
+        binding.rvWorkouts.layoutManager = LinearLayoutManager(requireContext())
+
         binding.ibAddExercises.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.flFragment, CreateWorkoutFragment())
                 .addToBackStack(null)
                 .commit()
         }
+    }
 
-        // Список тренировок
-        workoutAdapter = WorkoutAdapter(
-            workouts,
-            { workout -> /* клик на элемент */ },
-            { workout -> handleLikeClick(workout) } // Передаем обработчик
-        )
-        binding.rvWorkouts.adapter = workoutAdapter
-        binding.rvWorkouts.layoutManager = LinearLayoutManager(requireContext())
+    private fun openWorkoutDetails(workout: WorkoutForPageDto) {
+        // Реализация открытия деталей тренировки
     }
 
     private fun handleLikeClick(workout: WorkoutForPageDto) {
-
-        /*if (workout.id == null || workout.id <= 0L) {
-            // Локальная тренировка - обновляем локально
-            updateLocalWorkout(workout)
-        }
-
-         */
-        updateLocalWorkout(workout)
-        /*else {
-            // Серверная тренировка - отправляем запрос
-            ApiService.workoutService.toggleLike(workout.id)
-                .enqueue(object : Callback<WorkoutForPageDto> {
-                    override fun onResponse(
-                        call: Call<WorkoutForPageDto>,
-                        response: Response<WorkoutForPageDto>
-                    ) {
-                        if (response.isSuccessful) {
-                            response.body()?.let { updatedWorkout ->
-                                updateWorkoutInList(updatedWorkout)
-                            }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<WorkoutForPageDto>, t: Throwable) {
-                        Toast.makeText(context, "Ошибка сети", Toast.LENGTH_SHORT).show()
-                        // Откатываем состояние
-                        revertLikeState(workout)
-                    }
-                })
-                */
-
-        // Временное обновление UI до ответа сервера
         val tempWorkout = workout.copy(
             liked = !workout.liked,
-            likeCount = workout.likeCount?.plus(if (workout.liked) -1 else 1)
+            likeCount = (workout.likeCount ?: 0) + (if (workout.liked) -1 else 1)
         )
         updateWorkoutInList(tempWorkout)
-    }
-
-    private fun updateLocalWorkout(workout: WorkoutForPageDto) {
-        val updatedWorkout = workout.copy(
-            liked = !workout.liked,
-            likeCount = workout.likeCount?.plus(if (workout.liked) -1 else 1)
-        )
-
-        (activity as? MainActivity)?.prefs?.updateLocalWorkout(updatedWorkout)
-        updateWorkoutInList(updatedWorkout)
+        (activity as? MainActivity)?.prefs?.updateLocalWorkout(tempWorkout)
     }
 
     private fun updateWorkoutInList(updatedWorkout: WorkoutForPageDto) {
@@ -110,23 +72,7 @@ class FragmentCollection : Fragment(R.layout.collection) {
         if (index != -1) {
             workouts[index] = updatedWorkout
             workoutAdapter.notifyItemChanged(index)
-
-            // Принудительно обновляем источник данных
-            workoutAdapter = WorkoutAdapter(
-                workouts,
-                { workout -> /* клик на элемент */ },
-                { workout -> handleLikeClick(workout) }
-            )
-            binding.rvWorkouts.adapter = workoutAdapter
         }
-    }
-
-    private fun revertLikeState(workout: WorkoutForPageDto) {
-        val revertedWorkout = workout.copy(
-            liked = !workout.liked,
-            likeCount = workout.likeCount?.plus(if (workout.liked) 1 else -1)
-        )
-        updateWorkoutInList(revertedWorkout)
     }
 
     internal fun loadWorkouts() {
@@ -138,10 +84,8 @@ class FragmentCollection : Fragment(R.layout.collection) {
                 ) {
                     if (response.isSuccessful) {
                         val serverWorkouts = response.body()?.content ?: emptyList()
-                        val localWorkouts =
-                            (activity as? MainActivity)?.prefs?.getLocalWorkouts() ?: emptyList()
+                        val localWorkouts = getLocalWorkouts()
 
-                        // Объединяем и обновляем список
                         workouts.clear()
                         workouts.addAll(serverWorkouts + localWorkouts)
                         workoutAdapter.notifyDataSetChanged()
@@ -149,15 +93,17 @@ class FragmentCollection : Fragment(R.layout.collection) {
                 }
 
                 override fun onFailure(call: Call<PagedResponse<WorkoutForPageDto>>, t: Throwable) {
-                    // Показать только локальные данные при ошибке сети
-                    val localWorkouts =
-                        (activity as? MainActivity)?.prefs?.getLocalWorkouts() ?: emptyList()
                     workouts.clear()
-                    workouts.addAll(localWorkouts)
+                    workouts.addAll(getLocalWorkouts())
                     workoutAdapter.notifyDataSetChanged()
                 }
             })
     }
+
+    private fun getLocalWorkouts() =
+        (activity as? MainActivity)?.prefs?.getLocalWorkouts() ?: emptyList()
+
+    fun getWorkoutNames() = workouts.map { it.name }
 
     override fun onResume() {
         super.onResume()
