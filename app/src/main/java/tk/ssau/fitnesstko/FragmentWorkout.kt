@@ -44,10 +44,16 @@ class FragmentWorkout : Fragment(R.layout.workout) {
             isDragEnabled = true
             setScaleEnabled(true)
             setPinchZoom(true)
+            legend.isEnabled = false
 
             xAxis.apply {
                 position = XAxis.XAxisPosition.BOTTOM
                 granularity = 1f
+                textColor = Color.WHITE
+                gridLineWidth = 2f
+                axisLineWidth = 2f
+
+
                 valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
                         return try {
@@ -62,9 +68,14 @@ class FragmentWorkout : Fragment(R.layout.workout) {
             }
 
             axisLeft.apply {
+                gridLineWidth = 2f
+                axisLineWidth = 2f
+                extraBottomOffset = 15f
+                textColor = Color.WHITE
                 granularity = 0.5f
                 axisMinimum = 30f
                 axisMaximum = 150f
+
             }
 
             axisRight.isEnabled = false
@@ -95,11 +106,13 @@ class FragmentWorkout : Fragment(R.layout.workout) {
         }
 
         val dataSet = LineDataSet(entries, "Вес (кг)").apply {
-            color = "#2196F3".toColorInt()
-            valueTextColor = Color.BLACK
-            lineWidth = 2.5f
+            color = "#ffffff".toColorInt()
+            valueTextColor = Color.WHITE
+            lineWidth = 5f
+            valueTextSize = 10f
             setDrawCircles(true)
-            setCircleColor(Color.RED)
+            setCircleColor(Color.parseColor("#9BFF20"))
+            circleHoleColor = Color.parseColor("#9BFF20")
             circleRadius = 6f
             mode = LineDataSet.Mode.LINEAR
             setDrawValues(true)

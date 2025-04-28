@@ -1,10 +1,11 @@
 package tk.ssau.fitnesstko
 
 import android.content.Context
-import android.graphics.Color
+import android.graphics.*
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 
 class DayView @JvmOverloads constructor(
     context: Context,
@@ -13,9 +14,9 @@ class DayView @JvmOverloads constructor(
 
     enum class WorkoutState {
         NONE,
-        PLANNED,    // Серная рамка
-        TODAY,       // Зеленая рамка
-        COMPLETED    // Черная рамка
+        PLANNED,    // Пунктирная серая рамка
+        TODAY,      // Сплошная зеленая рамка
+        COMPLETED   // Сплошная синяя заливка
     }
 
     var state: WorkoutState = WorkoutState.NONE
@@ -23,6 +24,11 @@ class DayView @JvmOverloads constructor(
             field = value
             updateAppearance()
         }
+
+    // Цвета из ресурсов
+    private val plannedColor = Color.parseColor("#9E9E9E") // Серый
+    private val todayColor = Color.parseColor("#D6FFA4")   // Зеленый
+    private val completedColor = Color.parseColor("#FFFFFF") // Синий
 
     init {
         setTextColor(Color.BLACK)
@@ -33,19 +39,31 @@ class DayView @JvmOverloads constructor(
 
     private fun updateAppearance() {
         background = when (state) {
-            WorkoutState.PLANNED -> createBorderDrawable(Color.GRAY)
-            WorkoutState.TODAY -> createBorderDrawable(Color.GREEN)
-            WorkoutState.COMPLETED -> createBorderDrawable(Color.BLACK)
+            WorkoutState.PLANNED -> createDashedBorderDrawable(plannedColor)
+            WorkoutState.TODAY -> createSolidBorderDrawable(todayColor)
+            WorkoutState.COMPLETED -> createSolidBorderDrawable(completedColor)
             else -> null
         }
     }
 
-    private fun createBorderDrawable(color: Int): GradientDrawable {
+    private fun createDashedBorderDrawable(color: Int): GradientDrawable {
         return GradientDrawable().apply {
             shape = GradientDrawable.OVAL
-            setStroke(4.dpToPx(), color)
+            setStroke(3.dpToPx(), color, 5f.dpToPx(), 3f.dpToPx()) // Пунктир: 10px длина, 5px промежуток
             setColor(Color.TRANSPARENT)
         }
+    }
+
+    private fun createSolidBorderDrawable(color: Int): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setStroke(3.dpToPx(), color) // Сплошная линия
+            setColor(Color.TRANSPARENT)
+        }
+    }
+
+    private fun Float.dpToPx(): Float {
+        return this * context.resources.displayMetrics.density
     }
 
     private fun Int.dpToPx(): Int {
