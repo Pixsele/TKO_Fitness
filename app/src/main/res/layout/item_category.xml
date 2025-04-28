@@ -8,7 +8,11 @@
     android:layout_marginEnd="8dp"
     android:insetTop="0dp"
     android:insetBottom="0dp"
-    app:cornerRadius="8dp"
-    app:strokeColor="#6200EE"
+    app:cornerRadius="12dp"
+    app:backgroundTint="@color/TKO_gray"
+    app:strokeColor="@color/TKO_gray"
     app:strokeWidth="1dp"
+    android:textColor="@color/TKO_green"
+    android:textSize="16dp"
+    android:textStyle="bold"
     style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
