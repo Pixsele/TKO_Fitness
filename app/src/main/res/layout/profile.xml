@@ -4,14 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/TKO_dark_gray">
 
     <TextView
         android:id="@+id/textProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Профиль"
-        android:textSize="30sp"
+        android:textColor="@color/white"
+        android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +36,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Имя Фамилия"
-        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:textSize="22sp"
         app:layout_constraintTop_toBottomOf="@id/imageAvatar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +49,7 @@
         android:layout_height="wrap_content"
         android:text="Возраст"
         android:textSize="18sp"
-        android:textColor="@color/gray"
+        android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/fio"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +58,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="1dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,48 +67,60 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnProfileChangeFIO"
-            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Изменить личные данные"
-            android:textSize="16sp"
-            android:layout_weight="1"/>
+            android:textSize="20sp"
+            android:layout_weight="1"
+            app:cornerRadius="12sp"
+            android:backgroundTint="@color/TKO_gray"
+            android:gravity="left"
+            />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnProfileChangeAvatar"
-            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Изменить фото профиля"
-            android:textSize="16sp"
-            android:layout_weight="1"/>
+            android:textSize="20sp"
+            android:layout_weight="1"
+            app:cornerRadius="12sp"
+            app:backgroundTint="@color/TKO_gray"
+            android:gravity="left"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnProfileAddMeasurements"
-            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Добавить замеры"
-            android:textSize="16sp"
-            android:layout_weight="1"/>
+            android:textSize="20sp"
+            android:layout_weight="1"
+            app:cornerRadius="12sp"
+            app:backgroundTint="@color/TKO_gray"
+            android:gravity="left"/>
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnProfileAddWeighing"
-            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Добавить взвешивание"
-            android:textSize="16sp"
-            android:layout_weight="1"/>
+            android:textSize="20sp"
+            android:layout_weight="1"
+            app:cornerRadius="12sp"
+            app:backgroundTint="@color/TKO_gray"
+            android:gravity="left"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnProfileSettingApp"
-            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Настройки приложения"
-            android:textSize="16sp"
-            android:layout_weight="1"/>
+            android:textSize="20sp"
+            android:layout_weight="1"
+            app:cornerRadius="12sp"
+            app:backgroundTint="@color/TKO_gray"
+            android:gravity="left"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
