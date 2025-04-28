@@ -1,11 +1,10 @@
 package tk.ssau.fitnesstko
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
 
 class DayView @JvmOverloads constructor(
     context: Context,
@@ -49,7 +48,12 @@ class DayView @JvmOverloads constructor(
     private fun createDashedBorderDrawable(color: Int): GradientDrawable {
         return GradientDrawable().apply {
             shape = GradientDrawable.OVAL
-            setStroke(3.dpToPx(), color, 5f.dpToPx(), 3f.dpToPx()) // Пунктир: 10px длина, 5px промежуток
+            setStroke(
+                3.dpToPx(),
+                color,
+                5f.dpToPx(),
+                3f.dpToPx()
+            ) // Пунктир: 10px длина, 5px промежуток
             setColor(Color.TRANSPARENT)
         }
     }

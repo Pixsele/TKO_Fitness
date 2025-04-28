@@ -162,7 +162,7 @@ class FragmentWorkout : Fragment(R.layout.workout) {
             DayView(requireContext()).apply {
                 text = day
                 setTextAppearance(android.R.style.TextAppearance_Medium)
-                setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 addToGrid()
             }
         }
@@ -248,13 +248,6 @@ class FragmentWorkout : Fragment(R.layout.workout) {
     private fun setupPlanWorkoutButton() {
 
         binding.btnPlanWorkout.setOnClickListener {
-            val workoutNames = (requireActivity() as MainActivity)
-                .supportFragmentManager
-                .findFragmentByTag("collection") // или другой способ получения данных
-                ?.let { it as? FragmentCollection }
-                ?.getWorkoutNames()
-                ?: emptyList()
-
             parentFragmentManager.beginTransaction()
                 .replace(R.id.flFragment, ScheduleWorkoutFragment())
                 .addToBackStack(null)

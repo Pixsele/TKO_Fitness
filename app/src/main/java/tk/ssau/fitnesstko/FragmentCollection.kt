@@ -12,9 +12,10 @@ import retrofit2.Response
 import tk.ssau.fitnesstko.databinding.CollectionBinding
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 
-class FragmentCollection : Fragment(R.layout.collection) {
+class FragmentCollection : Fragment() {
 
-    private lateinit var binding: CollectionBinding
+    private var _binding: CollectionBinding? = null
+    private val binding get() = _binding!!
     private lateinit var workoutAdapter: WorkoutAdapter
     private var workouts = mutableListOf<WorkoutForPageDto>()
 
@@ -23,29 +24,45 @@ class FragmentCollection : Fragment(R.layout.collection) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = CollectionBinding.inflate(inflater, container, false)
-        setupRecyclers()
-        loadWorkouts()
+        _binding = CollectionBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupRecyclers()
+        loadWorkouts()
+        setupClickListeners()
+    }
+
     private fun setupRecyclers() {
+        // Настройка категорий
         val categories = listOf("Тренировки", "Программы")
-        binding.rvCategories.adapter = CategoriesAdapter(categories)
-        binding.rvCategories.layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
+        binding.rvCategories.apply {
+            adapter = CategoriesAdapter(categories)
+            layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+        }
 
+        // Настройка списка тренировок
         workoutAdapter = WorkoutAdapter(
-            workouts,
-            { workout -> openWorkoutDetails(workout) },
-            { workout -> handleLikeClick(workout) }
+            workouts = emptyList(),
+            fragmentManager = parentFragmentManager, // Передаем родительский FragmentManager
+            onDataUpdated = { updatedWorkout ->
+                (activity as? MainActivity)?.prefs?.updateLocalWorkout(updatedWorkout)
+            }
         )
-        binding.rvWorkouts.adapter = workoutAdapter
-        binding.rvWorkouts.layoutManager = LinearLayoutManager(requireContext())
 
+        binding.rvWorkouts.apply {
+            adapter = workoutAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+    }
+
+    private fun setupClickListeners() {
         binding.ibAddExercises.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.flFragment, CreateWorkoutFragment())
@@ -54,38 +71,8 @@ class FragmentCollection : Fragment(R.layout.collection) {
         }
     }
 
-    private fun openWorkoutDetails(workout: WorkoutForPageDto) {
-        // Реализация открытия деталей тренировки
-    }
-
-    private fun handleLikeClick(workout: WorkoutForPageDto) {
-        val updatedWorkout = workout.copy(
-            liked = !workout.liked,
-            likeCount = (workout.likeCount ?: 0) + if (workout.liked) -1 else 1
-        )
-
-        // Обновляем локальное хранилище
-        (activity as? MainActivity)?.prefs?.updateLocalWorkout(updatedWorkout)
-
-        // Находим позицию и обновляем список
-        val position = workouts.indexOfFirst { it.id == workout.id }
-        if (position != -1) {
-            workouts = workouts.toMutableList().apply {
-                set(position, updatedWorkout)
-            }
-            workoutAdapter.notifyItemChanged(position)
-        }
-    }
-
-    private fun updateWorkoutInList(updatedWorkout: WorkoutForPageDto) {
-        val index = workouts.indexOfFirst { it.id == updatedWorkout.id }
-        if (index != -1) {
-            workouts[index] = updatedWorkout
-            workoutAdapter.notifyItemChanged(index)
-        }
-    }
-
     internal fun loadWorkouts() {
+
         ApiService.workoutService.getWorkouts()
             .enqueue(object : Callback<PagedResponse<WorkoutForPageDto>> {
                 override fun onResponse(
@@ -93,25 +80,49 @@ class FragmentCollection : Fragment(R.layout.collection) {
                     response: Response<PagedResponse<WorkoutForPageDto>>
                 ) {
                     if (response.isSuccessful) {
-                        val serverWorkouts = response.body()?.content ?: emptyList()
-                        val localWorkouts = getLocalWorkouts()
-
-                        workouts.clear()
-                        workouts.addAll(serverWorkouts + localWorkouts)
-                        workoutAdapter.notifyDataSetChanged()
+                        response.body()?.let { pagedResponse ->
+                            updateWorkoutsList(
+                                serverWorkouts = pagedResponse.content,
+                                localWorkouts = getLocalWorkouts()
+                            )
+                        }
                     }
                 }
 
                 override fun onFailure(call: Call<PagedResponse<WorkoutForPageDto>>, t: Throwable) {
-                    workouts.clear()
-                    workouts.addAll(getLocalWorkouts())
-                    workoutAdapter.notifyDataSetChanged()
+                    updateWorkoutsList(localWorkouts = getLocalWorkouts())
                 }
             })
     }
 
-    private fun getLocalWorkouts() =
-        (activity as? MainActivity)?.prefs?.getLocalWorkouts() ?: emptyList()
+    private fun updateWorkoutsList(
+        serverWorkouts: List<WorkoutForPageDto> = emptyList(),
+        localWorkouts: List<WorkoutForPageDto> = emptyList()
+    ) {
+        workouts.clear()
+        workouts.addAll(serverWorkouts + localWorkouts)
+        workoutAdapter.updateWorkouts(workouts)
+    }
 
-    fun getWorkoutNames() = workouts.map { it.name }
+    private fun handleLikeClick(workout: WorkoutForPageDto) {
+        (activity as? MainActivity)?.prefs?.updateLocalWorkout(workout)
+        updateWorkoutInList(workout)
+    }
+
+    private fun updateWorkoutInList(updatedWorkout: WorkoutForPageDto) {
+        val position = workouts.indexOfFirst { it.id == updatedWorkout.id }
+        if (position != -1) {
+            workouts[position] = updatedWorkout
+            workoutAdapter.notifyItemChanged(position)
+        }
+    }
+
+    private fun getLocalWorkouts(): List<WorkoutForPageDto> {
+        return (activity as? MainActivity)?.prefs?.getLocalWorkouts() ?: emptyList()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
