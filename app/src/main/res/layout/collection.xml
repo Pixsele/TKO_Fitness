@@ -26,7 +26,7 @@
         android:id="@+id/tvCollection"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingStart="75sp"
+        android:paddingStart="70sp"
         android:text="Коллекция"
         android:textColor="@color/white"
         android:textSize="28sp"

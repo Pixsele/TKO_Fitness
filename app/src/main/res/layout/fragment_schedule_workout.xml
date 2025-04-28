@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:paddingTop="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +16,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="Дата тренировки">
+            android:hint="Дата тренировки"
+            app:boxBackgroundColor="@color/TKO_gray"
+            android:textColorHint="#FFFFFF"
+            app:boxCornerRadiusTopStart="18sp"
+            app:boxCornerRadiusTopEnd="18sp"
+            app:boxCornerRadiusBottomStart="18sp"
+            app:boxCornerRadiusBottomEnd="18sp"
+            app:boxStrokeColor="#D6FFA4"
+            app:hintTextColor="#FFFFFF">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etDate"
@@ -31,7 +39,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:hint="Тренировка">
+            android:hint="Тренировка"
+            app:boxBackgroundColor="@color/TKO_gray"
+            android:textColorHint="#FFFFFF"
+            app:boxCornerRadiusTopStart="18sp"
+            app:boxCornerRadiusTopEnd="18sp"
+            app:boxCornerRadiusBottomStart="18sp"
+            app:boxCornerRadiusBottomEnd="18sp"
+            app:boxStrokeColor="#D6FFA4"
+            app:hintTextColor="#FFFFFF">>
 
             <AutoCompleteTextView
                 android:id="@+id/actvWorkout"
@@ -42,12 +58,18 @@
                 android:focusable="false"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
+
+        <com.google.android.material.button.MaterialButton
+
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60sp"
             android:text="Сохранить"
-            android:textColor="@color/white"/>
+            android:textColor="#D6FFA4"
+            android:textSize="22sp"
+            android:backgroundTint="#353535"
+            app:cornerRadius="18sp"
+            />
 
     </LinearLayout>
 </ScrollView>
