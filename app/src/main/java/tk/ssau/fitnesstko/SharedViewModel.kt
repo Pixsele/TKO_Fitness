@@ -6,13 +6,23 @@ import androidx.lifecycle.ViewModel
 import tk.ssau.fitnesstko.model.dto.ExerciseForPageDto
 
 class SharedViewModel : ViewModel() {
-    private val _selectedExercises =
-        MutableLiveData<MutableList<ExerciseForPageDto>>(mutableListOf())
-    val selectedExercises: LiveData<MutableList<ExerciseForPageDto>> = _selectedExercises
+    private val _selectedExercises = MutableLiveData<List<ExerciseWithParams>>(emptyList())
+    val selectedExercises: LiveData<List<ExerciseWithParams>> = _selectedExercises
 
-    fun addExercise(exercise: ExerciseForPageDto) {
-        val currentList = _selectedExercises.value ?: mutableListOf()
-        currentList.add(exercise)
+    fun addExerciseWithParams(exercise: ExerciseForPageDto, sets: Int, reps: Int, rest: Int) {
+        val currentList = _selectedExercises.value?.toMutableList() ?: mutableListOf()
+        currentList.add(ExerciseWithParams(exercise, sets, reps, rest))
         _selectedExercises.value = currentList
     }
+
+    fun clearSelectedExercises() {
+        _selectedExercises.value = emptyList()
+    }
 }
+
+data class ExerciseWithParams(
+    val exercise: ExerciseForPageDto,
+    val sets: Int,
+    val reps: Int,
+    val rest: Int
+)
