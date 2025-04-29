@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import {useAuth} from "./contexts/AuthContext.jsx";
+import React, { useState, useEffect } from 'react';
+import { useAuth } from "./contexts/AuthContext.jsx";
 import './LoginForm.css';
+import axios from 'axios';
 
 const LoginForm = ({ onSwitchToRegister, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -38,9 +39,21 @@ const LoginForm = ({ onSwitchToRegister, onSuccess }) => {
 
             if (response.ok) {
                 const { token, userId, name } = result;
-                authLogin({ token, userId, name });
+
+                // После логина получаем данные пользователя, включая gender
+                const userResponse = await axios.get(`http://85.236.187.180:8080/api/user/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                const { gender } = "MALE";
+
+                // Сохраняем все данные в контексте
+                authLogin({ token, userId, name, gender });
+
                 alert('Вход успешен!');
-                onSuccess();
+                onSuccess(); // Оповещаем родительский компонент
             } else {
                 setError(result.message || 'Ошибка при входе');
             }
@@ -50,7 +63,6 @@ const LoginForm = ({ onSwitchToRegister, onSuccess }) => {
             setLoading(false);
         }
     };
-
 
     return (
         <form onSubmit={handleSubmit} className="login-form">

@@ -44,6 +44,7 @@
     margin-top: 15px;
     gap: 20px; /* Обеспечивает отступы между кнопками */
     align-items: center; /* Выравнивание кнопок по вертикали */
+    text-decoration: none;
 }
 
 .nav-link {
@@ -56,11 +57,10 @@
     padding-left: 20px;
     padding-right: 20px;
     text-align: center; /* Текст по центру внутри кнопок */
+    text-decoration: none;
 }
 
-.navigation-links .nav-link-now {
-    margin-right: 20px; /* Увеличиваем отступ справа от "Тренировки" */
-}
+
 
 .logo-container,
 .auth-buttons {
@@ -128,6 +128,14 @@
     display: flex; /* Выставляем элементы по горизонтали */
     justify-content: space-between; /* Распределяем элементы по всему контейнеру */
     margin-bottom: 20px;
+}
+.workout-link {
+    text-decoration: none;
+    color: white;
+}
+
+.workout-link:hover {
+    color: #d6ffa4;
 }
 
 .workout-info {

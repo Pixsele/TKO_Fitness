@@ -1,4 +1,4 @@
-.home-container, body {
+.page-container, body {
     background-color: #212121;
     font-family: 'Montserrat-ExtraBold', sans-serif;
     min-height: 100vh;
@@ -38,36 +38,148 @@
 .navigation-links {
     margin-bottom: 30px;
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Разделяет кнопки равномерно по всей ширине */
     flex: 1;
-    margin-left: 250px; /* двигаем вправо */
+    margin-left: 250px; /* Сдвигаем вправо */
+    margin-top: 15px;
+    gap: 20px; /* Обеспечивает отступы между кнопками */
+    align-items: center; /* Выравнивание кнопок по вертикали */
+    text-decoration: none;
 }
+
+.nav-link {
+    font-family: 'Montserrat-ExtraBold', sans-serif;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center; /* Текст по центру внутри кнопок */
+}
+
+
 
 .logo-container,
 .auth-buttons {
     flex-shrink: 0; /* Не сжимается */
 }
 
-.nav-link {
-    font-family: 'Montserrat-ExtraBold', sans-serif; /* Используем шрифт */
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    font-style: normal;
-    text-decoration: none;
-}
-
-.nav-link-now {
-    font-family: 'Montserrat-ExtraBold', sans-serif; /* Используем шрифт */
-    color: #d6ffa4;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    font-style: normal;
-    text-decoration: none;
-}
-
 .nav-link:hover {
     color: #d6ffa4;
+}
+
+.user-info{
+    display: flex;
+    gap: 8px;
+    font-family: 'Montserrat-ExtraBold', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color : white;
+    align-items: center;
+    margin-top: -5px;
+}
+
+.user-info img{
+    width: 30px;  /* Или другой размер для иконки */
+    height: 29px;
+    margin-top: -5px;
+}
+
+.user-name {
+    align-items: center;
+    text-decoration: none;
+    color: white;
+}
+
+.rasch-h1 {
+    font-family: 'Montserrat-ExtraBold', sans-serif;
+    font-size: 35px;
+    font-weight: 700;
+    color: #ffffff;
+}
+.rasch-p {
+    font-size: 20px;
+    text-align: left;
+    color: #ffffff;
+}
+
+.kcal-profile-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.rasch {
+    background-color: #1e1e2f;
+    padding: 30px;
+    border-radius: 12px;
+    background-color: #303030;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.selector-activ {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.selector-activ label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.selector-activ select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #212121;
+    border-color: #212121;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.selector-activ select:focus {
+    background-color: #212121;
+}
+
+.selector-activ option {
+    background-color: #212121;
+    color: #ffffff;
+}
+
+.calculate-button {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #212121; /* Зеленая основа */
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.calculate-button:hover {
+    background-color: #212121; /* Чуть темнее при наведении */
+    transform: translateY(-2px); /* Эффект подъема кнопки */
+}
+
+.calculate-button:active {
+    background-color: #212121; /* Еще темнее при нажатии */
+    transform: translateY(0); /* Возврат позиции */
+}
+
+.result-kcal{
+    color: #ffffff;
 }

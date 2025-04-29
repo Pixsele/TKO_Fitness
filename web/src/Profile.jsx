@@ -28,7 +28,7 @@ const Profile = () => {
 
     const toggleEdit = () => setShowEdit(!showEdit);
 
-    if (!profileData) return <div>Загрузка профиля...</div>;
+    if (!profileData) return <div className="load-prof">Загрузка профиля...</div>;
     return (
         <div className="home-container">
             {/* Логотип, который ведет на главную страницу */}
@@ -65,7 +65,7 @@ const Profile = () => {
             <button className="main">
                 <div className="profile-content">
                     <img
-                        src="/assets/image%202.svg" // можно заменить на profileData.avatar, если сервер отдает URL
+                        src="/assets/Mask%20group.svg" // можно заменить на profileData.avatar, если сервер отдает URL
                         alt="Avatar"
                         className="profile-avatar"
                     />
