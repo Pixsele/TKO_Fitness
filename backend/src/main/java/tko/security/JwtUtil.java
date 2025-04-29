@@ -57,7 +57,7 @@ public class JwtUtil {
                 .claim("role", user.getRole())
                 .issuedAt(Date.from(Instant.now()))
                 //TODO
-                .expiration(Date.from(Instant.now().plusSeconds(3600)))
+                .expiration(Date.from(Instant.now().plusSeconds(3600*20)))
                 .signWith(getSigningKey())
                 .compact();
     }

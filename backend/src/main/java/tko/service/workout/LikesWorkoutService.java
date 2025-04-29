@@ -105,12 +105,16 @@ public class LikesWorkoutService {
         return likesWorkoutMapper.toDTO(likesWorkoutEntity);
     }
 
-    public LikesWorkoutDTO deleteLikesWorkout(Long id) {
-        if (id == null) {
+    public LikesWorkoutDTO deleteLikesWorkout(LikesWorkoutDTO likesWorkoutDTO) {
+        if (likesWorkoutDTO == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id must not be null");
         }
 
-        LikesWorkoutEntity likesWorkoutEntity = likesWorkoutRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+        LikesWorkoutEntity likesWorkoutEntity = likesWorkoutRepository
+                .findByWorkout_IdAndUser_Id(likesWorkoutDTO.getWorkoutId(), likesWorkoutDTO.getUserId())
+                .map(entity -> (LikesWorkoutEntity) entity)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Workout does not exist"));
+
         likesWorkoutRepository.delete(likesWorkoutEntity);
         workoutService.removeLike(likesWorkoutEntity.getWorkout().getId());
         return likesWorkoutMapper.toDTO(likesWorkoutEntity);

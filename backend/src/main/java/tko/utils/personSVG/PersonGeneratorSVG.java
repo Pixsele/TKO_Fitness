@@ -26,11 +26,11 @@ import java.util.List;
 public class PersonGeneratorSVG {
 
     private static final String color = "#FF0000";
-    private static final String sourceWomanBack  = "src/main/resources/peopleSVG/woman_back.svg";
-    private static final String sourceWomanFront  = "src/main/resources/peopleSVG/woman_front.svg";
+    private static final String sourceWomanBack  = "svg/woman_back.svg";
+    private static final String sourceWomanFront  = "svg/woman_front.svg";
 
-    private static final String sourceManBack  = "src/main/resources/peopleSVG/man_back.svg";
-    private static final String sourceManFront  = "src/main/resources/peopleSVG/man_front.svg";
+    private static final String sourceManBack  = "svg/man_back.svg";
+    private static final String sourceManFront  = "svg/man_front.svg";
 
 
     public static List<String> GetPersonWithChangesByIdElements(Gender genderPerson, List<Muscle> muscleList) throws ParserConfigurationException, IOException, SAXException, TransformerException {

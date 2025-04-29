@@ -30,28 +30,28 @@ public class LikesTrainingsProgramController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("@likesTrainingsProgramService.isLikeOwner(#id,authentication.name)")
+    //@PreAuthorize("@likesTrainingsProgramService.isLikeOwner(#id,authentication.name)")
     public ResponseEntity<LikesTrainingsProgramDTO> readLikesTrainingsProgramById(@PathVariable Long id) {
         LikesTrainingsProgramDTO readLike = likesTrainingsProgramService.readLikesTrainingsProgram(id);
         return new ResponseEntity<>(readLike, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("@likesTrainingsProgramService.isLikeOwner(#id,authentication.name)")
+    //@PreAuthorize("@likesTrainingsProgramService.isLikeOwner(#id,authentication.name)")
     public ResponseEntity<LikesTrainingsProgramDTO> updateLikesTrainingsProgram(@PathVariable Long id, @Valid @RequestBody LikesTrainingsProgramDTO likesTrainingsProgramDTO) {
         LikesTrainingsProgramDTO updatedLike = likesTrainingsProgramService.updateLikesTrainingsProgram(id, likesTrainingsProgramDTO);
         return new ResponseEntity<>(updatedLike, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@likesTrainingsProgramService.isLikeOwner(#id,authentication.name)")
+   // @PreAuthorize("@likesTrainingsProgramService.isLikeOwner(#id,authentication.name)")
     public ResponseEntity<LikesTrainingsProgramDTO> deleteLikesTrainingsProgram(@PathVariable Long id) {
         LikesTrainingsProgramDTO deletedLike = likesTrainingsProgramService.deleteLikesTrainingsProgram(id);
         return new ResponseEntity<>(deletedLike, HttpStatus.OK);
     }
 
     @GetMapping("/page/{id}")
-    @PreAuthorize("@likesTrainingsProgramService.isLikeOwner(#id,authentication.name)")
+    //@PreAuthorize("@likesTrainingsProgramService.isLikeOwner(#id,authentication.name)")
     public PagedModel<LikesTrainingsProgramDTO> getLikesTrainingsPrograms(@PathVariable Long id, Pageable pageable) {
         Page<LikesTrainingsProgramDTO> likesTrainingsProgramDTOS = likesTrainingsProgramService.readLikesTrainingsProgramsByUserId(id, pageable);
         return new PagedModel<>(likesTrainingsProgramDTOS);

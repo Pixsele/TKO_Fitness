@@ -31,28 +31,27 @@ public class LikesWorkoutController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("@likesWorkoutService.isLikeOwner(#id,authentication.name)")
+    //@PreAuthorize("@likesWorkoutService.isLikeOwner(#id,authentication.name)")
     public ResponseEntity<LikesWorkoutDTO> readLikesWorkoutById(@PathVariable Long id) {
         LikesWorkoutDTO readLike = likesWorkoutService.readLikesWorkout(id);
         return new ResponseEntity<>(readLike, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("@likesWorkoutService.isLikeOwner(#id,authentication.name)")
+    //@PreAuthorize("@likesWorkoutService.isLikeOwner(#id,authentication.name)")
     public ResponseEntity<LikesWorkoutDTO> updateLikesWorkout(@PathVariable Long id, @Valid @RequestBody LikesWorkoutDTO workout) {
         LikesWorkoutDTO updatedLike = likesWorkoutService.updateLikesWorkout(id, workout);
         return new ResponseEntity<>(updatedLike,HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("@likesWorkoutService.isLikeOwner(#id,authentication.name)")
-    public ResponseEntity<LikesWorkoutDTO> deleteLikesWorkout(@PathVariable Long id) {
-        LikesWorkoutDTO deletedLike = likesWorkoutService.deleteLikesWorkout(id);
+    @DeleteMapping
+    public ResponseEntity<LikesWorkoutDTO> deleteLikesWorkout(@Valid @RequestBody LikesWorkoutDTO workoutDTO) {
+        LikesWorkoutDTO deletedLike = likesWorkoutService.deleteLikesWorkout(workoutDTO);
         return new ResponseEntity<>(deletedLike,HttpStatus.OK);
     }
 
     @GetMapping("/page/{id}")
-    @PreAuthorize("@likesWorkoutService.isLikeOwner(#id,authentication.name)")
+    //@PreAuthorize("@likesWorkoutService.isLikeOwner(#id,authentication.name)")
     public PagedModel<LikesWorkoutDTO> getLikesWorkouts(@PathVariable Long id, Pageable pageable) {
         Page<LikesWorkoutDTO> likesWorkoutDTOS = likesWorkoutService.readLikesWorkoutByUserId(id, pageable);
         return new PagedModel<>(likesWorkoutDTOS);

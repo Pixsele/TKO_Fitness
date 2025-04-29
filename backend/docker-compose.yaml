@@ -26,5 +26,6 @@ services:
       - db
     volumes:
       - ./src/main/media:/app/media
+      - ./src/main/resources/peopleSVG:/app/svg
 volumes:
   pgdata:
