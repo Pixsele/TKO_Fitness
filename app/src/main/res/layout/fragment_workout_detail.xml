@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@color/TKO_dark_gray">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,8 +18,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_arrow_left"
+            app:navigationIconTint="@color/white"
             app:title="Тренировка"
-            app:titleTextColor="@color/white"/>
+            app:titleTextColor="@color/white" />
 
         <!-- Название тренировки -->
         <TextView
@@ -27,8 +29,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textColor="@color/white"
-            android:textSize="24sp"
-            android:textStyle="bold"/>
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"/>
 
         <!-- Сложность -->
         <TextView
@@ -36,7 +39,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textSize="16sp"/>
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@drawable/rounded_textview_bg"
+            android:padding="3dp"
+            />
 
         <!-- Описание -->
         <TextView
@@ -45,17 +54,30 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textColor="@color/white"
-            android:textSize="16sp"/>
+            android:textSize="19sp"
+            android:background="@drawable/rounded_textview_bg"
+            android:padding="5dp"/>
 
         <!-- SVG изображение мышц -->
-        <ImageView
-            android:id="@+id/ivMuscleDiagram"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
-            android:contentDescription="Диаграмма мышц"
-            android:scaleType="fitCenter"/>
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/TKO_gray"
+            android:padding="3dp"
+            >
+
+
+            <ImageView
+                android:id="@+id/ivMuscleDiagram"
+                android:layout_width="350dp"
+                android:layout_height="310dp"
+                android:contentDescription="Диаграмма мышц"
+                android:scaleType="fitCenter" />
+        </androidx.cardview.widget.CardView>
 
         <!-- Список упражнений -->
         <androidx.recyclerview.widget.RecyclerView
@@ -73,9 +95,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Начать тренировку"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             app:cornerRadius="8dp"
-            app:iconTint="@color/black"/>
+            app:iconTint="@color/white"
+            android:background="@drawable/rounded_bg"
+            app:backgroundTint="@color/TKO_gray"/>
 
         <!-- Индикатор загрузки -->
         <ProgressBar
