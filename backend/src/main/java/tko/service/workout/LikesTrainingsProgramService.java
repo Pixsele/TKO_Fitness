@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import tko.database.entity.user.UsersEntity;
 import tko.database.entity.workout.LikesTrainingsProgramEntity;
+import tko.database.entity.workout.LikesWorkoutEntity;
 import tko.database.entity.workout.TrainingsProgramEntity;
 import tko.database.repository.user.UsersRepository;
 import tko.database.repository.workout.LikesTrainingsProgramRepository;
@@ -101,12 +102,16 @@ public class LikesTrainingsProgramService {
         return likesTrainingsProgramMapper.toDTO(likesTrainingsProgramEntity);
     }
 
-    public LikesTrainingsProgramDTO deleteLikesTrainingsProgram(Long id) {
-        if(id == null) {
+    public LikesTrainingsProgramDTO deleteLikesTrainingsProgram(LikesTrainingsProgramDTO likesTrainingsProgramDTO) {
+        if(likesTrainingsProgramDTO == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id must not be null");
         }
 
-        LikesTrainingsProgramEntity likesTrainingsProgram = likesTrainingsProgramRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id not found"));
+        LikesTrainingsProgramEntity likesTrainingsProgram = likesTrainingsProgramRepository
+                .findByUser_IdAndTrainingsProgram_Id(likesTrainingsProgramDTO.getUserId(), likesTrainingsProgramDTO.getTrainingsProgramId())
+                .map(entity -> (LikesTrainingsProgramEntity) entity)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Workout does not exist"));
+
         likesTrainingsProgramRepository.delete(likesTrainingsProgram);
         trainingsProgramService.removeLike(likesTrainingsProgram.getTrainingsProgram().getId());
         return likesTrainingsProgramMapper.toDTO(likesTrainingsProgram);

@@ -6,6 +6,8 @@ import tko.database.entity.workout.LikesTrainingsProgramEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface LikesTrainingsProgramRepository extends JpaRepository<LikesTrainingsProgramEntity, Long> {
     boolean existsByUser_IdAndTrainingsProgram_Id(Long userId, Long trainingsProgramId);
@@ -13,4 +15,6 @@ public interface LikesTrainingsProgramRepository extends JpaRepository<LikesTrai
     Page<LikesTrainingsProgramEntity> findByUser_Id(Long userId, Pageable pageable);
 
     boolean existsByUser_IdAndId(Long userId, Long id);
+
+    Optional<Object> findByUser_IdAndTrainingsProgram_Id(Long userId, Long trainingsProgramId);
 }

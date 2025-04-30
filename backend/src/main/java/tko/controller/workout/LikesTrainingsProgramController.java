@@ -43,10 +43,10 @@ public class LikesTrainingsProgramController {
         return new ResponseEntity<>(updatedLike, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping()
    // @PreAuthorize("@likesTrainingsProgramService.isLikeOwner(#id,authentication.name)")
-    public ResponseEntity<LikesTrainingsProgramDTO> deleteLikesTrainingsProgram(@PathVariable Long id) {
-        LikesTrainingsProgramDTO deletedLike = likesTrainingsProgramService.deleteLikesTrainingsProgram(id);
+    public ResponseEntity<LikesTrainingsProgramDTO> deleteLikesTrainingsProgram(@Valid @RequestBody LikesTrainingsProgramDTO likesTrainingsProgramDTO) {
+        LikesTrainingsProgramDTO deletedLike = likesTrainingsProgramService.deleteLikesTrainingsProgram(likesTrainingsProgramDTO);
         return new ResponseEntity<>(deletedLike, HttpStatus.OK);
     }
 
