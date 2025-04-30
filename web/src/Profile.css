@@ -44,6 +44,7 @@
     margin-top: 15px;
     gap: 20px; /* Обеспечивает отступы между кнопками */
     align-items: center; /* Выравнивание кнопок по вертикали */
+    text-decoration: none;
 }
 
 .nav-link {
@@ -60,6 +61,8 @@
 
 .navigation-links .nav-link-now {
     margin-right: 20px; /* Увеличиваем отступ справа от "Тренировки" */
+    text-decoration: none;
+    color: #d6ffa4;
 }
 
 .logo-container,
@@ -158,3 +161,11 @@
     color: #caff75;
 }
 
+.load-prof{
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+    color: white;
+}
