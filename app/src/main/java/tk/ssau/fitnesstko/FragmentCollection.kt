@@ -36,7 +36,6 @@ class FragmentCollection : Fragment() {
     }
 
     private fun setupRecyclers() {
-        // Настройка категорий
         val categories = listOf("Тренировки", "Программы")
         binding.rvCategories.apply {
             adapter = CategoriesAdapter(categories)
@@ -47,10 +46,9 @@ class FragmentCollection : Fragment() {
             )
         }
 
-        // Настройка списка тренировок
         workoutAdapter = WorkoutAdapter(
             workouts = emptyList(),
-            fragmentManager = parentFragmentManager, // Передаем родительский FragmentManager
+            fragmentManager = parentFragmentManager,
             onDataUpdated = { updatedWorkout ->
                 (activity as? MainActivity)?.prefs?.updateLocalWorkout(updatedWorkout)
             }

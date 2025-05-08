@@ -14,7 +14,6 @@ class PreferencesManager(context: Context) {
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     private val gson = Gson()
 
-    // Сохранение данных пользователя
     fun saveUserData(firstName: String, lastName: String, age: String) {
         sharedPreferences.edit {
             putString("firstName", firstName)
@@ -24,7 +23,7 @@ class PreferencesManager(context: Context) {
     }
 
     fun saveWeight(weight: Float) {
-        val currentTime = System.currentTimeMillis() // Используем текущее время с миллисекундами
+        val currentTime = System.currentTimeMillis()
 
         sharedPreferences.edit {
             putStringSet(
@@ -56,14 +55,12 @@ class PreferencesManager(context: Context) {
             ?.sortedBy { it.first } ?: emptyList()
     }
 
-    // Получение последнего веса
     fun getLastWeight(): String {
         return getWeights().lastOrNull()?.let {
             "%.1f кг (${dateFormat.format(Date(it.first))})".format(it.second)
         } ?: "Нет данных"
     }
 
-    // Сохранение тренировок
     fun saveWorkout(date: String, type: String) {
         val workouts = getWorkouts().toMutableSet()
         workouts.add("$date|$type")
@@ -72,7 +69,6 @@ class PreferencesManager(context: Context) {
         }
     }
 
-    // Получение тренировок
     fun getWorkouts(): Set<String> {
         return sharedPreferences.getStringSet("workouts", emptySet()) ?: emptySet()
     }

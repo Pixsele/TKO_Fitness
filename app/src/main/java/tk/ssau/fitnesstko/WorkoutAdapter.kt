@@ -24,7 +24,6 @@ class WorkoutAdapter(
 
         fun bind(workout: WorkoutForPageDto) {
             binding.apply {
-                // Основные данные
                 tvWorkoutName.text = workout.name
                 tvLikeCount.text = workout.likeCount?.toString() ?: "0"
                 ivLike.setImageResource(
@@ -32,12 +31,10 @@ class WorkoutAdapter(
                     else R.drawable.ic_not_liked
                 )
 
-                // Обработка клика на лайк
                 ivLike.setOnClickListener {
                     handleLikeClick(workout)
                 }
 
-                // Обработка клика на карточку
                 root.setOnClickListener {
                     workout.id?.let { id -> openWorkoutDetails(id) }
                 }

@@ -25,7 +25,6 @@ class AddWeightFragment : Fragment(R.layout.fragment_add_weight) {
     }
 
     private fun setupUI() {
-        // Показать последнее измерение
         prefs.getWeights().lastOrNull()?.let { (timestamp, weight) ->
             binding.tvLastWeight.text = "Последнее: %.1f кг\n(%s)".format(
                 weight,
@@ -50,7 +49,7 @@ class AddWeightFragment : Fragment(R.layout.fragment_add_weight) {
     private fun isValidWeight(input: String): Boolean {
         return try {
             val weight = input.toFloat()
-            weight in 30f..300f // Проверка на реалистичный вес
+            weight in 30f..300f
         } catch (e: NumberFormatException) {
             false
         }
@@ -63,13 +62,10 @@ class AddWeightFragment : Fragment(R.layout.fragment_add_weight) {
 
     private fun saveWeight(weight: Float) {
         try {
-            // Сохраняем с текущим временем
             prefs.saveWeight(weight)
 
-            // Уведомляем родительский фрагмент
             parentFragmentManager.setFragmentResult("weight_updated", Bundle())
 
-            // Закрываем фрагмент
             parentFragmentManager.popBackStack()
 
         } catch (e: Exception) {
@@ -79,7 +75,6 @@ class AddWeightFragment : Fragment(R.layout.fragment_add_weight) {
 
     override fun onResume() {
         super.onResume()
-        // Очистить поле при каждом открытии
         binding.etWeight.text?.clear()
     }
 }

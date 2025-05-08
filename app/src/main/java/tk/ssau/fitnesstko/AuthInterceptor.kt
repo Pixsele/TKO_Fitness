@@ -7,7 +7,7 @@ import okhttp3.Response
 class AuthInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val hardcodedToken =
-            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzQ1ODc2OTg2LCJleHAiOjE3NDU5NDg5ODZ9.ksWcB8Js9CVjh27qcOCQA1LtI8In7mfUW-ntVGxHn90" //
+            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzQ2NzE1MDczLCJleHAiOjE3NDY3ODcwNzN9.VPHYYw-spa3soU0fRhB2hfBf9Qy1hqfI2ViGLSubly4"
 
         val request = chain.request().newBuilder()
             .addHeader("Authorization", "Bearer $hardcodedToken")

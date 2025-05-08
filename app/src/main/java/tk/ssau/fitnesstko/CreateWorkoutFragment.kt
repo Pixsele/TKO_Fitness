@@ -12,6 +12,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import tk.ssau.fitnesstko.databinding.FragmentCreateWorkoutBinding
+import tk.ssau.fitnesstko.model.dto.ExerciseForPageDto
 import tk.ssau.fitnesstko.model.dto.WorkoutDto
 import tk.ssau.fitnesstko.model.dto.WorkoutExerciseDto
 
@@ -43,7 +44,7 @@ class CreateWorkoutFragment : Fragment() {
         binding.btnAddExercise.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.flFragment, ExercisePickerFragment())
-                .addToBackStack(null).commit()
+                .addToBackStack("create_workout").commit()
         }
 
         binding.btnSave.setOnClickListener {
@@ -104,7 +105,7 @@ class CreateWorkoutFragment : Fragment() {
             name = binding.etWorkoutName.text.toString(),
             description = binding.etDescription.text.toString(),
             difficult = difficulty,
-            likeCount = 0,
+            likeCount = null,
             id = null
         )
 

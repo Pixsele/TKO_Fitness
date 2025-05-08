@@ -21,25 +21,22 @@ import tk.ssau.fitnesstko.model.dto.WorkoutExerciseDto
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 
 object ApiService {
-    internal const val BASE_URL = "http://85.236.187.180:8080/" // Замените на ваш URL
+    internal const val BASE_URL = "http://85.236.187.180:8080/"
     private lateinit var authManager: AuthManager
 
-    // Инициализация (вызовите в Application классе или MainActivity)
     fun initialize(context: Context) {
         authManager = AuthManager(context)
     }
 
-    // Клиент с интерцепторами
     val client: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor())
             .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY // Логирование запросов
+                level = HttpLoggingInterceptor.Level.BODY
             })
             .build()
     }
 
-    // Retrofit экземпляр
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -69,7 +66,7 @@ object ApiService {
         @GET("api/workout/svg/{id}")
         fun getWorkoutSvg(
             @Path("id") id: Long,
-            @Query("gender") gender: String // Обязательный параметр
+            @Query("gender") gender: String
         ): Call<PersonSvgDto>
     }
 
@@ -113,4 +110,3 @@ data class PageInfo(
     val totalElements: Int,
     val totalPages: Int
 )
-//"size":20,"number":0,"totalElements":20,"totalPages":1
