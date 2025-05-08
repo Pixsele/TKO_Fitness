@@ -9,6 +9,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * Фрагмент для добавления и отображения веса пользователя.
+ */
 class AddWeightFragment : Fragment(R.layout.fragment_add_weight) {
 
     private lateinit var binding: FragmentAddWeightBinding
@@ -24,6 +27,10 @@ class AddWeightFragment : Fragment(R.layout.fragment_add_weight) {
         setupListeners()
     }
 
+    /**
+     * Настройка UI.
+     * Отображение последнего сохранённого веса. Если данных нет, то выводится надпись "Нет предыдущих измерений"
+     */
     private fun setupUI() {
         prefs.getWeights().lastOrNull()?.let { (timestamp, weight) ->
             binding.tvLastWeight.text = "Последнее: %.1f кг\n(%s)".format(
@@ -35,22 +42,29 @@ class AddWeightFragment : Fragment(R.layout.fragment_add_weight) {
         }
     }
 
+    /**
+     * Обработка кнопки сохранения
+     */
     private fun setupListeners() {
         binding.btnSaveWeight.setOnClickListener {
             val input = binding.etWeight.text.toString()
             when {
                 input.isBlank() -> showError("Введите значение веса")
-                !isValidWeight(input) -> showError("Некорректный вес (пример: 72.5)")
+                !isValidWeight(input) -> showError("Некорректный вес (пример: 72.5, диапозон(20, 120)")
                 else -> saveWeight(input.toFloat())
             }
         }
     }
 
+    /**
+     * Валидация данных
+     * @param input Вес, который ввёл пользователь
+     */
     private fun isValidWeight(input: String): Boolean {
         return try {
             val weight = input.toFloat()
-            weight in 30f..300f
-        } catch (e: NumberFormatException) {
+            weight in 20f..120f
+        } catch (_: NumberFormatException) {
             false
         }
     }
@@ -60,6 +74,10 @@ class AddWeightFragment : Fragment(R.layout.fragment_add_weight) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Функция сохранения веса
+     * @param weight Вес пользователя, который нужно сохранить
+     */
     private fun saveWeight(weight: Float) {
         try {
             prefs.saveWeight(weight)

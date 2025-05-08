@@ -9,13 +9,13 @@
         android:id="@+id/ivExercise"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/cat"/>
+        android:src="@drawable/cat" />
 
     <TextView
         android:id="@+id/tvExerciseName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
 </LinearLayout>

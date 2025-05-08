@@ -152,7 +152,7 @@ class WorkoutDetailFragment : Fragment() {
                             binding.ivMuscleDiagram.setImageDrawable(
                                 PictureDrawable(svg.renderToPicture())
                             )
-                        } catch (e: SVGParseException) {
+                        } catch (_: SVGParseException) {
                             binding.ivMuscleDiagram.setImageResource(R.drawable.cat)
                         }
                     }

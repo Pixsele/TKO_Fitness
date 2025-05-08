@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:text="Создание тренировки"
             android:textSize="24sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <!-- Название тренировки -->
         <EditText
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Название тренировки"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" />
 
         <!-- Описание -->
         <EditText
@@ -31,7 +31,7 @@
             android:layout_height="100dp"
             android:hint="Описание"
             android:gravity="start"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp" />
 
         <!-- Контейнер для упражнений -->
         <LinearLayout
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" />
 
         <!-- Кнопка добавления упражнения -->
         <Button
@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Добавить упражнение"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" />
 
         <!-- Сложность -->
         <RadioGroup
@@ -61,19 +61,19 @@
                 android:id="@+id/rbEasy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="EASY"/>
+                android:text="EASY" />
 
             <RadioButton
                 android:id="@+id/rbMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MEDIUM"/>
+                android:text="MEDIUM" />
 
             <RadioButton
                 android:id="@+id/rbHard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="HARD"/>
+                android:text="HARD" />
         </RadioGroup>
 
         <!-- Кнопка сохранения -->
@@ -82,7 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Сохранить"
-            android:layout_marginTop="24dp"/>
+            android:layout_marginTop="24dp" />
 
     </LinearLayout>
 </ScrollView>

@@ -29,7 +29,7 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:gravity="center"/>
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/tvDifficulty"
@@ -41,8 +41,7 @@
             android:textStyle="bold"
             android:gravity="center"
             android:background="@drawable/rounded_textview_bg"
-            android:padding="3dp"
-            />
+            android:padding="3dp" />
 
         <TextView
             android:id="@+id/tvDescription"
@@ -52,7 +51,7 @@
             android:textColor="@color/white"
             android:textSize="19sp"
             android:background="@drawable/rounded_textview_bg"
-            android:padding="5dp"/>
+            android:padding="5dp" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
@@ -62,8 +61,7 @@
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="@color/TKO_gray"
-            android:padding="3dp"
-            >
+            android:padding="3dp">
 
 
             <ImageView
@@ -80,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStartWorkout"
@@ -92,7 +90,7 @@
             app:cornerRadius="8dp"
             app:iconTint="@color/white"
             android:background="@drawable/rounded_bg"
-            app:backgroundTint="@color/TKO_gray"/>
+            app:backgroundTint="@color/TKO_gray" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -100,7 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="32dp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvError"
@@ -108,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 </ScrollView>

@@ -12,10 +12,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import tk.ssau.fitnesstko.databinding.FragmentCreateWorkoutBinding
-import tk.ssau.fitnesstko.model.dto.ExerciseForPageDto
 import tk.ssau.fitnesstko.model.dto.WorkoutDto
 import tk.ssau.fitnesstko.model.dto.WorkoutExerciseDto
 
+/**
+ * Фрагмент для создания новой тренировки
+ */
 class CreateWorkoutFragment : Fragment() {
 
     private var _binding: FragmentCreateWorkoutBinding? = null
@@ -40,6 +42,7 @@ class CreateWorkoutFragment : Fragment() {
         setupObservers()
         setupDifficultyGroup()
     }
+
     private fun setupUI() {
         binding.btnAddExercise.setOnClickListener {
             parentFragmentManager.beginTransaction()
@@ -136,7 +139,7 @@ class CreateWorkoutFragment : Fragment() {
                     exerciseId = it,
                     sets = exerciseWithParams.sets,
                     reps = exerciseWithParams.reps,
-                    distance = 1.0,
+                    distance = 0.0,
                     duration = 1.0,
                     id = null,
                     restTime = exerciseWithParams.rest,

@@ -20,7 +20,7 @@
             android:text="Параметры упражнения"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="24dp" />
 
         <!-- Подходы -->
         <com.google.android.material.textfield.TextInputLayout
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:maxLines="1"
-                tools:text="3"/>
+                tools:text="3" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Повторения -->
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:maxLines="1"
-                tools:text="12"/>
+                tools:text="12" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Отдых (секунды) -->
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:maxLines="1"
-                tools:text="60"/>
+                tools:text="60" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Кнопка сохранения -->
@@ -82,7 +82,7 @@
             android:textAllCaps="false"
             app:iconTint="@color/white"
             app:iconGravity="start"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
     </LinearLayout>
 </ScrollView>
