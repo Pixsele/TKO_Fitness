@@ -6,9 +6,6 @@ import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 
-/**
- * Круг вокруг дня на календаре
- */
 class DayView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null

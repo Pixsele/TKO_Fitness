@@ -1,8 +1,5 @@
 package tk.ssau.fitnesstko.model.dto
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
 /**
  * Текущее выполняемое упражнение
  * @param id Уникальный идентификатор связи (может быть null для новых объектов).
@@ -15,7 +12,6 @@ import kotlinx.parcelize.Parcelize
  * @param restTime Время отдыха между подходами в секундах.
  * @param exerciseOrder Порядок выполнения упражнения в тренировке (начиная с 0).
  */
-@Parcelize
 data class WorkoutExerciseDto(
     val id: Long?,
     val workoutId: Long,
@@ -26,4 +22,4 @@ data class WorkoutExerciseDto(
     val duration: Double,
     val restTime: Int,
     val exerciseOrder: Int?
-) : Parcelable
+)
