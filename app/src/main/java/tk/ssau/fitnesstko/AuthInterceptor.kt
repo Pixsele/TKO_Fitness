@@ -15,19 +15,12 @@ import okhttp3.Response
  * 1. Добавляется в цепочку OkHttp-клиента через `OkHttpClient.Builder().addInterceptor(AuthInterceptor())`.
  * 2. Автоматически применяется ко всем запросам через Retrofit.
  */
-class AuthInterceptor : Interceptor {
+class AuthInterceptor(private val authManager: AuthManager) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val hardcodedToken =
-            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzQ2NzE1MDczLCJleHAiOjE3NDY3ODcwNzN9.VPHYYw-spa3soU0fRhB2hfBf9Qy1hqfI2ViGLSubly4"
-
         val request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer $hardcodedToken")
-            .build()
-
-        Log.d("Network", "URL: ${request.url}")
-        Log.d("Network", "Headers: ${request.headers}")
-
-
-        return chain.proceed(request)
+        authManager.getToken()?.let { token ->
+            request.addHeader("Authorization", "Bearer $token")
+        }
+        return chain.proceed(request.build())
     }
 }

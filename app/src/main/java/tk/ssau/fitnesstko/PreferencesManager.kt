@@ -22,6 +22,19 @@ class PreferencesManager(context: Context) {
         }
     }
 
+    fun getString(key: String, defaultValue: String): String {
+        return sharedPreferences.getString(key, defaultValue) ?: defaultValue
+    }
+
+    fun saveUserProfile(name: String, birthDay: String, weight: Double, height: Double) {
+        sharedPreferences.edit {
+            putString("user_name", name)
+            putString("birthDay", birthDay)
+            putFloat("weight", weight.toFloat())
+            putFloat("height", height.toFloat())
+        }
+    }
+
     fun saveWeight(weight: Float) {
         val currentTime = System.currentTimeMillis()
 

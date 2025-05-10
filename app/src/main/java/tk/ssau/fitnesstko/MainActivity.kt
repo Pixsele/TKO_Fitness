@@ -1,5 +1,6 @@
 package tk.ssau.fitnesstko
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -12,11 +13,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ApiService.initialize(applicationContext)
+
+        if (!isUserLoggedIn()) {
+            startActivity(Intent(this, AuthActivity::class.java))
+            finish()
+            return
+        }
+
         prefs = PreferencesManager(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        ApiService.initialize(applicationContext)
 
         val profileFragment = FragmentProfile()
         val collectionFragment = FragmentCollection()
@@ -46,5 +55,9 @@ class MainActivity : AppCompatActivity() {
                 it.loadWorkouts()
             }
         }
+    }
+
+    private fun isUserLoggedIn(): Boolean {
+        return AuthManager(this).getToken() != null
     }
 }

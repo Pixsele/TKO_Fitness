@@ -1,6 +1,11 @@
 package tk.ssau.fitnesstko
 
 import android.content.Context
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonSerializer
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -19,6 +24,10 @@ import tk.ssau.fitnesstko.model.dto.PersonSvgDto
 import tk.ssau.fitnesstko.model.dto.WorkoutDto
 import tk.ssau.fitnesstko.model.dto.WorkoutExerciseDto
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
+import tk.ssau.fitnesstko.model.dto.user.AuthRequest
+import tk.ssau.fitnesstko.model.dto.user.RegisterUsersDTO
+import java.lang.reflect.Type
+import java.time.LocalDate
 
 /**
  * Объект синглтон для взаимодействия с REST API сервера
@@ -33,18 +42,22 @@ object ApiService {
 
     val client: OkHttpClient by lazy {
         OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor())
+            .addInterceptor(AuthInterceptor(authManager))
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
             .build()
     }
 
+    private val gson = GsonBuilder()
+        .registerTypeAdapter(LocalDate::class.java, LocalDateSerializer())
+        .create()
+
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 
@@ -52,6 +65,7 @@ object ApiService {
     val exerciseService: ExerciseApi by lazy { retrofit.create(ExerciseApi::class.java) }
     val workoutExerciseService: WorkoutExerciseApi by lazy { retrofit.create(WorkoutExerciseApi::class.java) }
     val likesService: LikesApi by lazy { retrofit.create(LikesApi::class.java) }
+    val authService: AuthApi by lazy { retrofit.create(AuthApi::class.java) }
 
     /**
      * Интерфейс для работы с тренировками
@@ -155,6 +169,14 @@ object ApiService {
         fun deleteLikeWorkout(@Body like: LikesWorkoutDto): Call<Unit>
     }
 
+    interface AuthApi {
+        @POST("api/register")
+        fun register(@Body user: RegisterUsersDTO): Call<Unit>
+
+        @POST("api/login")
+        fun login(@Body authRequest: AuthRequest): Call<AuthResponse>
+    }
+
 }
 
 /**
@@ -178,3 +200,19 @@ data class PageInfo(
     val totalElements: Int,
     val totalPages: Int
 )
+
+data class AuthResponse(
+    val token: String,
+    val userId: Long,
+    val name: String
+)
+
+private class LocalDateSerializer : JsonSerializer<LocalDate> {
+    override fun serialize(
+        src: LocalDate,
+        typeOfSrc: Type,
+        context: JsonSerializationContext
+    ): JsonElement {
+        return JsonPrimitive(src.toString()) // Формат "yyyy-MM-dd"
+    }
+}

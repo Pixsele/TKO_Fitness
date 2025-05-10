@@ -36,6 +36,10 @@ class AuthManager(context: Context) {
         sharedPreferences.edit { putString("jwt_token", token).apply() }
     }
 
+    fun refreshToken(newToken: String) {
+        saveToken(newToken)
+    }
+
     /**
      * Получает сохранённый JWT-токен.
      * @return Токен или null, если не найден
