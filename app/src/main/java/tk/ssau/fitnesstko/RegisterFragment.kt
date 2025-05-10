@@ -71,26 +71,32 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 showError("Введите имя")
                 false
             }
+
             login.isBlank() -> {
                 showError("Введите логин")
                 false
             }
+
             password.length < 6 -> {
                 showError("Пароль должен быть не менее 6 символов")
                 false
             }
+
             !isValidDate(birthDate) -> {
                 showError("Некорректная дата (формат: ГГГГ-ММ-ДД)")
                 false
             }
+
             !isValidWeight(weight) -> {
                 showError("Вес должен быть от 20 до 300 кг")
                 false
             }
+
             !isValidHeight(height) -> {
                 showError("Рост должен быть от 50 до 250 см")
                 false
             }
+
             else -> true
         }
     }

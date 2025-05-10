@@ -74,6 +74,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         startActivity(Intent(requireActivity(), MainActivity::class.java))
         requireActivity().finish()
     }
+
     private fun navigateToRegister() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.auth_container, RegisterFragment())

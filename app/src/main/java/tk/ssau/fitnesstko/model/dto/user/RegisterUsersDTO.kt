@@ -10,4 +10,4 @@ data class RegisterUsersDTO(
     val gender: Gender
 )
 
-enum class Gender {MALE, FEMALE}
+enum class Gender { MALE, FEMALE }
