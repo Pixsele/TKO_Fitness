@@ -1,5 +1,8 @@
 package tk.ssau.fitnesstko.model.dto
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
  * Полное представление упражнения.
  * @param id Уникальный идентификатор упражнения (может быть null для новых объектов).
@@ -11,6 +14,8 @@ package tk.ssau.fitnesstko.model.dto
  * @param requestEquipment Требуется ли специальное оборудование (true/false).
  * @param type Тип упражнения (например, "Силовое", "Кардио", "Растяжка").
  */
+
+@Parcelize
 data class ExerciseDto(
     val id: Long?,
     val instruction: String,
@@ -20,4 +25,4 @@ data class ExerciseDto(
     val likeCount: Int?,
     val requestEquipment: Boolean,
     val type: String
-)
+) : Parcelable
