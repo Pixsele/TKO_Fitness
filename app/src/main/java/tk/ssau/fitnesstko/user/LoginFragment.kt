@@ -56,7 +56,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        authManager.saveToken(it.token)
+                        authManager.saveToken(response.body()!!.token)
+                        authManager.saveCredentials(login, password)
                         navigateToMain()
                     }
                 } else {

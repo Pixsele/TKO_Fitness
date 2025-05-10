@@ -55,4 +55,26 @@ class AuthManager(context: Context) {
     fun clearToken() {
         sharedPreferences.edit { remove("jwt_token").apply() }
     }
+
+    fun saveCredentials(login: String, password: String) {
+        sharedPreferences.edit {
+            putString("login", login)
+            putString("password", password)
+        }
+    }
+
+    fun getLogin(): String? {
+        return sharedPreferences.getString("login", null)
+    }
+
+    fun getPassword(): String? {
+        return sharedPreferences.getString("password", null)
+    }
+
+    fun clearCredentials() {
+        sharedPreferences.edit {
+            remove("login")
+            remove("password")
+        }
+    }
 }
