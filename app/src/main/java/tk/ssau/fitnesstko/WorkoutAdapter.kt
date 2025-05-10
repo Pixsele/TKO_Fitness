@@ -16,7 +16,8 @@ import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 class WorkoutAdapter(
     private var workouts: List<WorkoutForPageDto>,
     private val fragmentManager: FragmentManager,
-    private val onDataUpdated: (WorkoutForPageDto) -> Unit
+    private val onDataUpdated: (WorkoutForPageDto) -> Unit,
+    private val authManager: AuthManager
 ) : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
 
     inner class WorkoutViewHolder(private val binding: ItemWorkoutBinding) :
@@ -69,9 +70,14 @@ class WorkoutAdapter(
             originalWorkout: WorkoutForPageDto,
             updatedWorkout: WorkoutForPageDto
         ) {
+            val userId = authManager.getUserId() ?: run {
+                Log.e("LikeError", "User ID not found")
+                return
+            }
+
             val likeDto = LikesWorkoutDto(
                 id = null,
-                userId = 1L,
+                userId = userId,
                 workoutId = updatedWorkout.id!!
             )
 

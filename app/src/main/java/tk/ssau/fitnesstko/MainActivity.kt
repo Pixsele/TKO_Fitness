@@ -2,6 +2,7 @@ package tk.ssau.fitnesstko
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -22,12 +23,23 @@ class MainActivity : AppCompatActivity() {
         prefs = PreferencesManager(this)
         ApiService.initialize(applicationContext)
 
+
         lifecycleScope.launch {
-            handleAuthentication()
+            try {
+                handleAuthentication()
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Auth error: ${e.message}")
+                redirectToAuth()
+            }
         }
     }
 
-    private suspend fun handleAuthentication() {
+    private fun handleAuthentication() {
+        if (authManager.getToken() != null) {
+            initMainInterface()
+            return
+        }
+
         val savedLogin = authManager.getLogin()
         val savedPassword = authManager.getPassword()
 
@@ -40,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
                     if (response.isSuccessful) {
                         response.body()?.let {
-                            authManager.saveToken(it.token)
+                            authManager.saveUserData(it.token, it.userId)
                             initMainInterface()
                         }
                     } else {
@@ -73,10 +85,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupNavigation() {
         val profileFragment = FragmentProfile()
-        val collectionFragment = FragmentCollection()
+        val collectionFragment = FragmentCollection(authManager)
         val workoutFragment = FragmentWorkout()
 
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
+        binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.miCollection -> replaceFragment(collectionFragment)
                 R.id.miProfile -> replaceFragment(profileFragment)
@@ -115,6 +127,5 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        //authManager.clearToken()
     }
 }

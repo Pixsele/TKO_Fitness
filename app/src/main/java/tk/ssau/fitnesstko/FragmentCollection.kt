@@ -12,7 +12,7 @@ import retrofit2.Response
 import tk.ssau.fitnesstko.databinding.CollectionBinding
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 
-class FragmentCollection : Fragment() {
+class FragmentCollection(private val authManager: AuthManager) : Fragment() {
 
     private var _binding: CollectionBinding? = null
     private val binding get() = _binding!!
@@ -51,7 +51,8 @@ class FragmentCollection : Fragment() {
             fragmentManager = parentFragmentManager,
             onDataUpdated = { updatedWorkout ->
                 (activity as? MainActivity)?.prefs?.updateLocalWorkout(updatedWorkout)
-            }
+            },
+            authManager = authManager
         )
 
         binding.rvWorkouts.apply {

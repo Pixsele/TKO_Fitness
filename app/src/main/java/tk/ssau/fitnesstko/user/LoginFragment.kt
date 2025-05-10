@@ -56,7 +56,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        authManager.saveToken(response.body()!!.token)
+                        authManager.saveUserData(it.token, it.userId)
                         authManager.saveCredentials(login, password)
                         navigateToMain()
                     }
@@ -72,7 +72,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun navigateToMain() {
-        startActivity(Intent(requireActivity(), MainActivity::class.java))
+        val intent = Intent(requireActivity(), MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
         requireActivity().finish()
     }
 

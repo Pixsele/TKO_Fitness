@@ -32,12 +32,16 @@ class AuthManager(context: Context) {
      * Сохраняет JWT-токен в зашифрованном хранилище.
      * @param token Токен для сохранения (например, "eyJhbGci...")
      */
-    fun saveToken(token: String) {
-        sharedPreferences.edit { putString("jwt_token", token).apply() }
+    fun saveUserData(token: String, userId: Long) {
+        sharedPreferences.edit {
+            putString("jwt_token", token)
+            putLong("user_id", userId)
+            apply()
+        }
     }
 
-    fun refreshToken(newToken: String) {
-        saveToken(newToken)
+    fun getUserId(): Long? {
+        return sharedPreferences.getLong("user_id", -1L).takeIf { it != -1L }
     }
 
     /**
