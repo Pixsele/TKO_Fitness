@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import tko.model.dto.nutrition.KcalProductDTO;
 import tko.service.nutrition.KcalProductService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/kcal-product")
 public class KcalProductController {
@@ -41,5 +43,11 @@ public class KcalProductController {
     public ResponseEntity<KcalProductDTO> delete(@PathVariable Long id) {
         KcalProductDTO deleteKcalProduct = kcalProductService.deleteKcalProductById(id);
         return new ResponseEntity<>(deleteKcalProduct, HttpStatus.OK);
+    }
+
+    @GetMapping("/by-tracker/{id}")
+    public ResponseEntity<List<KcalProductDTO>> readByTracker(@PathVariable Long id) {
+        List<KcalProductDTO> list = kcalProductService.readAllKcalProductsByTrackerId(id);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }

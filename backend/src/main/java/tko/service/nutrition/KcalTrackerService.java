@@ -3,6 +3,7 @@ package tko.service.nutrition;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ import tko.database.repository.user.UsersRepository;
 import tko.model.dto.nutrition.KcalTrackerDTO;
 import tko.model.mapper.nutrition.KcalTrackerMapper;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -92,5 +95,14 @@ public class KcalTrackerService {
 
         kcalTrackerRepository.delete(deleteKcalTracker);
         return kcalTrackerMapper.toDto(deleteKcalTracker);
+    }
+
+    public KcalTrackerDTO getKcalTrackerByDate(LocalDate localDate) {
+        if (localDate == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Date must not be null");
+        }
+        UsersEntity usersEntity = usersRepository.findByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
+        KcalTrackerEntity kcalTrackerEntity = kcalTrackerRepository.findByDateAndUser_Id(localDate, usersEntity.getId());
+        return kcalTrackerMapper.toDto(kcalTrackerEntity);
     }
 }

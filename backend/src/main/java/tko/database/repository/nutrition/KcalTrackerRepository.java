@@ -9,4 +9,8 @@ import java.time.LocalDate;
 @Repository
 public interface KcalTrackerRepository extends JpaRepository<KcalTrackerEntity, Long> {
     boolean existsByUser_IdAndDate(Long userId, LocalDate date);
+
+    KcalTrackerEntity findByDate(LocalDate date);
+
+    KcalTrackerEntity findByDateAndUser_Id(LocalDate date, Long userId);
 }

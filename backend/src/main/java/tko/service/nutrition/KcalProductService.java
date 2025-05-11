@@ -5,11 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import tko.database.entity.nutrition.KcalProductEntity;
+import tko.database.entity.nutrition.KcalTrackerEntity;
 import tko.database.repository.nutrition.KcalProductRepository;
 import tko.database.repository.nutrition.KcalTrackerRepository;
 import tko.database.repository.nutrition.ProductRepository;
 import tko.model.dto.nutrition.KcalProductDTO;
 import tko.model.mapper.nutrition.KcalProductMapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class KcalProductService {
@@ -89,5 +93,21 @@ public class KcalProductService {
 
         kcalProductRepository.delete(kcalProductEntity);
         return kcalProductMapper.toDto(kcalProductEntity);
+    }
+
+    public List<KcalProductDTO> readAllKcalProductsByTrackerId(Long trackerId) {
+        if(trackerId == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "TrackerId must not be null");
+        }
+
+        KcalTrackerEntity kcalTrackerEntity = kcalTrackerRepository.findById(trackerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tracker does not exist"));
+
+        List<KcalProductEntity> list = kcalProductRepository.findAllByKcalTracker(kcalTrackerEntity);
+
+        List<KcalProductDTO> result = new ArrayList<>();
+        for(KcalProductEntity kcalProductEntity : list){
+            result.add(kcalProductMapper.toDto(kcalProductEntity));
+        }
+        return result;
     }
 }

@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import tko.model.dto.nutrition.KcalTrackerDTO;
 import tko.service.nutrition.KcalTrackerService;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @RestController
 @RequestMapping("/kcal-tracker")
 public class KcalTrackerController {
@@ -41,6 +44,12 @@ public class KcalTrackerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<KcalTrackerDTO> deleteTracker(@PathVariable Long id) {
         KcalTrackerDTO trackerDTO = kcalTrackerService.deleteKcalTracker(id);
+        return new ResponseEntity<>(trackerDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/by-date/{date}")
+    public ResponseEntity<KcalTrackerDTO> readTrackersByDate(@PathVariable LocalDate date) {
+        KcalTrackerDTO trackerDTO = kcalTrackerService.getKcalTrackerByDate(date);
         return new ResponseEntity<>(trackerDTO, HttpStatus.OK);
     }
 }

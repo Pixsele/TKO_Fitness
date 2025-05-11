@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleNullPointerException(NullPointerException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    //TODO
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return new ResponseEntity<>("Valid error", HttpStatus.BAD_REQUEST);
