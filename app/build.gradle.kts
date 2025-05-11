@@ -9,9 +9,17 @@ android {
     namespace = "tk.ssau.fitnesstko"
     compileSdk = 35
 
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            isUniversalApk = true
+        }
+    }
+
     defaultConfig {
         applicationId = "tk.ssau.fitnesstko"
-        minSdk = 34
+        minSdk = 29
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -21,7 +29,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

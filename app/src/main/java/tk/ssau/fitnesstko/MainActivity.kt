@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import tk.ssau.fitnesstko.databinding.ActivityMainBinding
+import tk.ssau.fitnesstko.food.FragmentFood
 import tk.ssau.fitnesstko.model.dto.user.AuthRequest
 
 class MainActivity : AppCompatActivity() {
@@ -87,12 +88,14 @@ class MainActivity : AppCompatActivity() {
         val profileFragment = FragmentProfile()
         val collectionFragment = FragmentCollection(authManager)
         val workoutFragment = FragmentWorkout()
+        val foodFragment = FragmentFood()
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.miCollection -> replaceFragment(collectionFragment)
                 R.id.miProfile -> replaceFragment(profileFragment)
                 R.id.miWorkout -> replaceFragment(workoutFragment)
+                R.id.miFood -> replaceFragment(foodFragment)
             }
             true
         }
