@@ -108,5 +108,4 @@ public class CurrentTrainingProgramService {
 
         return currentTrainingProgramMapper.toDto(currentTrainingProgramEntity);
     }
-    //TODO Delete,update,get with percent
 }

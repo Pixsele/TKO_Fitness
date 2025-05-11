@@ -88,7 +88,6 @@ public class ProductService {
         ProductEntity deletedProduct = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
-        //TODO Check to delete
 
         productRepository.delete(deletedProduct);
         return productMapper.toDto(deletedProduct);

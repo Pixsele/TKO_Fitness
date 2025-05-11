@@ -91,7 +91,6 @@ public class KcalTrackerService {
         KcalTrackerEntity deleteKcalTracker = kcalTrackerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Id not found"));
 
-        //TODO Check dependencies to delete
 
         kcalTrackerRepository.delete(deleteKcalTracker);
         return kcalTrackerMapper.toDto(deleteKcalTracker);

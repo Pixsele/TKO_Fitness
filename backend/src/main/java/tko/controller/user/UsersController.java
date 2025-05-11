@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-//TODO
 @RestController
 @RequestMapping("/user")
 public class UsersController {

@@ -86,7 +86,6 @@ public class WorkoutService {
 
         List<WorkoutExerciseEntity> workoutExerciseEntities = workoutExerciseRepository.findByWorkout_Id(id);
 
-        //TODO Check Dependencies with Training Program
 
         workoutExerciseRepository.deleteAll(workoutExerciseEntities);
         workoutRepository.delete(deleteEntity);
