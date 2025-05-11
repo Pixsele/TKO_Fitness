@@ -3,5 +3,6 @@
         <item name="colorPrimary">@color/white</item>
         <item name="android:statusBarColor">@color/TKO_dark_gray</item>
         <item name="android:navigationBarColor">@color/TKO_dark_gray</item>
+        <item name="android:windowBackground">@color/TKO_dark_gray</item>
     </style>
 </resources>
