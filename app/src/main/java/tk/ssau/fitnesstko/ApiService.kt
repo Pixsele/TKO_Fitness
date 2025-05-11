@@ -2,6 +2,8 @@ package tk.ssau.fitnesstko
 
 import android.content.Context
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializationContext
@@ -24,10 +26,14 @@ import tk.ssau.fitnesstko.model.dto.PersonSvgDto
 import tk.ssau.fitnesstko.model.dto.WorkoutDto
 import tk.ssau.fitnesstko.model.dto.WorkoutExerciseDto
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
+import tk.ssau.fitnesstko.model.dto.nutrition.KcalProductDTO
+import tk.ssau.fitnesstko.model.dto.nutrition.KcalTrackerDTO
+import tk.ssau.fitnesstko.model.dto.nutrition.ProductDTO
 import tk.ssau.fitnesstko.model.dto.user.AuthRequest
 import tk.ssau.fitnesstko.model.dto.user.RegisterUsersDTO
 import java.lang.reflect.Type
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 /**
  * Объект синглтон для взаимодействия с REST API сервера
@@ -66,6 +72,8 @@ object ApiService {
     val workoutExerciseService: WorkoutExerciseApi by lazy { retrofit.create(WorkoutExerciseApi::class.java) }
     val likesService: LikesApi by lazy { retrofit.create(LikesApi::class.java) }
     val authService: AuthApi by lazy { retrofit.create(AuthApi::class.java) }
+    val kcalTrackerService: KcalTrackerApi by lazy { retrofit.create(KcalTrackerApi::class.java) }
+    val productService: ProductApi by lazy { retrofit.create(ProductApi::class.java) }
 
     /**
      * Интерфейс для работы с тренировками
@@ -177,6 +185,22 @@ object ApiService {
         fun login(@Body authRequest: AuthRequest): Call<AuthResponse>
     }
 
+    interface KcalTrackerApi {
+        @GET("api/kcal-tracker/by-date/{date}")
+        fun getKcalByDate(@Path("date") date: String): Call<KcalTrackerDTO>
+
+        @POST("api/kcal-tracker")
+        fun createKcalTracker(@Body request: KcalTrackerDTO): Call<KcalTrackerDTO>
+
+        @GET("api/kcal-product/by-tracker/{trackerId}")
+        fun getProductsByTracker(@Path("trackerId") trackerId: Long?): Call<List<KcalProductDTO>>
+    }
+
+    interface ProductApi {
+        @GET("api/product/{id}")
+        fun getProductDetails(@Path("id") id: Long): Call<ProductDTO>
+    }
+
 }
 
 /**
@@ -207,12 +231,20 @@ data class AuthResponse(
     val name: String
 )
 
-private class LocalDateSerializer : JsonSerializer<LocalDate> {
+private class LocalDateSerializer : JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
     override fun serialize(
         src: LocalDate,
         typeOfSrc: Type,
         context: JsonSerializationContext
     ): JsonElement {
         return JsonPrimitive(src.toString()) // Формат "yyyy-MM-dd"
+    }
+
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): LocalDate {
+        return LocalDate.parse(json.asString, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
     }
 }

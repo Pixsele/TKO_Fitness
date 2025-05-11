@@ -1,18 +1,353 @@
 package tk.ssau.fitnesstko.food
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import tk.ssau.fitnesstko.ApiService
+import tk.ssau.fitnesstko.AuthManager
 import tk.ssau.fitnesstko.R
+import tk.ssau.fitnesstko.model.dto.nutrition.KcalProductDTO
+import tk.ssau.fitnesstko.model.dto.nutrition.KcalTrackerDTO
+import tk.ssau.fitnesstko.model.dto.nutrition.ProductDTO
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class FragmentFood : Fragment() {
+
+    private lateinit var authManager: AuthManager
+    private lateinit var selectedDate: LocalDate
+    private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    private var currentWeekDates = mutableListOf<LocalDate>()
+    private var currentTrackerId: Long? = null
+
+    // Структуры для хранения сумм
+    private data class SectionTotals(
+        var fats: BigDecimal = BigDecimal.ZERO,
+        var carbs: BigDecimal = BigDecimal.ZERO,
+        var proteins: BigDecimal = BigDecimal.ZERO,
+        var kcal: Int = 0
+    )
+
+    private val sections = mutableMapOf(
+        "BREAKFAST" to SectionTotals(),
+        "LUNCH" to SectionTotals(),
+        "DINNER" to SectionTotals(),
+        "SNACK" to SectionTotals()
+    )
+
+    private var globalTotals = SectionTotals()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_food, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        authManager = AuthManager(requireContext())
+        setupDates()
+        setupRadioGroup()
+        setupSections()
+        loadKcalData()
+    }
+
+    private fun setupDates() {
+        val today = LocalDate.now()
+        selectedDate = today
+        currentWeekDates = (0..6).map { today.plusDays(it.toLong()) }.toMutableList()
+    }
+
+    private fun setupRadioGroup() {
+        view?.findViewById<RadioGroup>(R.id.daysRadioGroup)?.apply {
+            if (childCount != 7) return@apply
+
+            currentWeekDates.forEachIndexed { index, date ->
+                (getChildAt(index) as? RadioButton)?.let {
+                    it.text = date.dayOfMonth.toString()
+                    it.tag = date
+                    if (date == selectedDate) it.isChecked = true
+                } ?: run {
+                    val rb = RadioButton(context).apply {
+                        layoutParams = LinearLayout.LayoutParams(
+                            0,
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            1f
+                        )
+                        text = date.dayOfMonth.toString()
+                        tag = date
+                        setTextColor(resources.getColor(R.color.white))
+                    }
+                    addView(rb)
+                }
+            }
+
+            setOnCheckedChangeListener { _, checkedId ->
+                (findViewById<RadioButton>(checkedId)?.tag as? LocalDate)?.let { date ->
+                    selectedDate = date
+                    loadKcalData()
+                }
+            }
+        }
+    }
+
+    private fun setupSections() {
+        listOf(
+            R.id.breakfastSection to "Завтрак",
+            R.id.lunchSection to "Обед",
+            R.id.dinnerSection to "Ужин",
+            R.id.snackSection to "Перекус"
+        ).forEach { (id, title) ->
+            view?.findViewById<View>(id)?.let { section ->
+                section.findViewById<TextView>(R.id.sectionTitle).text = title
+                section.findViewById<Button>(R.id.addButton).setOnClickListener {
+                    // TODO: Реализация добавления продукта
+                }
+                section.findViewById<LinearLayout>(R.id.productList).visibility = View.VISIBLE
+                section.findViewById<View>(R.id.sectionTitle).setOnClickListener {
+                    toggleSectionVisibility(section)
+                }
+            }
+        }
+    }
+
+    private fun toggleSectionVisibility(section: View) {
+        section.findViewById<LinearLayout>(R.id.productList).let { productList ->
+            if (productList.isVisible) {
+                productList.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up))
+                productList.visibility = View.GONE
+            } else {
+                productList.visibility = View.VISIBLE
+                productList.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_down))
+            }
+        }
+    }
+
+    private fun loadKcalData() {
+        clearSections()
+        val dateStr = selectedDate.format(dateFormatter)
+
+        ApiService.kcalTrackerService.getKcalByDate(dateStr).enqueue(object : Callback<KcalTrackerDTO> {
+            override fun onResponse(call: Call<KcalTrackerDTO>, response: Response<KcalTrackerDTO>) {
+                when {
+                    response.isSuccessful -> {
+                        response.body()?.let { tracker ->
+                            currentTrackerId = tracker.id
+                            loadProductsForTracker(tracker.id)
+                        } ?: createKcalTracker()
+                    }
+                    else -> showError("Ошибка: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<KcalTrackerDTO>, t: Throwable) {
+                showError("Ошибка сети: ${t.message}")
+                Log.e("FragmentFood", "Ошибка сети", t)
+            }
+        })
+    }
+
+    private fun createKcalTracker() {
+        val userId = authManager.getUserId() ?: run {
+            showError("Не авторизован")
+            return
+        }
+
+        val trackerRequest = KcalTrackerDTO(
+            id = null,
+            userId = userId,
+            date = selectedDate
+        )
+
+        ApiService.kcalTrackerService.createKcalTracker(trackerRequest)
+            .enqueue(object : Callback<KcalTrackerDTO> {
+                override fun onResponse(call: Call<KcalTrackerDTO>, response: Response<KcalTrackerDTO>) {
+                    response.body()?.let {
+                        currentTrackerId = it.id
+                        loadProductsForTracker(it.id)
+                    } ?: showError("Пустой ответ сервера")
+                }
+
+                override fun onFailure(call: Call<KcalTrackerDTO>, t: Throwable) {
+                    showError("Ошибка создания трекера")
+                }
+            })
+    }
+
+    private fun loadProductsForTracker(trackerId: Long?) {
+        trackerId?.let { id ->
+            ApiService.kcalTrackerService.getProductsByTracker(id)
+                .enqueue(object : Callback<List<KcalProductDTO>> {
+                    override fun onResponse(
+                        call: Call<List<KcalProductDTO>>,
+                        response: Response<List<KcalProductDTO>>
+                    ) {
+                        if (response.isSuccessful) {
+                            response.body()?.let { products ->
+                                products.groupBy { it.typeMeal }.forEach { (type, products) ->
+                                    products.forEach { loadProductDetails(it) }
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<KcalProductDTO>>, t: Throwable) {
+                        showError("Ошибка загрузки продуктов")
+                    }
+                })
+        } ?: showError("ID трекера не найден")
+    }
+
+    private fun loadProductDetails(kcalProduct: KcalProductDTO) {
+        ApiService.productService.getProductDetails(kcalProduct.productId)
+            .enqueue(object : Callback<ProductDTO> {
+                override fun onResponse(
+                    call: Call<ProductDTO>,
+                    response: Response<ProductDTO>
+                ) {
+                    response.body()?.let { product ->
+                        displayProduct(product, kcalProduct)
+                        updateTotals(kcalProduct.typeMeal, product, kcalProduct.count)
+                    }
+                }
+
+                override fun onFailure(call: Call<ProductDTO>, t: Throwable) {
+                    showError("Ошибка загрузки продукта")
+                }
+            })
+    }
+
+    private fun displayProduct(product: ProductDTO, kcalProduct: KcalProductDTO) {
+        val sectionId = when (kcalProduct.typeMeal) {
+            "BREAKFAST" -> R.id.breakfastSection
+            "LUNCH" -> R.id.lunchSection
+            "DINNER" -> R.id.dinnerSection
+            "SNACK" -> R.id.snackSection
+            else -> return
+        }
+
+        view?.findViewById<View>(sectionId)?.let { section ->
+            val productView = LayoutInflater.from(context)
+                .inflate(R.layout.item_product, null).apply {
+                    findViewById<TextView>(R.id.tvProductName).text = product.name
+                    val count = kcalProduct.count.toBigDecimal()
+
+                    findViewById<TextView>(R.id.tvFats).text = formatValue(product.fats * count)
+                    findViewById<TextView>(R.id.tvCarbs).text = formatValue(product.carbs * count)
+                    findViewById<TextView>(R.id.tvProtein).text = formatValue(product.proteins * count)
+                    findViewById<TextView>(R.id.tvKcal).text = (product.kcal * kcalProduct.count).toString()
+                }
+
+            section.findViewById<LinearLayout>(R.id.productList).apply {
+                addView(productView)
+                visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun updateTotals(mealType: String, product: ProductDTO, count: Int) {
+        val section = sections[mealType] ?: return
+        val multiplier = count.toBigDecimal()
+
+        with(section) {
+            fats += product.fats.multiply(multiplier)
+            carbs += product.carbs.multiply(multiplier)
+            proteins += product.proteins.multiply(multiplier)
+            kcal += product.kcal * count
+        }
+
+        with(globalTotals) {
+            fats += product.fats.multiply(multiplier)
+            carbs += product.carbs.multiply(multiplier)
+            proteins += product.proteins.multiply(multiplier)
+            kcal += product.kcal * count
+        }
+
+        updateSectionUI(mealType, section)
+        updateGlobalUI()
+    }
+
+    private fun updateSectionUI(mealType: String, totals: SectionTotals) {
+        val sectionId = when (mealType) {
+            "BREAKFAST" -> R.id.breakfastSection
+            "LUNCH" -> R.id.lunchSection
+            "DINNER" -> R.id.dinnerSection
+            "SNACK" -> R.id.snackSection
+            else -> return
+        }
+
+        view?.findViewById<View>(sectionId)?.let { section ->
+            section.findViewById<TextView>(R.id.tvFatsValue).text = formatValue(totals.fats)
+            section.findViewById<TextView>(R.id.tvCarbohydratesValue).text = formatValue(totals.carbs)
+            section.findViewById<TextView>(R.id.tvProteinValue).text = formatValue(totals.proteins)
+            section.findViewById<TextView>(R.id.tvKcalValue).text =
+                totals.kcal.takeIf { it > 0 }?.toString() ?: "-"
+        }
+    }
+
+    private fun updateGlobalUI() {
+        view?.let {
+            it.findViewById<TextView>(R.id.tvFatsValue).text = formatValue(globalTotals.fats)
+            it.findViewById<TextView>(R.id.tvCarbohydratesValue).text = formatValue(globalTotals.carbs)
+            it.findViewById<TextView>(R.id.tvProteinValue).text = formatValue(globalTotals.proteins)
+            it.findViewById<TextView>(R.id.tvKcalValue).text =
+                globalTotals.kcal.takeIf { it > 0 }?.toString() ?: "-"
+        }
+    }
+
+    private fun formatValue(value: BigDecimal): String {
+        return if (value > BigDecimal.ZERO) {
+            value.setScale(1, RoundingMode.HALF_UP).toString()
+        } else {
+            "-"
+        }
+    }
+
+    private fun clearSections() {
+        sections.values.forEach {
+            it.fats = BigDecimal.ZERO
+            it.carbs = BigDecimal.ZERO
+            it.proteins = BigDecimal.ZERO
+            it.kcal = 0
+        }
+        globalTotals = SectionTotals()
+
+        listOf(R.id.breakfastSection, R.id.lunchSection, R.id.dinnerSection, R.id.snackSection)
+            .forEach { sectionId ->
+                view?.findViewById<View>(sectionId)?.let {
+                    it.findViewById<LinearLayout>(R.id.productList).removeAllViews()
+                    arrayOf(R.id.tvFatsValue, R.id.tvCarbohydratesValue, R.id.tvProteinValue, R.id.tvKcalValue)
+                        .forEach { tvId ->
+                            it.findViewById<TextView>(tvId).text = "-"
+                        }
+                }
+            }
+
+        arrayOf(R.id.tvFatsValue, R.id.tvCarbohydratesValue, R.id.tvProteinValue, R.id.tvKcalValue)
+            .forEach { tvId ->
+                view?.findViewById<TextView>(tvId)?.text = "-"
+            }
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }
