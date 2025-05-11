@@ -16,7 +16,7 @@ import tk.ssau.fitnesstko.AuthManager
 import tk.ssau.fitnesstko.AuthResponse
 import tk.ssau.fitnesstko.MainActivity
 import tk.ssau.fitnesstko.R
-import tk.ssau.fitnesstko.RegisterFragment
+import tk.ssau.fitnesstko.user.RegisterFragment
 import tk.ssau.fitnesstko.model.dto.user.AuthRequest
 
 class LoginFragment : Fragment(R.layout.fragment_login) {

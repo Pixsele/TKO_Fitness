@@ -1,4 +1,4 @@
-package tk.ssau.fitnesstko
+package tk.ssau.fitnesstko.user
 
 import android.os.Bundle
 import android.view.View
@@ -11,9 +11,12 @@ import com.google.android.material.textfield.TextInputEditText
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import tk.ssau.fitnesstko.ApiService
+import tk.ssau.fitnesstko.AuthManager
+import tk.ssau.fitnesstko.PreferencesManager
+import tk.ssau.fitnesstko.R
 import tk.ssau.fitnesstko.model.dto.user.Gender
 import tk.ssau.fitnesstko.model.dto.user.RegisterUsersDTO
-import tk.ssau.fitnesstko.user.LoginFragment
 import java.time.LocalDate
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {

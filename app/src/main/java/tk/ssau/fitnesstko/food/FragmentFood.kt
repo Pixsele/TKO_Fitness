@@ -23,6 +23,7 @@ import tk.ssau.fitnesstko.R
 import tk.ssau.fitnesstko.model.dto.nutrition.KcalProductDTO
 import tk.ssau.fitnesstko.model.dto.nutrition.KcalTrackerDTO
 import tk.ssau.fitnesstko.model.dto.nutrition.ProductDTO
+import java.io.EOFException
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
@@ -148,18 +149,26 @@ class FragmentFood : Fragment() {
         ApiService.kcalTrackerService.getKcalByDate(dateStr).enqueue(object : Callback<KcalTrackerDTO> {
             override fun onResponse(call: Call<KcalTrackerDTO>, response: Response<KcalTrackerDTO>) {
                 when {
-                    response.isSuccessful -> {
-                        response.body()?.let { tracker ->
+                    response.isSuccessful && response.body() != null -> {
+                        response.body()!!.let { tracker ->
                             currentTrackerId = tracker.id
                             loadProductsForTracker(tracker.id)
-                        } ?: createKcalTracker()
+                        }
                     }
+
+                    response.isSuccessful -> {
+                        createKcalTracker()
+                    }
+
                     else -> showError("Ошибка: ${response.code()}")
                 }
             }
 
             override fun onFailure(call: Call<KcalTrackerDTO>, t: Throwable) {
-                showError("Ошибка сети: ${t.message}")
+                when (t) {
+                    is EOFException -> createKcalTracker()
+                    else -> showError("Ошибка сети: ${t.message}")
+                }
                 Log.e("FragmentFood", "Ошибка сети", t)
             }
         })
