@@ -24,7 +24,13 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:boxBackgroundColor="#353535"
+            app:boxBackgroundColor="@color/TKO_gray"
+            android:textColorHint="#FFFFFF"
+            app:boxCornerRadiusTopStart="18sp"
+            app:boxCornerRadiusTopEnd="18sp"
+            app:boxCornerRadiusBottomStart="18sp"
+            app:boxCornerRadiusBottomEnd="18sp"
+            app:boxStrokeColor="#D6FFA4"
             app:hintTextColor="#FFFFFF">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -38,7 +44,13 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:boxBackgroundColor="#353535"
+            app:boxBackgroundColor="@color/TKO_gray"
+            android:textColorHint="#FFFFFF"
+            app:boxCornerRadiusTopStart="18sp"
+            app:boxCornerRadiusTopEnd="18sp"
+            app:boxCornerRadiusBottomStart="18sp"
+            app:boxCornerRadiusBottomEnd="18sp"
+            app:boxStrokeColor="#D6FFA4"
             app:hintTextColor="#FFFFFF">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -52,7 +64,13 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:boxBackgroundColor="#353535"
+            app:boxBackgroundColor="@color/TKO_gray"
+            android:textColorHint="#FFFFFF"
+            app:boxCornerRadiusTopStart="18sp"
+            app:boxCornerRadiusTopEnd="18sp"
+            app:boxCornerRadiusBottomStart="18sp"
+            app:boxCornerRadiusBottomEnd="18sp"
+            app:boxStrokeColor="#D6FFA4"
             app:hintTextColor="#FFFFFF">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -67,7 +85,13 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:boxBackgroundColor="#353535"
+            app:boxBackgroundColor="@color/TKO_gray"
+            android:textColorHint="#FFFFFF"
+            app:boxCornerRadiusTopStart="18sp"
+            app:boxCornerRadiusTopEnd="18sp"
+            app:boxCornerRadiusBottomStart="18sp"
+            app:boxCornerRadiusBottomEnd="18sp"
+            app:boxStrokeColor="#D6FFA4"
             app:hintTextColor="#FFFFFF">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -81,7 +105,13 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:boxBackgroundColor="#353535"
+            app:boxBackgroundColor="@color/TKO_gray"
+            android:textColorHint="#FFFFFF"
+            app:boxCornerRadiusTopStart="18sp"
+            app:boxCornerRadiusTopEnd="18sp"
+            app:boxCornerRadiusBottomStart="18sp"
+            app:boxCornerRadiusBottomEnd="18sp"
+            app:boxStrokeColor="#D6FFA4"
             app:hintTextColor="#FFFFFF">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -96,7 +126,13 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:boxBackgroundColor="#353535"
+            app:boxBackgroundColor="@color/TKO_gray"
+            android:textColorHint="#FFFFFF"
+            app:boxCornerRadiusTopStart="18sp"
+            app:boxCornerRadiusTopEnd="18sp"
+            app:boxCornerRadiusBottomStart="18sp"
+            app:boxCornerRadiusBottomEnd="18sp"
+            app:boxStrokeColor="#D6FFA4"
             app:hintTextColor="#FFFFFF">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -113,20 +149,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            >
 
             <RadioButton
                 android:id="@+id/rbMale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Мужской"
-                android:checked="true" />
+                android:checked="true"
+                android:textColor="@color/white"
+                />
 
             <RadioButton
                 android:id="@+id/rbFemale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Женский" />
+                android:text="Женский"
+                android:textColor="@color/white"/>
         </RadioGroup>
 
         <com.google.android.material.button.MaterialButton
@@ -136,7 +177,8 @@
             android:text="Зарегистрироваться"
             android:textColor="#D6FFA4"
             android:backgroundTint="#353535"
-            app:cornerRadius="18sp" />
+            app:cornerRadius="18sp"
+            android:textSize="22sp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -145,7 +187,9 @@
             android:textColor="#FFFFFF"
             android:gravity="center"
             android:padding="16dp"
-            android:id="@+id/tvLogin" />
+            android:id="@+id/tvLogin"
+            android:textSize="18sp"
+            />
 
 
     </LinearLayout>
