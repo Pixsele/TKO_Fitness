@@ -150,8 +150,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
-            >
+            android:layout_marginTop="3dp">
 
             <RadioButton
                 android:id="@+id/rbMale"
@@ -159,15 +158,14 @@
                 android:layout_height="wrap_content"
                 android:text="Мужской"
                 android:checked="true"
-                android:textColor="@color/white"
-                />
+                android:textColor="@color/white" />
 
             <RadioButton
                 android:id="@+id/rbFemale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Женский"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
         </RadioGroup>
 
         <com.google.android.material.button.MaterialButton
@@ -178,7 +176,7 @@
             android:textColor="#D6FFA4"
             android:backgroundTint="#353535"
             app:cornerRadius="18sp"
-            android:textSize="22sp"/>
+            android:textSize="22sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -188,8 +186,7 @@
             android:gravity="center"
             android:padding="16dp"
             android:id="@+id/tvLogin"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
 
 
     </LinearLayout>

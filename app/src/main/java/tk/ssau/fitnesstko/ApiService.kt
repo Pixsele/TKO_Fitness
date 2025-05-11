@@ -29,6 +29,7 @@ import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 import tk.ssau.fitnesstko.model.dto.nutrition.KcalProductDTO
 import tk.ssau.fitnesstko.model.dto.nutrition.KcalTrackerDTO
 import tk.ssau.fitnesstko.model.dto.nutrition.ProductDTO
+import tk.ssau.fitnesstko.model.dto.nutrition.ProductForPageDTO
 import tk.ssau.fitnesstko.model.dto.user.AuthRequest
 import tk.ssau.fitnesstko.model.dto.user.RegisterUsersDTO
 import java.lang.reflect.Type
@@ -194,11 +195,17 @@ object ApiService {
 
         @GET("api/kcal-product/by-tracker/{trackerId}")
         fun getProductsByTracker(@Path("trackerId") trackerId: Long?): Call<List<KcalProductDTO>>
+
+        @POST("api/kcal-product")
+        fun createKcalProduct(@Body request: KcalProductDTO): Call<KcalProductDTO>
     }
 
     interface ProductApi {
         @GET("api/product/{id}")
         fun getProductDetails(@Path("id") id: Long): Call<ProductDTO>
+
+        @GET("api/product/search")
+        fun searchProducts(@Query("keyword") keyword: String): Call<List<ProductForPageDTO>>
     }
 
 }

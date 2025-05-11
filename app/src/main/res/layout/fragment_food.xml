@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/TKO_dark_gray">
@@ -19,7 +18,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
         <RadioGroup
             android:id="@+id/daysRadioGroup"
@@ -34,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Пн"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
 
             <RadioButton
                 android:id="@+id/tuesday"
@@ -42,42 +41,47 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Вт"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
+
             <RadioButton
                 android:id="@+id/wednesday"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Ср"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
+
             <RadioButton
                 android:id="@+id/thursday"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Чт"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
+
             <RadioButton
                 android:id="@+id/friday"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Пт"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
+
             <RadioButton
                 android:id="@+id/saturday"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Сб"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
+
             <RadioButton
                 android:id="@+id/sunday"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Вс"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
 
         </RadioGroup>
 
@@ -94,7 +98,7 @@
                 android:layout_weight="1"
                 android:text="Жиры"
                 android:gravity="center"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/tvCarbohydrates"
@@ -103,7 +107,8 @@
                 android:layout_weight="1"
                 android:text="Углев"
                 android:gravity="center"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
+
             <TextView
                 android:id="@+id/tvProtein"
                 android:layout_width="0dp"
@@ -111,7 +116,8 @@
                 android:layout_weight="1"
                 android:text="Белки"
                 android:gravity="center"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
+
             <TextView
                 android:id="@+id/tvRSK"
                 android:layout_width="0dp"
@@ -119,7 +125,8 @@
                 android:layout_weight="1"
                 android:text="РСК"
                 android:gravity="center"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
+
             <TextView
                 android:id="@+id/tvKcal"
                 android:layout_width="0dp"
@@ -127,7 +134,7 @@
                 android:layout_weight="1"
                 android:text="Ккал"
                 android:gravity="center"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
@@ -144,7 +151,7 @@
                 android:layout_weight="1"
                 android:text="-"
                 android:gravity="center"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/tvCarbohydratesValue"
@@ -153,7 +160,7 @@
                 android:layout_weight="1"
                 android:text="-"
                 android:gravity="center"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/tvProteinValue"
@@ -162,7 +169,7 @@
                 android:layout_weight="1"
                 android:text="-"
                 android:gravity="center"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/tvRSKValue"
@@ -171,7 +178,7 @@
                 android:layout_weight="1"
                 android:text="-"
                 android:gravity="center"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/tvKcalValue"
@@ -180,7 +187,7 @@
                 android:layout_weight="1"
                 android:text="-"
                 android:gravity="center"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
         </LinearLayout>
 
         <include

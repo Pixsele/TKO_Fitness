@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/TKO_dark_gray">
+
+    <EditText
+        android:id="@+id/etPortionCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Количество порций"
+        android:inputType="number"
+        android:textColor="@color/white"
+        android:textColorHint="#B3FFFFFF" />
+
+    <TextView
+        android:id="@+id/tvCalories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Калории: 0"
+        android:textColor="@color/white"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/tvFats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Жиры: 0 г"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/tvCarbs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Углеводы: 0 г"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/tvProtein"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Белки: 0 г"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Сохранить"
+        android:layout_marginTop="24dp" />
+
+</LinearLayout>

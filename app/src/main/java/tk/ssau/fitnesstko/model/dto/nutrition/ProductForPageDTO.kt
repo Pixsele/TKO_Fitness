@@ -8,5 +8,6 @@ data class ProductForPageDTO(
     val calories: Int,
     val percentOfTarget: Int,
     val unit: String,
-    val portions: BigDecimal
+    val portion: BigDecimal,
+    val grams: BigDecimal
 )

@@ -6,7 +6,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/TKO_dark_gray">
 
-    <!-- Ваши верхние элементы остаются без изменений -->
     <ImageButton
         android:id="@+id/ibAddExercises"
         android:layout_width="wrap_content"
@@ -49,7 +48,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_category" />
 
-    <!-- CardView с поиском - добавляем ID для ссылки -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardSearch"
         android:layout_width="match_parent"

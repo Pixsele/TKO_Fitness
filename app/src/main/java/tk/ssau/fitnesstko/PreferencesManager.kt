@@ -5,6 +5,8 @@ import androidx.core.content.edit
 import com.google.gson.Gson
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -120,5 +122,29 @@ class PreferencesManager(context: Context) {
                 apply()
             }
         }
+    }
+
+    fun saveKcalTrackerId(date: String, trackerId: Long) {
+        sharedPreferences.edit {
+            putLong("kcalTracker_$date", trackerId)
+        }
+    }
+
+    fun getKcalTrackerId(date: String): Long? {
+        val id = sharedPreferences.getLong("kcalTracker_$date", -1L)
+        return if (id != -1L) id else null
+    }
+
+    fun saveSelectedDate(date: LocalDate) {
+        val dateStr = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        sharedPreferences.edit {
+            putString("selectedDate", dateStr)
+        }
+    }
+
+    // Получить сохраненную дату
+    fun getSelectedDate(): LocalDate? {
+        val dateStr = sharedPreferences.getString("selectedDate", null)
+        return dateStr?.let { LocalDate.parse(it) }
     }
 }

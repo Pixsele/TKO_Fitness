@@ -14,11 +14,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import tk.ssau.fitnesstko.ApiService
 import tk.ssau.fitnesstko.AuthManager
+import tk.ssau.fitnesstko.PreferencesManager
 import tk.ssau.fitnesstko.R
 import tk.ssau.fitnesstko.model.dto.nutrition.KcalProductDTO
 import tk.ssau.fitnesstko.model.dto.nutrition.KcalTrackerDTO
@@ -36,8 +38,8 @@ class FragmentFood : Fragment() {
     private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     private var currentWeekDates = mutableListOf<LocalDate>()
     private var currentTrackerId: Long? = null
+    private lateinit var viewModel: KcalProductViewModel
 
-    // Структуры для хранения сумм
     private data class SectionTotals(
         var fats: BigDecimal = BigDecimal.ZERO,
         var carbs: BigDecimal = BigDecimal.ZERO,
@@ -64,6 +66,13 @@ class FragmentFood : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity())[KcalProductViewModel::class.java]
+
+        viewModel.products.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                loadKcalData()
+            }
+        }
         authManager = AuthManager(requireContext())
         setupDates()
         setupRadioGroup()
@@ -72,12 +81,17 @@ class FragmentFood : Fragment() {
     }
 
     private fun setupDates() {
-        val today = LocalDate.now()
-        selectedDate = today
-        currentWeekDates = (0..6).map { today.plusDays(it.toLong()) }.toMutableList()
+        val prefs = PreferencesManager(requireContext())
+        selectedDate = prefs.getSelectedDate() ?: run {
+            val today = LocalDate.now()
+            prefs.saveSelectedDate(today)
+            today
+        }
+        currentWeekDates = (0..6).map { selectedDate.plusDays(it.toLong()) }.toMutableList()
     }
 
     private fun setupRadioGroup() {
+        val preferences = PreferencesManager(requireContext())
         view?.findViewById<RadioGroup>(R.id.daysRadioGroup)?.apply {
             if (childCount != 7) return@apply
 
@@ -104,6 +118,7 @@ class FragmentFood : Fragment() {
             setOnCheckedChangeListener { _, checkedId ->
                 (findViewById<RadioButton>(checkedId)?.tag as? LocalDate)?.let { date ->
                     selectedDate = date
+                    preferences.saveSelectedDate(date)
                     loadKcalData()
                 }
             }
@@ -112,15 +127,21 @@ class FragmentFood : Fragment() {
 
     private fun setupSections() {
         listOf(
-            R.id.breakfastSection to "Завтрак",
-            R.id.lunchSection to "Обед",
-            R.id.dinnerSection to "Ужин",
-            R.id.snackSection to "Перекус"
-        ).forEach { (id, title) ->
+            R.id.breakfastSection to Pair("BREAKFAST", "Завтрак"),
+            R.id.lunchSection to Pair("LUNCH", "Обед"),
+            R.id.dinnerSection to Pair("DINNER", "Ужин"),
+            R.id.snackSection to Pair("SNACK", "Перекус")
+        ).forEach { (id, data) ->
             view?.findViewById<View>(id)?.let { section ->
-                section.findViewById<TextView>(R.id.sectionTitle).text = title
+                val (mealType, title) = data
+                section.findViewById<TextView>(R.id.sectionTitle).text = mealType
                 section.findViewById<Button>(R.id.addButton).setOnClickListener {
-                    // TODO: Реализация добавления продукта
+                    val args = Bundle().apply { putString("typeMeal", mealType) }
+                    val fragment = AddProductFragment().apply { arguments = args }
+                    requireActivity().supportFragmentManager.beginTransaction()
+                        .replace(R.id.flFragment, fragment)
+                        .addToBackStack(null)
+                        .commit()
                 }
                 section.findViewById<LinearLayout>(R.id.productList).visibility = View.VISIBLE
                 section.findViewById<View>(R.id.sectionTitle).setOnClickListener {
@@ -146,32 +167,42 @@ class FragmentFood : Fragment() {
         clearSections()
         val dateStr = selectedDate.format(dateFormatter)
 
-        ApiService.kcalTrackerService.getKcalByDate(dateStr).enqueue(object : Callback<KcalTrackerDTO> {
-            override fun onResponse(call: Call<KcalTrackerDTO>, response: Response<KcalTrackerDTO>) {
-                when {
-                    response.isSuccessful && response.body() != null -> {
-                        response.body()!!.let { tracker ->
-                            currentTrackerId = tracker.id
-                            loadProductsForTracker(tracker.id)
+        ApiService.kcalTrackerService.getKcalByDate(dateStr)
+            .enqueue(object : Callback<KcalTrackerDTO> {
+                override fun onResponse(
+                    call: Call<KcalTrackerDTO>,
+                    response: Response<KcalTrackerDTO>
+                ) {
+                    when {
+                        response.isSuccessful && response.body() != null -> {
+                            response.body()!!.let { tracker ->
+                                tracker.id?.let {
+                                    PreferencesManager(requireContext()).saveKcalTrackerId(
+                                        selectedDate.format(dateFormatter),
+                                        it
+                                    )
+                                }
+                                currentTrackerId = tracker.id
+                                loadProductsForTracker(tracker.id)
+                            }
                         }
+
+                        response.isSuccessful -> {
+                            createKcalTracker()
+                        }
+
+                        else -> showError("Ошибка: ${response.code()}")
                     }
+                }
 
-                    response.isSuccessful -> {
-                        createKcalTracker()
+                override fun onFailure(call: Call<KcalTrackerDTO>, t: Throwable) {
+                    when (t) {
+                        is EOFException -> createKcalTracker()
+                        else -> showError("Ошибка сети: ${t.message}")
                     }
-
-                    else -> showError("Ошибка: ${response.code()}")
+                    Log.e("FragmentFood", "Ошибка сети", t)
                 }
-            }
-
-            override fun onFailure(call: Call<KcalTrackerDTO>, t: Throwable) {
-                when (t) {
-                    is EOFException -> createKcalTracker()
-                    else -> showError("Ошибка сети: ${t.message}")
-                }
-                Log.e("FragmentFood", "Ошибка сети", t)
-            }
-        })
+            })
     }
 
     private fun createKcalTracker() {
@@ -186,12 +217,23 @@ class FragmentFood : Fragment() {
             date = selectedDate
         )
 
+        val dateStr = selectedDate.format(dateFormatter)
+
         ApiService.kcalTrackerService.createKcalTracker(trackerRequest)
             .enqueue(object : Callback<KcalTrackerDTO> {
-                override fun onResponse(call: Call<KcalTrackerDTO>, response: Response<KcalTrackerDTO>) {
-                    response.body()?.let {
-                        currentTrackerId = it.id
-                        loadProductsForTracker(it.id)
+                override fun onResponse(
+                    call: Call<KcalTrackerDTO>,
+                    response: Response<KcalTrackerDTO>
+                ) {
+                    response.body()?.let { tracker ->
+                        currentTrackerId = tracker.id
+                        tracker.id?.let {
+                            PreferencesManager(requireContext()).saveKcalTrackerId(
+                                selectedDate.format(dateFormatter),
+                                it
+                            )
+                        }
+                        loadProductsForTracker(tracker.id)
                     } ?: showError("Пустой ответ сервера")
                 }
 
@@ -261,8 +303,10 @@ class FragmentFood : Fragment() {
 
                     findViewById<TextView>(R.id.tvFats).text = formatValue(product.fats * count)
                     findViewById<TextView>(R.id.tvCarbs).text = formatValue(product.carbs * count)
-                    findViewById<TextView>(R.id.tvProtein).text = formatValue(product.proteins * count)
-                    findViewById<TextView>(R.id.tvKcal).text = (product.kcal * kcalProduct.count).toString()
+                    findViewById<TextView>(R.id.tvProtein).text =
+                        formatValue(product.proteins * count)
+                    findViewById<TextView>(R.id.tvKcal).text =
+                        (product.kcal * kcalProduct.count).toString()
                 }
 
             section.findViewById<LinearLayout>(R.id.productList).apply {
@@ -305,7 +349,8 @@ class FragmentFood : Fragment() {
 
         view?.findViewById<View>(sectionId)?.let { section ->
             section.findViewById<TextView>(R.id.tvFatsValue).text = formatValue(totals.fats)
-            section.findViewById<TextView>(R.id.tvCarbohydratesValue).text = formatValue(totals.carbs)
+            section.findViewById<TextView>(R.id.tvCarbohydratesValue).text =
+                formatValue(totals.carbs)
             section.findViewById<TextView>(R.id.tvProteinValue).text = formatValue(totals.proteins)
             section.findViewById<TextView>(R.id.tvKcalValue).text =
                 totals.kcal.takeIf { it > 0 }?.toString() ?: "-"
@@ -315,7 +360,8 @@ class FragmentFood : Fragment() {
     private fun updateGlobalUI() {
         view?.let {
             it.findViewById<TextView>(R.id.tvFatsValue).text = formatValue(globalTotals.fats)
-            it.findViewById<TextView>(R.id.tvCarbohydratesValue).text = formatValue(globalTotals.carbs)
+            it.findViewById<TextView>(R.id.tvCarbohydratesValue).text =
+                formatValue(globalTotals.carbs)
             it.findViewById<TextView>(R.id.tvProteinValue).text = formatValue(globalTotals.proteins)
             it.findViewById<TextView>(R.id.tvKcalValue).text =
                 globalTotals.kcal.takeIf { it > 0 }?.toString() ?: "-"
@@ -343,7 +389,12 @@ class FragmentFood : Fragment() {
             .forEach { sectionId ->
                 view?.findViewById<View>(sectionId)?.let {
                     it.findViewById<LinearLayout>(R.id.productList).removeAllViews()
-                    arrayOf(R.id.tvFatsValue, R.id.tvCarbohydratesValue, R.id.tvProteinValue, R.id.tvKcalValue)
+                    arrayOf(
+                        R.id.tvFatsValue,
+                        R.id.tvCarbohydratesValue,
+                        R.id.tvProteinValue,
+                        R.id.tvKcalValue
+                    )
                         .forEach { tvId ->
                             it.findViewById<TextView>(tvId).text = "-"
                         }

@@ -1,6 +1,5 @@
 package tk.ssau.fitnesstko.model.dto.nutrition
 
-import org.threeten.bp.LocalDateTime
 import java.math.BigDecimal
 
 data class ProductDTO(

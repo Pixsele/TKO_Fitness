@@ -12,11 +12,11 @@ import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import tk.ssau.fitnesstko.databinding.FragmentWorkoutExecutionBinding
 import tk.ssau.fitnesstko.model.dto.ExerciseDto
 import tk.ssau.fitnesstko.model.dto.WorkoutExerciseDto
-import retrofit2.Callback
-import retrofit2.Response
 
 class WorkoutExecutionFragment : Fragment(R.layout.fragment_workout_execution) {
     private lateinit var binding: FragmentWorkoutExecutionBinding
@@ -160,11 +160,13 @@ class WorkoutExecutionFragment : Fragment(R.layout.fragment_workout_execution) {
             }
         }
     }
+
     private fun exitWorkout() {
         parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
-    private fun Long.toTimeFormat() = String.format("%02d:%02d",
+    private fun Long.toTimeFormat() = String.format(
+        "%02d:%02d",
         (this / 1000) / 60,
         (this / 1000) % 60
     )
