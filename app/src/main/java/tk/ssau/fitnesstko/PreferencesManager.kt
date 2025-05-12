@@ -13,7 +13,6 @@ import java.util.Locale
 class PreferencesManager(context: Context) {
     private val sharedPreferences =
         context.getSharedPreferences("fitness_prefs", Context.MODE_PRIVATE)
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     private val gson = Gson()
 
     fun saveUserData(firstName: String, lastName: String, age: String) {
@@ -71,12 +70,6 @@ class PreferencesManager(context: Context) {
             ?.sortedBy { it.first } ?: emptyList()
     }
 
-    fun getLastWeight(): String {
-        return getWeights().lastOrNull()?.let {
-            "%.1f кг (${dateFormat.format(Date(it.first))})".format(it.second)
-        } ?: "Нет данных"
-    }
-
     fun saveWorkout(date: String, type: String) {
         val workouts = getWorkouts().toMutableSet()
         workouts.add("$date|$type")
@@ -88,20 +81,6 @@ class PreferencesManager(context: Context) {
     fun getWorkouts(): Set<String> {
         return sharedPreferences.getStringSet("workouts", emptySet()) ?: emptySet()
     }
-
-    fun getFirstName() = sharedPreferences.getString("firstName", "") ?: ""
-    fun getLastName() = sharedPreferences.getString("lastName", "") ?: ""
-    fun getAge() = sharedPreferences.getString("age", "") ?: ""
-
-
-    fun saveLocalWorkout(workout: WorkoutForPageDto) {
-        val workouts = getLocalWorkouts().toMutableList()
-        workouts.add(workout)
-        sharedPreferences.edit {
-            putString("local_workouts", gson.toJson(workouts))
-        }
-    }
-
 
     fun getLocalWorkouts(): List<WorkoutForPageDto> {
         val json = sharedPreferences.getString("local_workouts", null)
@@ -143,13 +122,11 @@ class PreferencesManager(context: Context) {
         }
     }
 
-    // Получить сохраненную дату
     fun getSelectedDate(): LocalDate? {
         val dateStr = sharedPreferences.getString("selectedDate", null)
         return dateStr?.let { LocalDate.parse(it) }
     }
 
-    // Добавьте методы для сохранения и получения URI аватара
     fun saveAvatarUri(uri: String) {
         sharedPreferences.edit {
             putString("avatar_uri", uri)

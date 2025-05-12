@@ -17,6 +17,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 import tk.ssau.fitnesstko.model.dto.ExerciseDto
@@ -32,6 +33,7 @@ import tk.ssau.fitnesstko.model.dto.nutrition.ProductDTO
 import tk.ssau.fitnesstko.model.dto.nutrition.ProductForPageDTO
 import tk.ssau.fitnesstko.model.dto.user.AuthRequest
 import tk.ssau.fitnesstko.model.dto.user.RegisterUsersDTO
+import tk.ssau.fitnesstko.model.dto.user.UserDTO
 import java.lang.reflect.Type
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -184,6 +186,12 @@ object ApiService {
 
         @POST("api/login")
         fun login(@Body authRequest: AuthRequest): Call<AuthResponse>
+
+        @PUT("api/user/{id}")
+        fun updateUser(
+            @Path("id") id: Long,
+            @Body userData: UpdateUserRequest
+        ): Call<UserDTO>
     }
 
     interface KcalTrackerApi {
@@ -258,3 +266,8 @@ private class LocalDateSerializer : JsonSerializer<LocalDate>, JsonDeserializer<
         return LocalDate.parse(json.asString, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
     }
 }
+
+data class UpdateUserRequest(
+    val name: String,
+    val login: String
+)
