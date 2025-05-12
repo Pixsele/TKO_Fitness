@@ -32,7 +32,7 @@ class CalculateCaloriesFragment : Fragment(R.layout.fragment_calculate_calories)
 
         val adapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            R.layout.spinner_item,
             activityLevels.map { it.first }
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
