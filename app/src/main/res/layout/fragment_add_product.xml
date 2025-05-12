@@ -25,16 +25,6 @@
             android:textStyle="bold"/>
 
         <Button
-            android:id="@+id/btnAddNew"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+"
-            android:textColor="@color/TKO_green"
-            android:textStyle="bold"
-            android:textSize="22sp"
-            android:background="@android:color/transparent"/>
-
-        <Button
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,8 +43,19 @@
         android:paddingHorizontal="16dp"
         android:textColor="@color/TKO_green"
         android:textSize="22sp"
-        android:layout_marginBottom="14dp"
+        android:layout_marginBottom="0dp"
         />
+
+    <Button
+        android:id="@+id/btnAddNew"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Создать новый продукт"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:background="@android:color/transparent"/>
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardSearch"
@@ -92,14 +93,16 @@
                 android:textSize="22sp"
                 android:imeOptions="actionSearch"
                 android:singleLine="true" />
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvProducts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp" />
+
 
     <TextView
         android:id="@+id/tvSelectedCount"
