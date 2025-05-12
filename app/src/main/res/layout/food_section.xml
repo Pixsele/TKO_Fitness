@@ -9,7 +9,6 @@
     android:paddingLeft="15dp"
     >
 
-    <!-- Заголовок секции и кнопка -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

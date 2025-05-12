@@ -9,7 +9,8 @@ data class ProductDTO(
     val unit: String,
     val grams: BigDecimal,
     val portion: BigDecimal,
-    val createdAt: String,
+    val createdAt: String?,
+    val percent: Int?,
     val fats: BigDecimal,
     val carbs: BigDecimal,
     val proteins: BigDecimal

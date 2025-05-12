@@ -44,7 +44,8 @@ class FragmentFood : Fragment() {
         var fats: BigDecimal = BigDecimal.ZERO,
         var carbs: BigDecimal = BigDecimal.ZERO,
         var proteins: BigDecimal = BigDecimal.ZERO,
-        var kcal: Int = 0
+        var kcal: Int = 0,
+        var rskPercent: Int = 0
     )
 
     private val sections = mutableMapOf(
@@ -68,11 +69,6 @@ class FragmentFood : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[KcalProductViewModel::class.java]
 
-        viewModel.products.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                loadKcalData()
-            }
-        }
         authManager = AuthManager(requireContext())
         setupDates()
         setupRadioGroup()
@@ -317,6 +313,8 @@ class FragmentFood : Fragment() {
                         formatValue(product.proteins * count)
                     findViewById<TextView>(R.id.tvKcal).text =
                         (product.kcal * kcalProduct.count).toString()
+                    findViewById<TextView>(R.id.tvRSK).text =
+                        (product.percent?.times(kcalProduct.count)?.toString() ?: "0")
                 }
 
             section.findViewById<LinearLayout>(R.id.productList).apply {
@@ -335,6 +333,7 @@ class FragmentFood : Fragment() {
             carbs += product.carbs.multiply(multiplier)
             proteins += product.proteins.multiply(multiplier)
             kcal += product.kcal * count
+            rskPercent += (product.percent ?: 0) * count
         }
 
         with(globalTotals) {
@@ -342,12 +341,12 @@ class FragmentFood : Fragment() {
             carbs += product.carbs.multiply(multiplier)
             proteins += product.proteins.multiply(multiplier)
             kcal += product.kcal * count
+            rskPercent += (product.percent ?: 0) * count
         }
 
         updateSectionUI(mealType, section)
         updateGlobalUI()
     }
-
     private fun updateSectionUI(mealType: String, totals: SectionTotals) {
         val sectionId = when (mealType) {
             "BREAKFAST" -> R.id.breakfastSection
@@ -364,6 +363,8 @@ class FragmentFood : Fragment() {
             section.findViewById<TextView>(R.id.tvProteinValue).text = formatValue(totals.proteins)
             section.findViewById<TextView>(R.id.tvKcalValue).text =
                 totals.kcal.takeIf { it > 0 }?.toString() ?: "-"
+            section.findViewById<TextView>(R.id.tvRSKValue)?.text =
+                totals.rskPercent.takeIf { it > 0 }?.toString() ?: "-"
         }
     }
 
@@ -375,6 +376,8 @@ class FragmentFood : Fragment() {
             it.findViewById<TextView>(R.id.tvProteinValue).text = formatValue(globalTotals.proteins)
             it.findViewById<TextView>(R.id.tvKcalValue).text =
                 globalTotals.kcal.takeIf { it > 0 }?.toString() ?: "-"
+            view?.findViewById<TextView>(R.id.tvRSKValue)?.text =
+                globalTotals.rskPercent.takeIf { it > 0 }?.toString() ?: "-"
         }
     }
 
@@ -392,6 +395,7 @@ class FragmentFood : Fragment() {
             it.carbs = BigDecimal.ZERO
             it.proteins = BigDecimal.ZERO
             it.kcal = 0
+            it.rskPercent = 0
         }
         globalTotals = SectionTotals()
 
@@ -403,7 +407,8 @@ class FragmentFood : Fragment() {
                         R.id.tvFatsValue,
                         R.id.tvCarbohydratesValue,
                         R.id.tvProteinValue,
-                        R.id.tvKcalValue
+                        R.id.tvKcalValue,
+                        R.id.tvRSKValue
                     )
                         .forEach { tvId ->
                             it.findViewById<TextView>(tvId).text = "-"
@@ -411,7 +416,7 @@ class FragmentFood : Fragment() {
                 }
             }
 
-        arrayOf(R.id.tvFatsValue, R.id.tvCarbohydratesValue, R.id.tvProteinValue, R.id.tvKcalValue)
+        arrayOf(R.id.tvFatsValue, R.id.tvCarbohydratesValue, R.id.tvProteinValue, R.id.tvKcalValue,R.id.tvRSKValue)
             .forEach { tvId ->
                 view?.findViewById<TextView>(tvId)?.text = "-"
             }
@@ -431,4 +436,13 @@ class FragmentFood : Fragment() {
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
+
 }
+/*
+GET http://85.236.187.180:8080/api/kcal-tracker/by-date/2025-05-12
+<-- 200 http://85.236.187.180:8080/api/kcal-tracker/by-date/2025-05-12 (76ms)
+
+ */

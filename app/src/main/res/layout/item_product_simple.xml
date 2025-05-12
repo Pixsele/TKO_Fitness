@@ -35,7 +35,7 @@
                 android:layout_marginEnd="8dp" />
 
             <TextView
-                android:id="@+id/tvRKS"
+                android:id="@+id/tvRSK"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"

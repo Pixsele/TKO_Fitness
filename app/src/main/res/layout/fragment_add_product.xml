@@ -25,6 +25,16 @@
             android:textStyle="bold"/>
 
         <Button
+            android:id="@+id/btnAddNew"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:textColor="@color/TKO_green"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:background="@android:color/transparent"/>
+
+        <Button
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

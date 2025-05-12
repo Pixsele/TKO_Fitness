@@ -206,6 +206,9 @@ object ApiService {
 
         @GET("api/product/search")
         fun searchProducts(@Query("keyword") keyword: String): Call<List<ProductForPageDTO>>
+
+        @POST("api/product")
+        fun createProduct(@Body product: ProductDTO): Call<ProductDTO>
     }
 
 }

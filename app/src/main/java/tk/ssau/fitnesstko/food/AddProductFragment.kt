@@ -115,6 +115,12 @@ class AddProductFragment : Fragment() {
             requireActivity().onBackPressed()
             return
         }
+        view.findViewById<Button>(R.id.btnAddNew).setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.flFragment, CreateProductFragment())
+                .addToBackStack("createProduct")
+                .commit()
+        }
     }
 
     private fun formatDate(date: LocalDate): String {
@@ -155,7 +161,7 @@ class AddProductFragment : Fragment() {
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val tvName: TextView = view.findViewById(R.id.tvProductName)
             val tvGrams: TextView = view.findViewById(R.id.tvGrams)
-            val tvRKS: TextView = view.findViewById(R.id.tvRKS)
+            val tvRSK: TextView = view.findViewById(R.id.tvRSK)
             val rbSelect: RadioButton = view.findViewById(R.id.rbSelect)
         }
 
@@ -180,7 +186,7 @@ class AddProductFragment : Fragment() {
             with(holder) {
                 tvName.text = product.name
                 tvGrams.text = "${product.grams.setScale(1, RoundingMode.HALF_UP)} гр"
-                tvRKS.text = "РКС ${product.percentOfTarget}% - ${product.calories} ккал"
+                tvRSK.text = "РСК ${product.percentOfTarget}% - ${product.calories} ккал"
                 rbSelect.isChecked = isSelected
 
                 itemView.setOnClickListener {
@@ -191,7 +197,6 @@ class AddProductFragment : Fragment() {
                             Toast.makeText(context, "Продукт уже добавлен", Toast.LENGTH_SHORT).show()
                             return@setOnClickListener
                         }
-                        // Переместил код перехода на фрагмент сюда
                         if (product.id == null) {
                             Toast.makeText(context, "Ошибка: продукт не выбран", Toast.LENGTH_SHORT)
                                 .show()
