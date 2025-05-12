@@ -34,6 +34,7 @@ import tk.ssau.fitnesstko.model.dto.nutrition.ProductForPageDTO
 import tk.ssau.fitnesstko.model.dto.user.AuthRequest
 import tk.ssau.fitnesstko.model.dto.user.RegisterUsersDTO
 import tk.ssau.fitnesstko.model.dto.user.UserDTO
+import tk.ssau.fitnesstko.model.dto.user.WeightDto
 import java.lang.reflect.Type
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -77,6 +78,7 @@ object ApiService {
     val authService: AuthApi by lazy { retrofit.create(AuthApi::class.java) }
     val kcalTrackerService: KcalTrackerApi by lazy { retrofit.create(KcalTrackerApi::class.java) }
     val productService: ProductApi by lazy { retrofit.create(ProductApi::class.java) }
+    val weightService: WeightApi by lazy { retrofit.create(WeightApi::class.java) }
 
     /**
      * Интерфейс для работы с тренировками
@@ -222,6 +224,13 @@ object ApiService {
         fun createProduct(@Body product: ProductDTO): Call<ProductDTO>
     }
 
+    interface WeightApi {
+        @POST("/api/weight")
+        fun postWeight(@Body weight: WeightDto): Call<WeightDto>
+
+        @GET("/api/weight/last/{userId}")
+        fun getUserWeights(@Path("userId") userId: Long): Call<List<WeightDto>>
+    }
 }
 
 /**

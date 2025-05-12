@@ -19,6 +19,9 @@ import tk.ssau.fitnesstko.PreferencesManager
 import tk.ssau.fitnesstko.R
 import tk.ssau.fitnesstko.model.dto.user.AuthRequest
 import tk.ssau.fitnesstko.model.dto.user.UserDTO
+import tk.ssau.fitnesstko.model.dto.user.WeightDto
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -82,6 +85,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         lastName = "",
                         birthDay = user.birthDay
                     )
+                    val prefsManager = PreferencesManager(requireContext())
+                    syncWeightsFromServer(userId, prefsManager)
+
                     navigateToMain()
                 }
             }
@@ -91,6 +97,34 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 p1: Throwable
             ) {
                 Toast.makeText(context, "Ошибка сети", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun syncWeightsFromServer(userId: Long, prefsManager: PreferencesManager) {
+        ApiService.weightService.getUserWeights(userId).enqueue(object : Callback<List<WeightDto>> {
+            override fun onResponse(
+                call: Call<List<WeightDto>>,
+                response: Response<List<WeightDto>>
+            ) {
+                if (response.isSuccessful) {
+                    response.body()?.let { serverWeights ->
+                        // Конвертируем в локальный формат и сохраняем
+                        val localWeights = serverWeights.map { weightDto ->
+                            val timestamp = LocalDateTime.parse(weightDto.timeDate)
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant()
+                                .toEpochMilli()
+                            "$timestamp|${weightDto.weight}"
+                        }
+
+                        prefsManager.saveWeightsBatch(localWeights)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<List<WeightDto>>, t: Throwable) {
+                // Можно добавить логирование ошибки
             }
         })
     }

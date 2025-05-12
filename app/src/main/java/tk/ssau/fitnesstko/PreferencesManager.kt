@@ -3,14 +3,22 @@ package tk.ssau.fitnesstko
 import android.content.Context
 import androidx.core.content.edit
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
+import tk.ssau.fitnesstko.model.dto.user.WeightDto
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class PreferencesManager(context: Context) {
     private val sharedPreferences =
         context.getSharedPreferences("fitness_prefs", Context.MODE_PRIVATE)
     private val gson = Gson()
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+    private val authManager = AuthManager(context)
+
 
     fun saveUserData(firstName: String, lastName: String, birthDay: String) {
         sharedPreferences.edit {
@@ -34,6 +42,42 @@ class PreferencesManager(context: Context) {
         }
     }
 
+    fun saveAndSendWeight(weight: Float) {
+        // Получаем userId из AuthManager
+        val userId = authManager.getUserId() ?: return
+
+        // Отправляем на сервер
+        coroutineScope.launch {
+            try {
+                val currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                val weightDto = WeightDto(
+                    userId = userId,
+                    weight = weight,
+                    timeDate = currentTime
+                )
+
+                // Используем ваш существующий ApiService
+                val response = ApiService.weightService.postWeight(weightDto).execute()
+
+                if (!response.isSuccessful) {
+                    // Можно добавить логирование ошибки
+                }
+            } catch (e: Exception) {
+                // Обработка ошибок (можно добавить логирование)
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun saveWeightsBatch(weightEntries: List<String>) {
+        sharedPreferences.edit {
+            val currentWeights = getWeightsRaw().toMutableSet()
+            currentWeights.addAll(weightEntries)
+            putStringSet("weightHistory", currentWeights)
+            apply()
+        }
+    }
+
     fun saveWeight(weight: Float) {
         val currentTime = System.currentTimeMillis()
 
@@ -44,7 +88,12 @@ class PreferencesManager(context: Context) {
             )
             apply()
         }
+        saveAndSendWeight(weight)
     }
+
+
+
+
 
     private fun getWeightsRaw() = getWeights()
         .map { "${it.first}|${it.second}" }

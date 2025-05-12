@@ -57,7 +57,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="-55dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,16 +109,7 @@
             app:backgroundTint="@color/TKO_gray"
             android:gravity="left" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnProfileSettingApp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Настройки приложения"
-            android:textSize="20sp"
-            android:layout_weight="1"
-            app:cornerRadius="12sp"
-            app:backgroundTint="@color/TKO_gray"
-            android:gravity="left" />
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogout"
