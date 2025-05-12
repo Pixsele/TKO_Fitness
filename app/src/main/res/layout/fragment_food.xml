@@ -9,13 +9,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="16dp"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:paddingBottom="30dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Питание"
-            android:textSize="24sp"
+            android:textSize="28sp"
             android:textStyle="bold"
             android:gravity="center"
             android:textColor="@color/white" />
@@ -33,7 +34,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Пн"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
 
             <RadioButton
                 android:id="@+id/tuesday"
@@ -41,7 +44,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Вт"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
 
             <RadioButton
                 android:id="@+id/wednesday"
@@ -49,7 +54,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Ср"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
 
             <RadioButton
                 android:id="@+id/thursday"
@@ -57,7 +64,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Чт"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
 
             <RadioButton
                 android:id="@+id/friday"
@@ -65,7 +74,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Пт"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
 
             <RadioButton
                 android:id="@+id/saturday"
@@ -73,7 +84,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Сб"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
 
             <RadioButton
                 android:id="@+id/sunday"
@@ -81,7 +94,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Вс"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
 
         </RadioGroup>
 
@@ -98,7 +113,9 @@
                 android:layout_weight="1"
                 android:text="Жиры"
                 android:gravity="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/tvCarbohydrates"
@@ -107,7 +124,9 @@
                 android:layout_weight="1"
                 android:text="Углев"
                 android:gravity="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tvProtein"
@@ -116,7 +135,9 @@
                 android:layout_weight="1"
                 android:text="Белки"
                 android:gravity="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/tvRSK"
@@ -125,7 +146,9 @@
                 android:layout_weight="1"
                 android:text="РСК"
                 android:gravity="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/tvKcal"
@@ -134,7 +157,9 @@
                 android:layout_weight="1"
                 android:text="Ккал"
                 android:gravity="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"/>
 
         </LinearLayout>
 
@@ -142,7 +167,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:id="@+id/tvFatsValue"
@@ -151,7 +177,8 @@
                 android:layout_weight="1"
                 android:text="-"
                 android:gravity="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/tvCarbohydratesValue"
@@ -160,7 +187,8 @@
                 android:layout_weight="1"
                 android:text="-"
                 android:gravity="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/tvProteinValue"
@@ -169,7 +197,8 @@
                 android:layout_weight="1"
                 android:text="-"
                 android:gravity="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/tvRSKValue"
@@ -178,7 +207,8 @@
                 android:layout_weight="1"
                 android:text="-"
                 android:gravity="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/tvKcalValue"
@@ -187,7 +217,8 @@
                 android:layout_weight="1"
                 android:text="-"
                 android:gravity="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
         </LinearLayout>
 
         <include

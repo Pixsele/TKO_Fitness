@@ -3,7 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginTop="16dp">
+    android:layout_marginTop="8dp"
+    android:background="@drawable/rounded_bg"
+    android:paddingBottom="20dp"
+    android:paddingLeft="15dp"
+    >
 
     <!-- Заголовок секции и кнопка -->
     <LinearLayout
@@ -17,13 +21,21 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="18sp"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
 
         <Button
             android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+" />
+            android:text="+"
+            android:background="@android:color/transparent"
+            android:textSize="40sp"
+            android:padding="0sp"
+            android:textColor="@color/TKO_green"
+            />
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -39,7 +51,8 @@
             android:layout_weight="1"
             android:text="-"
             android:gravity="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/tvCarbohydratesValue"
@@ -48,7 +61,8 @@
             android:layout_weight="1"
             android:text="-"
             android:gravity="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="20dp"/>
 
         <TextView
             android:id="@+id/tvProteinValue"
@@ -57,7 +71,8 @@
             android:layout_weight="1"
             android:text="-"
             android:gravity="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/tvRSKValue"
@@ -66,7 +81,8 @@
             android:layout_weight="1"
             android:text="-"
             android:gravity="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/tvKcalValue"
@@ -75,7 +91,8 @@
             android:layout_weight="1"
             android:text="-"
             android:gravity="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
     </LinearLayout>
 
     <LinearLayout
