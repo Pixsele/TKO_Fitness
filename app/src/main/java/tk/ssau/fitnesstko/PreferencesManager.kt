@@ -147,4 +147,16 @@ class PreferencesManager(context: Context) {
         val dateStr = sharedPreferences.getString("selectedDate", null)
         return dateStr?.let { LocalDate.parse(it) }
     }
+
+    // Добавьте методы для сохранения и получения URI аватара
+    fun saveAvatarUri(uri: String) {
+        sharedPreferences.edit {
+            putString("avatar_uri", uri)
+            apply()
+        }
+    }
+
+    fun getAvatarUri(): String? {
+        return sharedPreferences.getString("avatar_uri", null)
+    }
 }
