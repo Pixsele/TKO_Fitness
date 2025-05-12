@@ -96,6 +96,15 @@ class AddProductFragment : Fragment() {
         }
 
         val prefs = PreferencesManager(requireContext())
+        val selectedDate = prefs.getSelectedDate() ?: run {
+            requireActivity().onBackPressed()
+            return
+        }
+
+        if (!selectedDate.isEqual(LocalDate.now())) {
+            Toast.makeText(context, "Добавление невозможно для выбранной даты", Toast.LENGTH_SHORT).show()
+            requireActivity().onBackPressed()
+        }
         val date = prefs.getSelectedDate()?.format(DateTimeFormatter.ISO_LOCAL_DATE) ?: run {
             Toast.makeText(context, "Дата не выбрана", Toast.LENGTH_SHORT).show()
             requireActivity().onBackPressed()

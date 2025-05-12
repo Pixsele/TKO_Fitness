@@ -119,6 +119,7 @@ class FragmentFood : Fragment() {
                 (findViewById<RadioButton>(checkedId)?.tag as? LocalDate)?.let { date ->
                     selectedDate = date
                     preferences.saveSelectedDate(date)
+                    updateUIForDate()
                     loadKcalData()
                 }
             }
@@ -136,6 +137,15 @@ class FragmentFood : Fragment() {
                 val (mealType, title) = data
                 section.findViewById<TextView>(R.id.sectionTitle).text = mealType
                 section.findViewById<Button>(R.id.addButton).setOnClickListener {
+                    if (!selectedDate.isEqual(LocalDate.now())) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Добавление возможно только для сегодняшней даты",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@setOnClickListener
+                    }
+
                     val args = Bundle().apply { putString("typeMeal", mealType) }
                     val fragment = AddProductFragment().apply { arguments = args }
                     requireActivity().supportFragmentManager.beginTransaction()
@@ -410,4 +420,15 @@ class FragmentFood : Fragment() {
     private fun showError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
+
+    private fun updateUIForDate() {
+        val isToday = selectedDate.isEqual(LocalDate.now())
+
+        listOf(R.id.breakfastSection, R.id.lunchSection, R.id.dinnerSection, R.id.snackSection)
+            .forEach { sectionId ->
+                view?.findViewById<View>(sectionId)?.findViewById<Button>(R.id.addButton)?.visibility =
+                    if (isToday) View.VISIBLE else View.GONE
+            }
+    }
+
 }
