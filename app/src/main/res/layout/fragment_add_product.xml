@@ -100,19 +100,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="8dp" />
-
-    <TextView
-        android:id="@+id/tvSelectedCount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Выбранные продукты:"
-        android:textColor="@color/white"
-        android:layout_marginTop="16dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSelectedProducts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:minHeight="48dp" />
 </LinearLayout>

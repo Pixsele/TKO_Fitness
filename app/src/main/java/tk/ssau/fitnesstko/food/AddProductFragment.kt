@@ -33,7 +33,6 @@ class AddProductFragment : Fragment() {
     private lateinit var rvProducts: RecyclerView
     private lateinit var rvSelectedProducts: RecyclerView
     private lateinit var adapter: ProductAdapter
-    private lateinit var selectedAdapter: SelectedProductAdapter
     private lateinit var viewModel: KcalProductViewModel
     private var trackerId: Long = 0
 
@@ -58,25 +57,6 @@ class AddProductFragment : Fragment() {
         rvProducts.layoutManager = LinearLayoutManager(context)
         adapter = ProductAdapter(emptyList())
         rvProducts.adapter = adapter
-
-        rvSelectedProducts = view.findViewById(R.id.rvSelectedProducts)
-        rvSelectedProducts.layoutManager = LinearLayoutManager(context)
-        selectedAdapter = SelectedProductAdapter(
-            viewModel.products.value ?: mutableListOf()
-        ) { product ->
-            viewModel.products.value?.remove(product)
-            selectedAdapter.notifyDataSetChanged()
-        }
-        rvSelectedProducts.adapter = selectedAdapter
-
-        viewModel.products.observe(viewLifecycleOwner) { products ->
-            selectedAdapter.updateProducts(products)
-            view.findViewById<TextView>(R.id.tvSelectedCount).text =
-                "Выбрано: ${products.size}"
-            rvSelectedProducts.post {
-                selectedAdapter.notifyDataSetChanged()
-            }
-        }
 
         view.findViewById<View>(R.id.btnSave).setOnClickListener {
             if (viewModel.products.value.isNullOrEmpty()) {
@@ -268,7 +248,6 @@ class AddProductFragment : Fragment() {
                         ) {
                             if (response.isSuccessful) {
                                 viewModel.products.value?.remove(product)
-                                selectedAdapter.notifyDataSetChanged()
                             }
                         }
 
@@ -282,14 +261,6 @@ class AddProductFragment : Fragment() {
                     })
             }
             requireActivity().onBackPressed()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.products.value?.let {
-            selectedAdapter.updateProducts(it)
-            rvSelectedProducts.post { selectedAdapter.notifyDataSetChanged() }
         }
     }
 }
