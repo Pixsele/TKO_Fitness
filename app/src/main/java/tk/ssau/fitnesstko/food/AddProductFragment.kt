@@ -73,6 +73,9 @@ class AddProductFragment : Fragment() {
             selectedAdapter.updateProducts(products)
             view.findViewById<TextView>(R.id.tvSelectedCount).text =
                 "Выбрано: ${products.size}"
+            rvSelectedProducts.post {
+                selectedAdapter.notifyDataSetChanged()
+            }
         }
 
         view.findViewById<View>(R.id.btnSave).setOnClickListener {
@@ -167,7 +170,7 @@ class AddProductFragment : Fragment() {
 
             with(holder) {
                 tvName.text = product.name
-                tvGrams.text = "${product.grams.setScale(1, RoundingMode.HALF_UP)} ${product.unit}"
+                tvGrams.text = "${product.grams.setScale(1, RoundingMode.HALF_UP)} гр"
                 tvRKS.text = "РКС ${product.percentOfTarget}% - ${product.calories} ккал"
                 rbSelect.isChecked = isSelected
 
@@ -175,6 +178,10 @@ class AddProductFragment : Fragment() {
                     if (isSelected) {
                         viewModel.products.value?.removeAll { it.productId == product.id }
                     } else {
+                        if (viewModel.products.value?.any { it.productId == product.id } == true) {
+                            Toast.makeText(context, "Продукт уже добавлен", Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
+                        }
                         // Переместил код перехода на фрагмент сюда
                         if (product.id == null) {
                             Toast.makeText(context, "Ошибка: продукт не выбран", Toast.LENGTH_SHORT)
@@ -227,7 +234,10 @@ class AddProductFragment : Fragment() {
             val product = products[position]
             holder.tvName.text = "Продукт #${position + 1}"
             holder.tvDetails.text = "Порций: ${product.count}"
-            holder.btnRemove.setOnClickListener { onRemove(product) }
+            holder.btnRemove.setOnClickListener {
+                viewModel.products.value?.removeAt(position)
+                notifyItemRemoved(position)
+            }
         }
 
         override fun getItemCount() = products.size
@@ -257,13 +267,15 @@ class AddProductFragment : Fragment() {
                         }
                     })
             }
-            viewModel.clearProducts()
             requireActivity().onBackPressed()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        selectedAdapter.notifyDataSetChanged()
+        viewModel.products.value?.let {
+            selectedAdapter.updateProducts(it)
+            rvSelectedProducts.post { selectedAdapter.notifyDataSetChanged() }
+        }
     }
 }
