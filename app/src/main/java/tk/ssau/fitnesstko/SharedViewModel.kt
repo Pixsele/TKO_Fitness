@@ -20,7 +20,7 @@ class SharedViewModel : ViewModel() {
     }
 
     fun isExerciseSelected(exerciseId: Long?): Boolean {
-        return _selectedExercises.value?.any { it.exercise.id == exerciseId } ?: false
+        return _selectedExercises.value?.any { it.exercise.id == exerciseId } == true
     }
 }
 

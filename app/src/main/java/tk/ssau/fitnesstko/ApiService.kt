@@ -90,7 +90,7 @@ object ApiService {
         @GET("api/workout/page")
         fun getWorkouts(
             @Query("page") page: Int = 0,
-            @Query("size") size: Int = 10
+            @Query("size") size: Int = 200
         ): Call<PagedResponse<WorkoutForPageDto>>
 
         /**
@@ -131,7 +131,7 @@ object ApiService {
         @GET("api/exercise/page")
         fun getExercises(
             @Query("page") page: Int = 0,
-            @Query("size") size: Int = 20
+            @Query("size") size: Int = 200
         ): Call<PagedResponse<ExerciseForPageDto>>
 
         /**
