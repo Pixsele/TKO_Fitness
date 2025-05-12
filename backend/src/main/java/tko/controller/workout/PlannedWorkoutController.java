@@ -11,6 +11,19 @@ import tko.service.workout.PlannedWorkoutService;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Контроллер управления запланированными тренировками.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createPlannedWorkout(PlannedWorkoutDTO)} — создание новой запланированной тренировки</li>
+ *     <li>{@link #readPlannedWorkout(Long)} — получение запланированной тренировки по идентификатору</li>
+ *     <li>{@link #updatePlannedWorkout(Long, PlannedWorkoutDTO)} — обновление запланированной тренировки</li>
+ *     <li>{@link #deletePlannedWorkout(Long)} — удаление запланированной тренировки</li>
+ *     <li>{@link #readPlannedWorkoutsByDate(Long, java.time.LocalDate, java.time.LocalDate)} — получение списка запланированных тренировок за период</li>
+ * </ul>
+ */
+
 @RestController
 @RequestMapping("/planned-workout")
 public class PlannedWorkoutController {

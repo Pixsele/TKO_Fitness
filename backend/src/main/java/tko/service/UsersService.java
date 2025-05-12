@@ -4,7 +4,6 @@ package tko.service;
 import tko.database.entity.workout.CurrentTrainingProgramEntity;
 import tko.database.repository.workout.CurrentTrainingProgramRepository;
 import tko.legacy.NutritionProgramEntity;
-import tko.database.entity.workout.TrainingsProgramEntity;
 import tko.database.entity.user.UsersEntity;
 import tko.legacy.NutritionProgramRepository;
 import tko.database.repository.workout.TrainingsProgramRepository;
@@ -16,6 +15,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+
+/**
+ * Сервис для работы с пользователем.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #create(UsersDTO)} — создание нового пользователя</li>
+ *     <li>{@link #getUser(Long)} — получение пользователя по идентификатору</li>
+ *     <li>{@link #updateWeight(Double, Long)} — обновление веса пользователя</li>
+ *     <li>{@link #updateUser(Long, UsersDTO)} — обновление данных пользователя</li>
+ *     <li>{@link #deleteUser(Long)} — удаление пользователя по идентификатору</li>
+ * </ul>
+ */
 
 @Service
 public class UsersService {

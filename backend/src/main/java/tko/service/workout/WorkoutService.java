@@ -23,6 +23,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Сервис управления тренировками пользователей.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createWorkout(WorkoutDTO)} — создание новой тренировки</li>
+ *     <li>{@link #readWorkoutById(Long)} — получение тренировки по идентификатору</li>
+ *     <li>{@link #updateWorkout(Long, WorkoutDTO)} — обновление информации о тренировке</li>
+ *     <li>{@link #deleteWorkoutById(Long)} — удаление тренировки вместе с её упражнениями</li>
+ *     <li>{@link #readWorkoutWithPageable(org.springframework.data.domain.Pageable)} — постраничное получение тренировок</li>
+ *     <li>{@link #addLike(Long)} — добавление лайка на тренировку</li>
+ *     <li>{@link #removeLike(Long)} — удаление лайка с тренировки</li>
+ * </ul>
+ */
+
 @Service
 public class WorkoutService {
     private final WorkoutRepository workoutRepository;

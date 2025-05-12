@@ -13,6 +13,19 @@ import org.springframework.web.bind.annotation.*;
 import tko.model.dto.workout.LikesWorkoutDTO;
 import tko.service.workout.LikesWorkoutService;
 
+/**
+ * Контроллер управления лайками пользователей на тренировки.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createLikesWorkout(LikesWorkoutDTO)} — добавление лайка на тренировку</li>
+ *     <li>{@link #readLikesWorkoutById(Long)} — получение лайка по идентификатору</li>
+ *     <li>{@link #updateLikesWorkout(Long, LikesWorkoutDTO)} — обновление лайка</li>
+ *     <li>{@link #deleteLikesWorkout(LikesWorkoutDTO)} — удаление лайка</li>
+ *     <li>{@link #getLikesWorkouts(Long, Pageable)} — получение лайков по идентификатору пользователя постранично</li>
+ * </ul>
+ */
+
 @RestController
 @RequestMapping("/like-workout")
 public class LikesWorkoutController {

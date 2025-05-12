@@ -11,6 +11,19 @@ import tko.service.nutrition.ProductService;
 
 import java.util.List;
 
+/**
+ * Контроллер управления продуктами питания.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createProduct(ProductDTO)} — создание нового продукта</li>
+ *     <li>{@link #readProduct(Long)} — получение продукта по идентификатору</li>
+ *     <li>{@link #updateProduct(Long, ProductDTO)} — обновление информации о продукте</li>
+ *     <li>{@link #deleteProduct(Long)} — удаление продукта по идентификатору</li>
+ *     <li>{@link #searchProduct(String)} — поиск продуктов по ключевому слову</li>
+ * </ul>
+ */
+
 @RestController
 @RequestMapping("/product")
 public class ProductController {

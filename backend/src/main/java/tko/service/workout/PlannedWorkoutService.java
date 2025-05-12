@@ -17,6 +17,19 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Сервис управления запланированными тренировками пользователя.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createPlannedWorkout(PlannedWorkoutDTO)} — создание новой запланированной тренировки</li>
+ *     <li>{@link #readPlannedWorkout(Long)} — получение запланированной тренировки по идентификатору</li>
+ *     <li>{@link #updatePlannedWorkout(Long, PlannedWorkoutDTO)} — обновление информации о запланированной тренировке</li>
+ *     <li>{@link #deletePlannedWorkout(Long)} — удаление запланированной тренировки</li>
+ *     <li>{@link #readByDate(Long, java.time.LocalDate, java.time.LocalDate)} — получение тренировок за определённый период</li>
+ * </ul>
+ */
+
 @Service
 public class PlannedWorkoutService {
 

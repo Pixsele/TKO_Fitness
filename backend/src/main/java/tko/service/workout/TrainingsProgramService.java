@@ -24,6 +24,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Сервис управления тренировочными программами пользователей.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createTrainingsProgram(TrainingsProgramDTO)} — создание новой тренировочной программы</li>
+ *     <li>{@link #readTrainingsProgramById(Long)} — получение тренировочной программы по идентификатору</li>
+ *     <li>{@link #updateTrainingsProgram(Long, TrainingsProgramDTO)} — обновление информации о программе</li>
+ *     <li>{@link #deleteTrainingsProgram(Long)} — удаление тренировочной программы</li>
+ *     <li>{@link #readTrainingsProgramPageable(org.springframework.data.domain.Pageable)} — получение программ постранично</li>
+ *     <li>{@link #addLike(Long)} — добавление лайка на программу</li>
+ *     <li>{@link #removeLike(Long)} — удаление лайка с программы</li>
+ * </ul>
+ */
+
 @Service
 public class TrainingsProgramService {
 

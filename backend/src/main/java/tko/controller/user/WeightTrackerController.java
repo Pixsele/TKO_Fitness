@@ -11,6 +11,19 @@ import tko.service.WeightTrackerService;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Контроллер управления трекером веса пользователя.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createWeightTracker(WeightTrackerDTO)} — создание новой записи веса</li>
+ *     <li>{@link #readWeightTracker(Long)} — получение записи веса по идентификатору</li>
+ *     <li>{@link #updateWeightTracker(Long, WeightTrackerDTO)} — обновление записи</li>
+ *     <li>{@link #deleteWeightTracker(Long)} — удаление записи</li>
+ *     <li>{@link #readWeightTrackerByDate(Long, java.time.LocalDate, java.time.LocalDate)} — список по диапазону дат</li>
+ * </ul>
+ */
+
 @RestController
 @RequestMapping("/weight")
 public class WeightTrackerController {

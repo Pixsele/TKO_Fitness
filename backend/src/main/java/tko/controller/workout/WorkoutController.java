@@ -18,6 +18,20 @@ import tko.utils.Gender;
 
 import java.util.List;
 
+/**
+ * Контроллер управления тренировками.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createWorkout(WorkoutDTO)} — создание новой тренировки</li>
+ *     <li>{@link #readWorkout(Long)} — получение тренировки по идентификатору</li>
+ *     <li>{@link #updateWorkout(Long, WorkoutDTO)} — обновление тренировки</li>
+ *     <li>{@link #deleteWorkout(Long)} — удаление тренировки</li>
+ *     <li>{@link #readWorkoutPage(Pageable)} — постраничное получение тренировок</li>
+ *     <li>{@link #getSvg(Long, Gender)} — получение SVG-изображений тела по тренировке и полу</li>
+ * </ul>
+ */
+
 
 @RestController
 @RequestMapping("/workout")

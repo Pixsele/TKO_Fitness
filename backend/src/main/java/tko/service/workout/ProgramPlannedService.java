@@ -12,6 +12,18 @@ import tko.database.repository.workout.TrainingsProgramRepository;
 import tko.model.dto.workout.ProgramPlannedDTO;
 import tko.model.mapper.workout.ProgramPlannedMapper;
 
+/**
+ * Сервис управления привязкой запланированных тренировок к программам.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createProgramPlanned(ProgramPlannedDTO)} — создание связи между программой и тренировкой</li>
+ *     <li>{@link #readProgramPlannedById(Long)} — получение информации о связи по идентификатору</li>
+ *     <li>{@link #updateProgramPlannedById(Long, ProgramPlannedDTO)} — обновление связи между программой и тренировкой</li>
+ *     <li>{@link #deleteProgramPlannedById(Long)} — удаление связи между программой и тренировкой</li>
+ * </ul>
+ */
+
 @Service
 public class ProgramPlannedService {
 

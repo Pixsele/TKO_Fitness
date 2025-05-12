@@ -18,6 +18,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Сервис управления текущими тренировочными программами пользователей.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createCurrentTrainingProgram(Integer, CurrentTrainingProgramDTO)} — создание текущей тренировочной программы и планирование тренировок</li>
+ *     <li>{@link #readCurrentTrainingProgram(Long)} — получение текущей тренировочной программы по идентификатору</li>
+ * </ul>
+ */
+
 @Service
 public class CurrentTrainingProgramService {
 

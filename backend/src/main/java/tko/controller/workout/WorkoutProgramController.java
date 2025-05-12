@@ -10,6 +10,19 @@ import tko.service.workout.WorkoutProgramService;
 
 import java.util.List;
 
+/**
+ * Контроллер управления связями между тренировками и программами.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createWorkoutProgram(WorkoutProgramDTO)} — добавление тренировки в программу</li>
+ *     <li>{@link #readWorkoutProgram(Long)} — получение связи по идентификатору</li>
+ *     <li>{@link #updateWorkoutProgram(Long, WorkoutProgramDTO)} — обновление связи</li>
+ *     <li>{@link #deleteWorkoutProgram(Long)} — удаление связи</li>
+ *     <li>{@link #readWorkoutProgramsByWorkoutId(Long)} — получение всех связей по идентификатору тренировки</li>
+ * </ul>
+ */
+
 @RestController
 @RequestMapping("workout-program")
 public class WorkoutProgramController {

@@ -12,6 +12,19 @@ import org.springframework.web.bind.annotation.*;
 import tko.model.dto.workout.LikesTrainingsProgramDTO;
 import tko.service.workout.LikesTrainingsProgramService;
 
+/**
+ * Контроллер управления лайками пользователей на программы тренировок.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createLikesTrainingsProgram(LikesTrainingsProgramDTO)} — добавление лайка на тренировочную программу</li>
+ *     <li>{@link #readLikesTrainingsProgramById(Long)} — получение лайка по идентификатору</li>
+ *     <li>{@link #updateLikesTrainingsProgram(Long, LikesTrainingsProgramDTO)} — обновление лайка</li>
+ *     <li>{@link #deleteLikesTrainingsProgram(LikesTrainingsProgramDTO)} — удаление лайка</li>
+ *     <li>{@link #getLikesTrainingsPrograms(Long, Pageable)} — получение лайков по идентификатору пользователя постранично</li>
+ * </ul>
+ */
+
 @RestController
 @RequestMapping("/like-program")
 public class LikesTrainingsProgramController {

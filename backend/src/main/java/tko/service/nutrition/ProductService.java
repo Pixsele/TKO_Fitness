@@ -18,6 +18,19 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Сервис управления продуктами питания.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createProduct(ProductDTO)} — создание нового продукта</li>
+ *     <li>{@link #readProduct(Long)} — получение продукта по идентификатору</li>
+ *     <li>{@link #updateProduct(Long, ProductDTO)} — обновление информации о продукте</li>
+ *     <li>{@link #deleteProduct(Long)} — удаление продукта по идентификатору</li>
+ *     <li>{@link #searchProducts(String)} — поиск продуктов по ключевому слову с указанием процента от суточной нормы калорий</li>
+ * </ul>
+ */
+
 @Service
 public class ProductService {
 

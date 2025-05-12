@@ -20,6 +20,23 @@ import tko.utils.Gender;
 
 import java.util.List;
 
+/**
+ * Контроллер управления упражнениями.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createExercise(ExerciseDTO)} — создание нового упражнения</li>
+ *     <li>{@link #readExercise(Long)} — получение упражнения по идентификатору</li>
+ *     <li>{@link #updateExercise(Long, ExerciseDTO)} — обновление данных упражнения</li>
+ *     <li>{@link #deleteExercise(Long)} — удаление упражнения</li>
+ *     <li>{@link #readPage(Pageable)} — получение списка упражнений постранично</li>
+ *     <li>{@link #readMetaData(Long)} — получение медиафайлов к упражнению</li>
+ *     <li>{@link #update(Long, ExerciseMediaDTO)} — обновление медиафайлов упражнения</li>
+ *     <li>{@link #getImage(Long)} — получение изображения упражнения</li>
+ *     <li>{@link #getVideo(Long)} — получение видео упражнения</li>
+ *     <li>{@link #getSvg(Long, Gender)} — получение SVG-модели тела по полу</li>
+ * </ul>
+ */
 
 @RestController
 @RequestMapping("/exercise")

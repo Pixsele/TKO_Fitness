@@ -15,6 +15,19 @@ import tko.model.mapper.nutrition.KcalProductMapper;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Сервис управления продуктами, добавленными в калорийный трекер пользователя.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createKcalProduct(KcalProductDTO)} — создание продукта для трекера</li>
+ *     <li>{@link #readKcalProductById(Long)} — получение продукта по идентификатору</li>
+ *     <li>{@link #updateKcalProduct(Long, KcalProductDTO)} — обновление информации о продукте</li>
+ *     <li>{@link #deleteKcalProductById(Long)} — удаление продукта из трекера</li>
+ *     <li>{@link #readAllKcalProductsByTrackerId(Long)} — получение всех продуктов трекера по идентификатору трекера</li>
+ * </ul>
+ */
+
 @Service
 public class KcalProductService {
 

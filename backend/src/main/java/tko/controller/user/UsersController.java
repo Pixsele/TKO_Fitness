@@ -6,6 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Контроллер управления пользователем.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #getUser(Long)} — получение данных пользователя по идентификатору</li>
+ *     <li>{@link #updateUser(Long, UsersDTO)} — обновление данных пользователя</li>
+ * </ul>
+ */
 
 @RestController
 @RequestMapping("/user")

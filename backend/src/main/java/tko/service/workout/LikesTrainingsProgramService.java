@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import tko.database.entity.user.UsersEntity;
 import tko.database.entity.workout.LikesTrainingsProgramEntity;
-import tko.database.entity.workout.LikesWorkoutEntity;
 import tko.database.entity.workout.TrainingsProgramEntity;
 import tko.database.repository.user.UsersRepository;
 import tko.database.repository.workout.LikesTrainingsProgramRepository;
@@ -19,6 +18,20 @@ import tko.model.mapper.workout.LikesTrainingsProgramMapper;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+
+/**
+ * Сервис управления лайками пользователей на программы тренировок.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createLikesExercise(LikesTrainingsProgramDTO)} — создание лайка на программу тренировок</li>
+ *     <li>{@link #readLikesTrainingsProgram(Long)} — получение лайка по идентификатору</li>
+ *     <li>{@link #updateLikesTrainingsProgram(Long, LikesTrainingsProgramDTO)} — обновление лайка на программу тренировок</li>
+ *     <li>{@link #deleteLikesTrainingsProgram(LikesTrainingsProgramDTO)} — удаление лайка на программу тренировок</li>
+ *     <li>{@link #readLikesTrainingsProgramsByUserId(Long, Pageable)} — получение всех лайков пользователя по программам</li>
+ *     <li>{@link #isLikeOwner(Long, String)} — проверка, принадлежит ли лайк пользователю</li>
+ * </ul>
+ */
 
 @Service
 public class LikesTrainingsProgramService {
