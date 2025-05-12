@@ -59,7 +59,7 @@ class PreferencesManager(context: Context) {
                         val timestamp = parts[0].toLong()
                         val weight = parts[1].toFloat()
                         Pair(timestamp, weight)
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         null
                     }
                 } else null

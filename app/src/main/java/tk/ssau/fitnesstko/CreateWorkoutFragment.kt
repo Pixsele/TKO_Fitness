@@ -140,7 +140,7 @@ class CreateWorkoutFragment : Fragment() {
                     sets = exerciseWithParams.sets,
                     reps = exerciseWithParams.reps,
                     distance = 0.0,
-                    duration = 1.0,
+                    duration = 0.0,
                     id = null,
                     restTime = exerciseWithParams.rest,
                     exerciseOrder = null
@@ -150,29 +150,33 @@ class CreateWorkoutFragment : Fragment() {
             dto?.let { ApiService.workoutExerciseService.createWorkoutExercise(it) }?.enqueue(
                 object : Callback<Unit> {
                     override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                        if (!isAdded) return
                         if (!response.isSuccessful) {
                             showError("Ошибка привязки упражнений")
                         }
                     }
 
                     override fun onFailure(call: Call<Unit>, t: Throwable) {
+                        if (!isAdded) return
                         showError("Ошибка сети: ${t.message}")
                     }
                 }
             )
         }
 
-        parentFragmentManager.popBackStack()
-        (activity as? MainActivity)?.refreshWorkouts()
+        (activity as? MainActivity)?.let {
+            it.refreshWorkouts()
+            parentFragmentManager.popBackStack()
+        }
     }
 
     private fun showError(message: String) {
+        if (!isAdded || context == null) return
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        viewModel.clearSelectedExercises()
     }
 }
