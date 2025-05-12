@@ -9,6 +9,18 @@ import org.springframework.web.bind.annotation.*;
 import tko.model.dto.workout.ProgramPlannedDTO;
 import tko.service.workout.ProgramPlannedService;
 
+/**
+ * Контроллер управления запланированными программами тренировок.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createProgramPlanned(ProgramPlannedDTO)} — создание запланированной программы</li>
+ *     <li>{@link #readProgramPlanned(Long)} — получение запланированной программы по идентификатору</li>
+ *     <li>{@link #updateProgramPlanned(Long, ProgramPlannedDTO)} — обновление запланированной программы</li>
+ *     <li>{@link #deleteProgramPlanned(Long)} — удаление запланированной программы</li>
+ * </ul>
+ */
+
 @Service
 public class ProgramPlannedController {
 

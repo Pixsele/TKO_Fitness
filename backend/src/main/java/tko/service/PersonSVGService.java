@@ -1,13 +1,9 @@
 package tko.service;
 
-
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import tko.database.entity.workout.ExerciseEntity;
-import tko.database.entity.workout.WorkoutEntity;
 import tko.database.entity.workout.WorkoutExerciseEntity;
 import tko.database.repository.workout.ExerciseRepository;
 import tko.database.repository.workout.WorkoutExerciseRepository;
@@ -17,6 +13,16 @@ import tko.utils.personSVG.Muscle;
 import tko.utils.personSVG.PersonGeneratorSVG;
 
 import java.util.*;
+
+/**
+ * Сервис генерации SVG-изображений тела с подсвеченными мышцами.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #getSvgToExercise(Long, Gender)} — генерация SVG для конкретного упражнения</li>
+ *     <li>{@link #getSvgToWorkout(Long, Gender)} — генерация SVG для всей тренировки</li>
+ * </ul>
+ */
 
 @Service
 public class PersonSVGService {

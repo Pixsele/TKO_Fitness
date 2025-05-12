@@ -22,6 +22,20 @@ import tko.model.mapper.workout.LikesWorkoutMapper;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Сервис управления лайками пользователей на тренировки.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createLikesWorkout(LikesWorkoutDTO)} — создание лайка на тренировку</li>
+ *     <li>{@link #readLikesWorkout(Long)} — получение лайка по идентификатору</li>
+ *     <li>{@link #updateLikesWorkout(Long, LikesWorkoutDTO)} — обновление лайка на тренировку</li>
+ *     <li>{@link #deleteLikesWorkout(LikesWorkoutDTO)} — удаление лайка на тренировку</li>
+ *     <li>{@link #readLikesWorkoutByUserId(Long, Pageable)} — получение всех лайков пользователя по тренировкам</li>
+ *     <li>{@link #isLikeOwner(Long, String)} — проверка, принадлежит ли лайк пользователю</li>
+ * </ul>
+ */
+
 @Service
 public class LikesWorkoutService {
     private final LikesWorkoutRepository likesWorkoutRepository;

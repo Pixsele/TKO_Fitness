@@ -11,7 +11,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
+
+/**
+ * Сервис для аутентификации и регистрации пользователей.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #registerUser(RegisterUsersDTO)} — регистрация нового пользователя</li>
+ *     <li>{@link #login(String, String)} — аутентификация пользователя и выдача JWT-токена</li>
+ * </ul>
+ */
 
 @Service
 public class AuthService {

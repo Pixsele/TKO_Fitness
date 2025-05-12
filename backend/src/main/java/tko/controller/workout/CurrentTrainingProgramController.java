@@ -9,6 +9,16 @@ import org.springframework.web.bind.annotation.*;
 import tko.model.dto.workout.CurrentTrainingProgramDTO;
 import tko.service.workout.CurrentTrainingProgramService;
 
+/**
+ * Контроллер управления текущими тренировочными программами пользователя.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createCurrentTrainingProgram(Integer, CurrentTrainingProgramDTO)} — создание текущей программы с заданным периодом</li>
+ *     <li>{@link #readCurrentTrainingProgram(Long)} — получение текущей программы по идентификатору</li>
+ * </ul>
+ */
+
 @RestController
 @RequestMapping("/current-program")
 public class CurrentTrainingProgramController {

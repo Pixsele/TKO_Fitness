@@ -18,6 +18,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Сервис для отслеживания веса пользователей.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #create(WeightTrackerDTO)} — создание записи о весе</li>
+ *     <li>{@link #read(Long)} — получение записи о весе по идентификатору</li>
+ *     <li>{@link #update(Long, WeightTrackerDTO)} — обновление записи о весе</li>
+ *     <li>{@link #delete(Long)} — удаление записи о весе по идентификатору</li>
+ *     <li>{@link #readByDate(Long, LocalDate, LocalDate)} — получение записей веса за период</li>
+ * </ul>
+ */
+
 @Service
 public class WeightTrackerService {
     private final WeightTrackerRepository weightTrackerRepository;

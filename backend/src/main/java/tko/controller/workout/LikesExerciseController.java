@@ -15,6 +15,19 @@ import tko.service.workout.LikesExerciseService;
 
 import java.security.Security;
 
+/**
+ * Контроллер управления лайками пользователей на упражнения.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createLikesExercise(LikesExerciseDTO)} — добавление лайка на упражнение</li>
+ *     <li>{@link #readLikesExerciseById(Long)} — получение лайка по идентификатору</li>
+ *     <li>{@link #updateLikeExercise(Long, LikesExerciseDTO)} — обновление информации о лайке</li>
+ *     <li>{@link #deleteLikesExercise(Long)} — удаление лайка</li>
+ *     <li>{@link #getLikesExercisesByUserId(Long, Pageable)} — получение лайков по идентификатору пользователя постранично</li>
+ * </ul>
+ */
+
 @RestController
 @RequestMapping("/like-exercise")
 public class LikesExerciseController {

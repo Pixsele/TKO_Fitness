@@ -16,6 +16,19 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Сервис управления связями между тренировками и тренировочными программами.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #create(WorkoutProgramDTO)} — создание связи между тренировкой и программой</li>
+ *     <li>{@link #read(Long)} — получение связи по идентификатору</li>
+ *     <li>{@link #update(Long, WorkoutProgramDTO)} — обновление связи между тренировкой и программой</li>
+ *     <li>{@link #delete(Long)} — удаление связи между тренировкой и программой</li>
+ *     <li>{@link #findAllByProgramId(Long)} — получение всех тренировок, входящих в заданную программу</li>
+ * </ul>
+ */
+
 @Service
 public class WorkoutProgramService {
 

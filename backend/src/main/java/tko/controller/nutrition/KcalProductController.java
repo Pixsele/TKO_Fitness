@@ -10,6 +10,19 @@ import tko.service.nutrition.KcalProductService;
 
 import java.util.List;
 
+/**
+ * Контроллер управления продуктами, добавленными в калорийный трекер пользователя.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #create(KcalProductDTO)} — создание нового продукта для трекера</li>
+ *     <li>{@link #read(Long)} — получение продукта по идентификатору</li>
+ *     <li>{@link #update(Long, KcalProductDTO)} — обновление информации о продукте</li>
+ *     <li>{@link #delete(Long)} — удаление продукта по идентификатору</li>
+ *     <li>{@link #readByTracker(Long)} — получение списка продуктов, привязанных к трекеру</li>
+ * </ul>
+ */
+
 @RestController
 @RequestMapping("/kcal-product")
 public class KcalProductController {

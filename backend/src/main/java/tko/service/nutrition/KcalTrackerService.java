@@ -19,6 +19,19 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Сервис управления трекерами калорий пользователей.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createKcalTracker(KcalTrackerDTO)} — создание трекера калорий</li>
+ *     <li>{@link #readKcalTracker(Long)} — получение трекера по идентификатору</li>
+ *     <li>{@link #updateKcalTracker(Long, KcalTrackerDTO)} — обновление трекера калорий</li>
+ *     <li>{@link #deleteKcalTracker(Long)} — удаление трекера калорий по идентификатору</li>
+ *     <li>{@link #getKcalTrackerByDate(LocalDate)} — получение трекера калорий на конкретную дату</li>
+ * </ul>
+ */
+
 @Service
 public class KcalTrackerService {
 

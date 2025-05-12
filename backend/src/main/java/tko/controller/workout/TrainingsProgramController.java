@@ -13,6 +13,19 @@ import tko.model.dto.workout.TrainingsProgramDTO;
 import tko.model.dto.workout.TrainingsProgramForPageDTO;
 import tko.service.workout.TrainingsProgramService;
 
+/**
+ * Контроллер управления программами тренировок.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createTrainingProgram(TrainingsProgramDTO)} — создание новой программы</li>
+ *     <li>{@link #getTrainingProgram(Long)} — получение программы по идентификатору</li>
+ *     <li>{@link #updateTrainingProgram(Long, TrainingsProgramDTO)} — обновление программы</li>
+ *     <li>{@link #deleteTrainingProgram(Long)} — удаление программы</li>
+ *     <li>{@link #readTrainingProgramsPageable(Pageable)} — постраничное получение программ тренировок</li>
+ * </ul>
+ */
+
 @RestController
 @RequestMapping("/program")
 public class TrainingsProgramController {

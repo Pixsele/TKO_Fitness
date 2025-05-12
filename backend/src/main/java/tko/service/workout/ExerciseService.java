@@ -4,12 +4,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,6 +27,25 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * Сервис управления упражнениями.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #create(ExerciseDTO)} — создание нового упражнения</li>
+ *     <li>{@link #read(Long)} — получение упражнения по идентификатору</li>
+ *     <li>{@link #update(Long, ExerciseDTO)} — обновление информации об упражнении</li>
+ *     <li>{@link #delete(Long)} — удаление упражнения (если оно не используется в тренировках)</li>
+ *     <li>{@link #readPageable(Pageable)} — получение списка упражнений с постраничной навигацией</li>
+ *     <li>{@link #addLike(Long)} — добавление лайка на упражнение</li>
+ *     <li>{@link #removeLike(Long)} — удаление лайка с упражнения</li>
+ *     <li>{@link #getMetaData(Long)} — получение медиафайлов (изображения и видео) упражнения</li>
+ *     <li>{@link #updateMedia(Long, ExerciseMediaDTO)} — обновление медиафайлов (изображения и/или видео) упражнения</li>
+ *     <li>{@link #getImage(Long)} — получение изображения упражнения</li>
+ *     <li>{@link #getVideo(Long)} — получение видео упражнения</li>
+ * </ul>
+ */
 
 @Service
 public class ExerciseService {

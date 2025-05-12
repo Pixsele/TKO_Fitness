@@ -16,6 +16,19 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Сервис управления упражнениями, привязанными к конкретной тренировке.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #create(WorkoutExerciseDTO)} — добавление нового упражнения в тренировку</li>
+ *     <li>{@link #read(Long)} — получение упражнения по идентификатору</li>
+ *     <li>{@link #update(Long, WorkoutExerciseDTO)} — обновление информации об упражнении</li>
+ *     <li>{@link #delete(Long)} — удаление упражнения из тренировки</li>
+ *     <li>{@link #findAllByWorkoutId(Long)} — получение всех упражнений для заданной тренировки</li>
+ * </ul>
+ */
+
 @Service
 public class WorkoutExerciseService {
 

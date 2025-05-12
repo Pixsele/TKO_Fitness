@@ -10,7 +10,19 @@ import tko.model.dto.nutrition.KcalTrackerDTO;
 import tko.service.nutrition.KcalTrackerService;
 
 import java.time.LocalDate;
-import java.util.List;
+
+/**
+ * Контроллер управления трекером калорий.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createTracker(KcalTrackerDTO)} — создание нового трекера калорий</li>
+ *     <li>{@link #readTracker(Long)} — получение трекера по идентификатору</li>
+ *     <li>{@link #updateTracker(Long, KcalTrackerDTO)} — обновление трекера</li>
+ *     <li>{@link #deleteTracker(Long)} — удаление трекера по идентификатору</li>
+ *     <li>{@link #readTrackersByDate(java.time.LocalDate)} — получение трекера по дате</li>
+ * </ul>
+ */
 
 @RestController
 @RequestMapping("/kcal-tracker")

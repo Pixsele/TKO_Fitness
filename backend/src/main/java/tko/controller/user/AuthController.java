@@ -15,6 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Контроллер для авторизации и регистрации пользователей.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #registerUser(RegisterUsersDTO)} — регистрация нового пользователя</li>
+ *     <li>{@link #login(AuthRequest)} — вход пользователя и получение JWT-токена</li>
+ * </ul>
+ */
+
 @RestController
 public class AuthController {
     private final AuthService authService;

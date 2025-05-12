@@ -10,6 +10,19 @@ import tko.service.workout.WorkoutExerciseService;
 
 import java.util.List;
 
+/**
+ * Контроллер управления упражнениями, привязанными к конкретной тренировке.
+ * <p>
+ * Методы:
+ * <ul>
+ *     <li>{@link #createWorkoutExercise(WorkoutExerciseDTO)} — создание нового упражнения в тренировке</li>
+ *     <li>{@link #readWorkoutExercise(Long)} — получение упражнения по идентификатору</li>
+ *     <li>{@link #updateWorkoutExercise(Long, WorkoutExerciseDTO)} — обновление упражнения</li>
+ *     <li>{@link #deleteWorkoutExercise(Long)} — удаление упражнения</li>
+ *     <li>{@link #readWorkoutExercisesByWorkoutId(Long)} — получение списка упражнений по идентификатору тренировки</li>
+ * </ul>
+ */
+
 @RestController
 @RequestMapping("/workout-exercise")
 public class WorkoutExerciseController {
