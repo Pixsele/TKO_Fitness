@@ -58,6 +58,7 @@ class FragmentProfile : Fragment(R.layout.profile) {
 
     override fun onResume() {
         super.onResume()
+        loadUserData()
         loadAvatar()
         binding.btnProfileAddWeighing.text = "Добавить взвешивание"
     }
@@ -118,11 +119,11 @@ class FragmentProfile : Fragment(R.layout.profile) {
     }
 
     private fun loadUserData() {
-        val name = prefs.getString("user_name", "")
-        val birthDay = prefs.getString("birthDay", "")
+        val name = prefs.getString("firstName", "") + " " + prefs.getString("lastName","")
+        val age = prefs.getString("age", "")
 
         binding.fio.text = name.ifEmpty { "Имя Фамилия" }
-        binding.age.text = calculateAge(birthDay)
+        binding.age.text = age.ifEmpty { "Возраст" }
     }
 
     private fun loadAvatar() {
@@ -152,17 +153,6 @@ class FragmentProfile : Fragment(R.layout.profile) {
             permissions.any { it.uri == uri }
         } catch (e: Exception) {
             false
-        }
-    }
-
-    private fun calculateAge(birthDate: String): String {
-        return try {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val birthYear = dateFormat.parse(birthDate)?.year ?: return ""
-            val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-            "${currentYear - birthYear} лет"
-        } catch (_: Exception) {
-            "Возраст"
         }
     }
 

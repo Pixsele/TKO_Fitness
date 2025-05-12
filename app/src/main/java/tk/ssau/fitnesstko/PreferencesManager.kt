@@ -21,6 +21,7 @@ class PreferencesManager(context: Context) {
             putString("firstName", firstName)
             putString("lastName", lastName)
             putString("age", age)
+            apply()
         }
     }
 
