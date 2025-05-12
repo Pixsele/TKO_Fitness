@@ -347,6 +347,7 @@ class FragmentFood : Fragment() {
         updateSectionUI(mealType, section)
         updateGlobalUI()
     }
+
     private fun updateSectionUI(mealType: String, totals: SectionTotals) {
         val sectionId = when (mealType) {
             "BREAKFAST" -> R.id.breakfastSection
@@ -416,7 +417,13 @@ class FragmentFood : Fragment() {
                 }
             }
 
-        arrayOf(R.id.tvFatsValue, R.id.tvCarbohydratesValue, R.id.tvProteinValue, R.id.tvKcalValue,R.id.tvRSKValue)
+        arrayOf(
+            R.id.tvFatsValue,
+            R.id.tvCarbohydratesValue,
+            R.id.tvProteinValue,
+            R.id.tvKcalValue,
+            R.id.tvRSKValue
+        )
             .forEach { tvId ->
                 view?.findViewById<TextView>(tvId)?.text = "-"
             }
@@ -431,7 +438,8 @@ class FragmentFood : Fragment() {
 
         listOf(R.id.breakfastSection, R.id.lunchSection, R.id.dinnerSection, R.id.snackSection)
             .forEach { sectionId ->
-                view?.findViewById<View>(sectionId)?.findViewById<Button>(R.id.addButton)?.visibility =
+                view?.findViewById<View>(sectionId)
+                    ?.findViewById<Button>(R.id.addButton)?.visibility =
                     if (isToday) View.VISIBLE else View.GONE
             }
     }

@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Имя"
                 android:textColor="@color/white"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -62,8 +62,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Фамилия"
                 android:textColor="@color/white"
-                android:textSize="20sp"
-                 />
+                android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -83,10 +82,10 @@
                 android:id="@+id/etAge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Возраст"
-                android:inputType="number"
+                android:hint="Дата рождения (гггг-мм-дд)"
+                android:inputType="date"
                 android:textColor="@color/white"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton

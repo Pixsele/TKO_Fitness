@@ -4,22 +4,19 @@ import android.content.Context
 import androidx.core.content.edit
 import com.google.gson.Gson
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
 
 class PreferencesManager(context: Context) {
     private val sharedPreferences =
         context.getSharedPreferences("fitness_prefs", Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    fun saveUserData(firstName: String, lastName: String, age: String) {
+    fun saveUserData(firstName: String, lastName: String, birthDay: String) {
         sharedPreferences.edit {
             putString("firstName", firstName)
             putString("lastName", lastName)
-            putString("age", age)
+            putString("birthDay", birthDay)
             apply()
         }
     }
@@ -136,5 +133,12 @@ class PreferencesManager(context: Context) {
 
     fun getAvatarUri(): String? {
         return sharedPreferences.getString("avatar_uri", null)
+    }
+
+    fun clearUserData() {
+        sharedPreferences.edit {
+            clear()
+            apply()
+        }
     }
 }

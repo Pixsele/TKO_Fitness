@@ -36,7 +36,7 @@
                 android:text="Пн"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/tuesday"
@@ -46,7 +46,7 @@
                 android:text="Вт"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/wednesday"
@@ -56,7 +56,7 @@
                 android:text="Ср"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/thursday"
@@ -66,7 +66,7 @@
                 android:text="Чт"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/friday"
@@ -76,7 +76,7 @@
                 android:text="Пт"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/saturday"
@@ -86,7 +86,7 @@
                 android:text="Сб"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/sunday"
@@ -96,7 +96,7 @@
                 android:text="Вс"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </RadioGroup>
 
@@ -115,7 +115,7 @@
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvCarbohydrates"
@@ -126,7 +126,7 @@
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="15sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvProtein"
@@ -137,7 +137,7 @@
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvRSK"
@@ -148,7 +148,7 @@
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvKcal"
@@ -159,7 +159,7 @@
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
         </LinearLayout>
 
@@ -178,7 +178,7 @@
                 android:text="-"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvCarbohydratesValue"
@@ -188,7 +188,7 @@
                 android:text="-"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvProteinValue"
@@ -198,7 +198,7 @@
                 android:text="-"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvRSKValue"
@@ -208,7 +208,7 @@
                 android:text="-"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvKcalValue"
@@ -218,7 +218,7 @@
                 android:text="-"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
         </LinearLayout>
 
         <include

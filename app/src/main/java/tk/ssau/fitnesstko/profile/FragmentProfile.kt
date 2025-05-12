@@ -12,14 +12,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import tk.ssau.fitnesstko.AddWeightFragment
-import tk.ssau.fitnesstko.EditProfileFragment
+import tk.ssau.fitnesstko.AuthActivity
+import tk.ssau.fitnesstko.AuthManager
 import tk.ssau.fitnesstko.MainActivity
 import tk.ssau.fitnesstko.PreferencesManager
 import tk.ssau.fitnesstko.R
 import tk.ssau.fitnesstko.databinding.ProfileBinding
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.time.LocalDate
+import java.time.Period
+import java.time.format.DateTimeFormatter
 
 class FragmentProfile : Fragment(R.layout.profile) {
 
@@ -87,6 +88,17 @@ class FragmentProfile : Fragment(R.layout.profile) {
                 .addToBackStack(null)
                 .commit()
         }
+        binding.btnLogout.setOnClickListener {
+            performLogout()
+        }
+    }
+
+    private fun performLogout() {
+        AuthManager(requireContext()).logout()
+        PreferencesManager(requireContext()).clearUserData()
+
+        startActivity(Intent(requireContext(), AuthActivity::class.java))
+        activity?.finish()
     }
 
     private fun checkPermissionsAndOpenPicker() {
@@ -94,9 +106,11 @@ class FragmentProfile : Fragment(R.layout.profile) {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
                 requestPermission.launch(Manifest.permission.READ_MEDIA_IMAGES)
             }
+
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
                 requestPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             }
+
             else -> pickImage.launch(arrayOf("image/*"))
         }
     }
@@ -119,11 +133,14 @@ class FragmentProfile : Fragment(R.layout.profile) {
     }
 
     private fun loadUserData() {
-        val name = prefs.getString("firstName", "") + " " + prefs.getString("lastName","")
-        val age = prefs.getString("age", "")
+        val firstName = prefs.getString("firstName", "")
+        val lastName = prefs.getString("lastName", "")
+        val birthDate = prefs.getString("birthDay", "")
 
-        binding.fio.text = name.ifEmpty { "Имя Фамилия" }
-        binding.age.text = age.ifEmpty { "Возраст" }
+        binding.fio.text =
+            "$firstName $lastName"
+
+        binding.age.text = calculateAge(birthDate)
     }
 
     private fun loadAvatar() {
@@ -158,5 +175,17 @@ class FragmentProfile : Fragment(R.layout.profile) {
 
     private fun showError(text: String) {
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun calculateAge(birthDate: String): String {
+        return try {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val birthDate = LocalDate.parse(birthDate, formatter)
+            val currentDate = LocalDate.now()
+            val age = Period.between(birthDate, currentDate).years
+            "$age лет"
+        } catch (e: Exception) {
+            "Возраст не указан"
+        }
     }
 }

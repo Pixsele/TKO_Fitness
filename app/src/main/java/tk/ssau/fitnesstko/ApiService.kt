@@ -192,6 +192,9 @@ object ApiService {
             @Path("id") id: Long,
             @Body userData: UpdateUserRequest
         ): Call<UserDTO>
+
+        @GET("api/user/{id}")
+        fun getUser(@Path("id") id: Long): Call<UserDTO>
     }
 
     interface KcalTrackerApi {
@@ -269,5 +272,6 @@ private class LocalDateSerializer : JsonSerializer<LocalDate>, JsonDeserializer<
 
 data class UpdateUserRequest(
     val name: String,
-    val login: String
+    val login: String,
+    val birthDay: String
 )

@@ -82,7 +82,8 @@ class AddProductFragment : Fragment() {
         }
 
         if (!selectedDate.isEqual(LocalDate.now())) {
-            Toast.makeText(context, "Добавление невозможно для выбранной даты", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Добавление невозможно для выбранной даты", Toast.LENGTH_SHORT)
+                .show()
             requireActivity().onBackPressed()
         }
         val date = prefs.getSelectedDate()?.format(DateTimeFormatter.ISO_LOCAL_DATE) ?: run {
@@ -174,7 +175,8 @@ class AddProductFragment : Fragment() {
                         viewModel.products.value?.removeAll { it.productId == product.id }
                     } else {
                         if (viewModel.products.value?.any { it.productId == product.id } == true) {
-                            Toast.makeText(context, "Продукт уже добавлен", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Продукт уже добавлен", Toast.LENGTH_SHORT)
+                                .show()
                             return@setOnClickListener
                         }
                         if (product.id == null) {

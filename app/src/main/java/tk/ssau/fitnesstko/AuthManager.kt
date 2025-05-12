@@ -81,4 +81,11 @@ class AuthManager(context: Context) {
             remove("password")
         }
     }
+
+    fun logout() {
+        sharedPreferences.edit {
+            clear()
+            apply()
+        }
+    }
 }

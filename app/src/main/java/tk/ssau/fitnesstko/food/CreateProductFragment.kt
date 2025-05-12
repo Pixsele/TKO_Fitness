@@ -43,14 +43,17 @@ class CreateProductFragment : Fragment() {
                 showError("Введите название")
                 false
             }
+
             binding.etKcal.text.isNullOrEmpty() -> {
                 showError("Введите калории")
                 false
             }
+
             binding.etUnit.text.isNullOrEmpty() -> {
                 showError("Введите единицу измерения")
                 false
             }
+
             else -> true
         }
     }

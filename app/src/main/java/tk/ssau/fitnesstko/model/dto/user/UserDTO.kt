@@ -1,7 +1,7 @@
 package tk.ssau.fitnesstko.model.dto.user
 
 data class UserDTO(
-    val id:Long?,
+    val id: Long?,
     val name: String,
     val login: String,
     val birthDay: String,

@@ -1,4 +1,4 @@
-package tk.ssau.fitnesstko
+package tk.ssau.fitnesstko.profile
 
 import android.os.Bundle
 import android.view.View
@@ -9,7 +9,15 @@ import com.google.android.material.textfield.TextInputEditText
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import tk.ssau.fitnesstko.ApiService
+import tk.ssau.fitnesstko.AuthManager
+import tk.ssau.fitnesstko.PreferencesManager
+import tk.ssau.fitnesstko.R
+import tk.ssau.fitnesstko.UpdateUserRequest
 import tk.ssau.fitnesstko.model.dto.user.UserDTO
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 
 class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     private lateinit var prefs: PreferencesManager
@@ -22,20 +30,24 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
         val etFirstName = view.findViewById<TextInputEditText>(R.id.etFirstName)
         val etLastName = view.findViewById<TextInputEditText>(R.id.etLastName)
-        val etAge = view.findViewById<TextInputEditText>(R.id.etAge)
+        val etBirthDay = view.findViewById<TextInputEditText>(R.id.etAge)
 
         view.findViewById<MaterialButton>(R.id.btnSave).setOnClickListener {
             val firstName = etFirstName.text.toString()
             val lastName = etLastName.text.toString()
-            val age = etAge.text.toString()
+            val birthDay = etBirthDay.text.toString()
 
-            prefs.saveUserData(firstName, lastName, age)
+            if (isValidDate(birthDay)) {
+                prefs.saveUserData(firstName, lastName, birthDay)
 
-            sendUserDataToServer(firstName, lastName)
+                sendUserDataToServer(firstName, lastName, birthDay)
+            } else {
+                Toast.makeText(context, "Некорректный формат даты", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun sendUserDataToServer(firstName: String, lastName: String) {
+    private fun sendUserDataToServer(firstName: String, lastName: String, birthDay: String) {
         val userId = authManager.getUserId()
         val login = authManager.getLogin()
 
@@ -46,7 +58,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
         val request = UpdateUserRequest(
             name = "$firstName $lastName",
-            login = login
+            login = login,
+            birthDay = birthDay
         )
 
         ApiService.authService.updateUser(userId, request).enqueue(object : Callback<UserDTO> {
@@ -62,5 +75,14 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                 Toast.makeText(requireContext(), "Ошибка сети", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun isValidDate(date: String): Boolean {
+        return try {
+            LocalDate.parse(date, DateTimeFormatter.ISO_DATE)
+            true
+        } catch (_: Exception) {
+            false
+        }
     }
 }
