@@ -1,17 +1,25 @@
-package tk.ssau.fitnesstko
+package tk.ssau.fitnesstko.profile
 
+import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import tk.ssau.fitnesstko.AddWeightFragment
+import tk.ssau.fitnesstko.EditProfileFragment
+import tk.ssau.fitnesstko.MainActivity
+import tk.ssau.fitnesstko.PreferencesManager
+import tk.ssau.fitnesstko.R
 import tk.ssau.fitnesstko.databinding.ProfileBinding
-import android.Manifest
-import androidx.activity.result.ActivityResultLauncher
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class FragmentProfile : Fragment(R.layout.profile) {
 
@@ -50,7 +58,7 @@ class FragmentProfile : Fragment(R.layout.profile) {
 
     override fun onResume() {
         super.onResume()
-        loadAvatar() // Обновляем при каждом возврате
+        loadAvatar()
         binding.btnProfileAddWeighing.text = "Добавить взвешивание"
     }
 
@@ -72,6 +80,12 @@ class FragmentProfile : Fragment(R.layout.profile) {
         binding.btnProfileChangeAvatar.setOnClickListener {
             checkPermissionsAndOpenPicker()
         }
+        binding.btnProfileResultKcal.setOnClickListener {
+            (activity as MainActivity).supportFragmentManager.beginTransaction()
+                .replace(R.id.flFragment, CalculateCaloriesFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     private fun checkPermissionsAndOpenPicker() {
@@ -88,16 +102,13 @@ class FragmentProfile : Fragment(R.layout.profile) {
 
     private fun handleImageSelection(uri: Uri) {
         try {
-            // Сохраняем права доступа
             requireContext().contentResolver.takePersistableUriPermission(
                 uri,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
 
-            // Сохраняем URI
             prefs.saveAvatarUri(uri.toString())
 
-            // Обновляем UI
             loadAvatar()
         } catch (e: SecurityException) {
             showError("Нет прав доступа к файлу")
@@ -119,7 +130,6 @@ class FragmentProfile : Fragment(R.layout.profile) {
             try {
                 val uri = Uri.parse(uriString)
 
-                // Проверка действительности URI
                 if (isUriValid(uri)) {
                     Glide.with(this)
                         .load(uri)
@@ -127,18 +137,15 @@ class FragmentProfile : Fragment(R.layout.profile) {
                         .into(binding.imageAvatar)
                     return
                 }
-            } catch (e: Exception) {
-                // Ошибка парсинга
+            } catch (_: Exception) {
             }
         }
 
-        // Установка изображения по умолчанию
         binding.imageAvatar.setImageResource(R.drawable.cat)
     }
 
     private fun isUriValid(uri: Uri): Boolean {
         return try {
-            // Проверка сохраненных прав
             val permissions = requireContext().contentResolver
                 .getPersistedUriPermissions()
 
@@ -150,9 +157,9 @@ class FragmentProfile : Fragment(R.layout.profile) {
 
     private fun calculateAge(birthDate: String): String {
         return try {
-            val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val birthYear = dateFormat.parse(birthDate)?.year ?: return ""
-            val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
+            val currentYear = Calendar.getInstance().get(Calendar.YEAR)
             "${currentYear - birthYear} лет"
         } catch (_: Exception) {
             "Возраст"

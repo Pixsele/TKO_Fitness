@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import tk.ssau.fitnesstko.databinding.ActivityMainBinding
 import tk.ssau.fitnesstko.food.FragmentFood
 import tk.ssau.fitnesstko.model.dto.user.AuthRequest
+import tk.ssau.fitnesstko.profile.FragmentProfile
 
 class MainActivity : AppCompatActivity() {
 

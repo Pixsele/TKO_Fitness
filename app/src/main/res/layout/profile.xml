@@ -87,10 +87,10 @@
             android:gravity="left" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnProfileAddMeasurements"
+            android:id="@+id/btnProfileResultKcal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Добавить замеры"
+            android:text="Рассчитать норму ккал"
             android:textSize="20sp"
             android:layout_weight="1"
             app:cornerRadius="12sp"
