@@ -12,6 +12,7 @@ import Profile from "./Profile.jsx";
 import WorkoutDetail from "./WorkoutDetail.jsx";
 import ExercisePage from "./ExercisePage.jsx";
 import Trein from "./Trein.jsx";
+import EditForm from "./EditForm.jsx";
 
 const App = () => {
     const [authMode, setAuthMode] = useState('login');
@@ -30,6 +31,7 @@ const App = () => {
                     <Route path="/workout/:id" element={<WorkoutDetail />} />
                     <Route path="/exercise/:id" element={<ExercisePage />} />
                     <Route path="/trein/:id" element={<Trein />} />
+                    <Route path="/edit" element={<EditForm />} />
 
 
                 </Routes>

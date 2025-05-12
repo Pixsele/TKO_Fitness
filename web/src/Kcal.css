@@ -156,11 +156,11 @@
     color: #ffffff;
 }
 
-.calculate-button {
+.kcal-calculate-button {
     width: 100%;
     padding: 12px 20px;
-    background-color: #212121; /* Зеленая основа */
-    color: white;
+    background-color: #d6ffa4; /* Зеленая основа */
+    color: black;
     font-size: 18px;
     font-weight: 600;
     border: none;
@@ -170,15 +170,11 @@
     transition: background-color 0.3s, transform 0.2s;
 }
 
-.calculate-button:hover {
-    background-color: #212121; /* Чуть темнее при наведении */
+.kcal-calculate-button:hover {
+    background-color: #caff75; /* Чуть темнее при наведении */
     transform: translateY(-2px); /* Эффект подъема кнопки */
 }
 
-.calculate-button:active {
-    background-color: #212121; /* Еще темнее при нажатии */
-    transform: translateY(0); /* Возврат позиции */
-}
 
 .result-kcal{
     color: #ffffff;

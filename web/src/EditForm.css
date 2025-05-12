@@ -1,0 +1,60 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-content {
+    background: #212121;
+    padding: 20px;
+    border-radius: 12px;
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: white;
+}
+
+.modal-content h2 {
+    margin-top: 20px;
+    margin-left: 30px;
+    font-weight: 700;
+    color: white;
+}
+
+.modal-content label {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.modal-content input {
+    padding: 8px 12px;
+    border-radius: 8px; /* <-- закругление */
+    border: 1px solid #ccc;
+    background-color: #2e2e2e;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.modal-content input:focus {
+    border-color: #d6ffa4;
+}
+
