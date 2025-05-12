@@ -26,6 +26,7 @@ public class ProductDTO {
     private BigDecimal portion;
 
     private LocalDateTime createdAt;
+    private Integer percent;
 
     @NotNull
     private BigDecimal fats;

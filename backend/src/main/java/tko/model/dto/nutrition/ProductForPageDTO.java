@@ -16,4 +16,5 @@ public class ProductForPageDTO {
     private Integer percentOfTarget;
     private String unit;
     private BigDecimal portion;
+    private BigDecimal grams;
 }

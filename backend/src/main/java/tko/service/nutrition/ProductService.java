@@ -56,7 +56,15 @@ public class ProductService {
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
-        return productMapper.toDto(productEntity);
+        UsersEntity user = usersRepository.findByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        Integer target = user.getTargetKcal();
+
+
+        ProductDTO productDTO = productMapper.toDto(productEntity);
+        productDTO.setPercent(KcalHelper.percentOfTarget(target, productDTO.getKcal()));
+
+        return productDTO;
     }
 
     public ProductDTO updateProduct(Long id,ProductDTO productDTO) {
@@ -94,7 +102,7 @@ public class ProductService {
     }
 
     public List<ProductForPageDTO> searchProducts(String keyword) {
-        List<ProductDTO> productDTOList = productRepository.findByNameContainingIgnoreCase(keyword);
+        List<ProductEntity> productDTOList = productRepository.findByNameContainingIgnoreCase(keyword);
 
         UsersEntity user = usersRepository.findByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
 
@@ -102,7 +110,7 @@ public class ProductService {
 
         List<ProductForPageDTO> productForPageDTOList = new ArrayList<>();
 
-        for(ProductDTO productDTO : productDTOList) {
+        for(ProductEntity productDTO : productDTOList) {
             ProductForPageDTO productForPageDTO = new ProductForPageDTO();
 
             productForPageDTO.setId(productDTO.getId());
@@ -110,6 +118,7 @@ public class ProductService {
             productForPageDTO.setCalories(productDTO.getKcal());
             productForPageDTO.setUnit(productDTO.getUnit());
             productForPageDTO.setPortion(productDTO.getPortion());
+            productForPageDTO.setGrams(productDTO.getGrams());
             productForPageDTO.setPercentOfTarget(KcalHelper.percentOfTarget(target, productDTO.getKcal()));
 
             productForPageDTOList.add(productForPageDTO);

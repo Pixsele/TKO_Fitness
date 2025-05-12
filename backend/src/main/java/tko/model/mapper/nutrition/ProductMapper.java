@@ -9,7 +9,10 @@ import tko.model.dto.nutrition.ProductDTO;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
+    @Mapping(target = "percent", ignore = true)
     ProductDTO toDto(ProductEntity productEntity);
+
     ProductEntity toEntity(ProductDTO productDTO);
+
     void updateEntity(ProductDTO dto, @MappingTarget ProductEntity entity);
 }
