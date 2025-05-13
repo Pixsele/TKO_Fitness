@@ -1,6 +1,7 @@
 package tk.ssau.fitnesstko.profile
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -21,6 +22,7 @@ import tk.ssau.fitnesstko.databinding.ProfileBinding
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
+import androidx.core.net.toUri
 
 class FragmentProfile : Fragment(R.layout.profile) {
 
@@ -125,13 +127,14 @@ class FragmentProfile : Fragment(R.layout.profile) {
             prefs.saveAvatarUri(uri.toString())
 
             loadAvatar()
-        } catch (e: SecurityException) {
+        } catch (_: SecurityException) {
             showError("Нет прав доступа к файлу")
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showError("Ошибка загрузки изображения")
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun loadUserData() {
         val firstName = prefs.getString("firstName", "")
         val lastName = prefs.getString("lastName", "")
@@ -146,7 +149,7 @@ class FragmentProfile : Fragment(R.layout.profile) {
     private fun loadAvatar() {
         prefs.getAvatarUri()?.let { uriString ->
             try {
-                val uri = Uri.parse(uriString)
+                val uri = uriString.toUri()
 
                 if (isUriValid(uri)) {
                     Glide.with(this)
@@ -165,10 +168,10 @@ class FragmentProfile : Fragment(R.layout.profile) {
     private fun isUriValid(uri: Uri): Boolean {
         return try {
             val permissions = requireContext().contentResolver
-                .getPersistedUriPermissions()
+                .persistedUriPermissions
 
             permissions.any { it.uri == uri }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
@@ -184,7 +187,7 @@ class FragmentProfile : Fragment(R.layout.profile) {
             val currentDate = LocalDate.now()
             val age = Period.between(birthDate, currentDate).years
             "$age лет"
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             "Возраст не указан"
         }
     }

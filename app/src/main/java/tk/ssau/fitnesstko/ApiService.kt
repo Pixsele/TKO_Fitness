@@ -86,6 +86,7 @@ object ApiService {
     val programService: ProgramApi by lazy { retrofit.create(ProgramApi::class.java) }
     val workoutProgramService: WorkoutProgramApi by lazy { retrofit.create(WorkoutProgramApi::class.java) }
     val weightService: WeightApi by lazy { retrofit.create(WeightApi::class.java) }
+
     /**
      * Интерфейс для работы с тренировками
      */
@@ -307,7 +308,7 @@ private class LocalDateSerializer : JsonSerializer<LocalDate>, JsonDeserializer<
         typeOfSrc: Type,
         context: JsonSerializationContext
     ): JsonElement {
-        return JsonPrimitive(src.toString()) // Формат "yyyy-MM-dd"
+        return JsonPrimitive(src.toString())
     }
 
     override fun deserialize(

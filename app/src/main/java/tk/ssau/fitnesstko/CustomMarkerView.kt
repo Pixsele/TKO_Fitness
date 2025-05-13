@@ -1,5 +1,6 @@
 package tk.ssau.fitnesstko
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.TextView
 import com.github.mikephil.charting.components.MarkerView
@@ -12,9 +13,11 @@ import java.util.Locale
 /**
  * Точка на графике с информацией о весе
  */
+@SuppressLint("ViewConstructor")
 class CustomMarkerView(context: Context, layoutResource: Int) :
     MarkerView(context, layoutResource) {
 
+    @SuppressLint("SetTextI18n")
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         e?.data?.let { timestamp ->
             findViewById<TextView>(R.id.tvDate).text =

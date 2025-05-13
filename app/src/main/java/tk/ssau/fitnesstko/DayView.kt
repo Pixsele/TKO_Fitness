@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.graphics.toColorInt
 
 /**
  * Круг вокруг дня на календаре
@@ -27,9 +28,9 @@ class DayView @JvmOverloads constructor(
             updateAppearance()
         }
 
-    private val plannedColor = Color.parseColor("#9E9E9E")
-    private val todayColor = Color.parseColor("#D6FFA4")
-    private val completedColor = Color.parseColor("#FFFFFF")
+    private val plannedColor = "#9E9E9E".toColorInt()
+    private val todayColor = "#D6FFA4".toColorInt()
+    private val completedColor = "#FFFFFF".toColorInt()
 
     init {
         setTextColor(Color.BLACK)

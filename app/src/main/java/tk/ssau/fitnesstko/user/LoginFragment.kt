@@ -124,7 +124,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
 
             override fun onFailure(call: Call<List<WeightDto>>, t: Throwable) {
-                // Можно добавить логирование ошибки
             }
         })
     }

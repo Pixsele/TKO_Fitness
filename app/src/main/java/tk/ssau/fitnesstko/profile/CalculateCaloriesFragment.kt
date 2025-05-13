@@ -1,5 +1,6 @@
 package tk.ssau.fitnesstko.profile
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -47,11 +48,12 @@ class CalculateCaloriesFragment : Fragment(R.layout.fragment_calculate_calories)
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun calculateCalories(spinner: Spinner) {
         val age = view?.findViewById<EditText>(R.id.etAge)?.text.toString().toIntOrNull()
         val weight = view?.findViewById<EditText>(R.id.etWeight)?.text.toString().toDoubleOrNull()
         val height = view?.findViewById<EditText>(R.id.etHeight)?.text.toString().toIntOrNull()
-        val isMale = view?.findViewById<RadioButton>(R.id.rbMale)?.isChecked ?: false
+        val isMale = view?.findViewById<RadioButton>(R.id.rbMale)?.isChecked == true
         val activityLevel = activityLevels[spinner.selectedItemPosition].second
 
         if (age == null || weight == null || height == null) {
@@ -67,6 +69,6 @@ class CalculateCaloriesFragment : Fragment(R.layout.fragment_calculate_calories)
 
         val result = (bmr * activityLevel).toInt()
         view?.findViewById<TextView>(R.id.tvResult)?.text =
-            "Ваша суточная норма: ${result} ккал"
+            "Ваша суточная норма: $result ккал"
     }
 }

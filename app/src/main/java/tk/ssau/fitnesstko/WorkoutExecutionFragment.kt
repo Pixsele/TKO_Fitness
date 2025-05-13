@@ -1,11 +1,11 @@
 package tk.ssau.fitnesstko
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import androidx.annotation.OptIn
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.okhttp.OkHttpDataSource
@@ -70,6 +70,7 @@ class WorkoutExecutionFragment : Fragment(R.layout.fragment_workout_execution) {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateUIComponents(exercise: WorkoutExerciseDto) {
         binding.tvExerciseName.text = "Загрузка..."
         binding.tvSets.text = remainingSets.toString()
@@ -92,6 +93,7 @@ class WorkoutExecutionFragment : Fragment(R.layout.fragment_workout_execution) {
                 }
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onFailure(call: Call<ExerciseDto>, t: Throwable) {
                 if (isAdded) {
                     binding.tvExerciseName.text = "Упражнение $exerciseId"
@@ -134,6 +136,7 @@ class WorkoutExecutionFragment : Fragment(R.layout.fragment_workout_execution) {
                 binding.tvTimer.text = millis.toTimeFormat()
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onFinish() {
                 isResting = false
                 binding.tvTimer.text = "00:00"
@@ -169,6 +172,7 @@ class WorkoutExecutionFragment : Fragment(R.layout.fragment_workout_execution) {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private fun Long.toTimeFormat() = String.format(
         "%02d:%02d",
         (this / 1000) / 60,

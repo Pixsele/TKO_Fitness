@@ -67,7 +67,7 @@ class FragmentWorkout : Fragment(R.layout.workout) {
                         return try {
                             timeFormat.format(Date(value.toLong())) + "\n" +
                                     dateFormat.format(Date(value.toLong()))
-                        } catch (e: Exception) {
+                        } catch (_: Exception) {
                             ""
                         }
                     }
@@ -117,8 +117,8 @@ class FragmentWorkout : Fragment(R.layout.workout) {
             lineWidth = 5f
             valueTextSize = 10f
             setDrawCircles(true)
-            setCircleColor(Color.parseColor("#9BFF20"))
-            circleHoleColor = Color.parseColor("#9BFF20")
+            setCircleColor("#9BFF20".toColorInt())
+            circleHoleColor = "#9BFF20".toColorInt()
             circleRadius = 6f
             mode = LineDataSet.Mode.LINEAR
             setDrawValues(true)

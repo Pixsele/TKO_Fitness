@@ -113,7 +113,8 @@ class ScheduleWorkoutFragment : Fragment(R.layout.fragment_schedule_workout) {
     }
 
     private fun saveWorkout() {
-        val selectedWorkoutName = view?.findViewById<AutoCompleteTextView>(R.id.actvWorkout)?.text.toString()
+        val selectedWorkoutName =
+            view?.findViewById<AutoCompleteTextView>(R.id.actvWorkout)?.text.toString()
         val selectedWorkout = workoutsList.find { it.name == selectedWorkoutName }
 
         selectedWorkout?.let { workout ->

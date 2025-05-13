@@ -1,9 +1,7 @@
 package tk.ssau.fitnesstko
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import tk.ssau.fitnesstko.databinding.ItemProgramBinding
 import tk.ssau.fitnesstko.model.dto.TrainingsProgramForPageDTO
@@ -14,7 +12,8 @@ class ProgramAdapter(
     private val onLikeClick: (TrainingsProgramForPageDTO) -> Unit,
 ) : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
 
-    inner class ProgramViewHolder(private val binding: ItemProgramBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ProgramViewHolder(private val binding: ItemProgramBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(program: TrainingsProgramForPageDTO) {
             binding.tvProgramName.text = program.name ?: "Без названия"
             binding.tvLikeCount.text = program.likeCount?.toString() ?: "0"
@@ -23,12 +22,10 @@ class ProgramAdapter(
                 else R.drawable.ic_not_liked
             )
 
-            // Обработчик клика на лайк
             binding.ivLike.setOnClickListener {
                 onLikeClick(program)
             }
 
-            // Обработчик клика на программу
             binding.root.setOnClickListener {
                 onProgramClick(program)
             }

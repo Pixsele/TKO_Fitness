@@ -20,10 +20,10 @@ class PreferencesManager(context: Context) {
     private val gson = Gson()
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
     private val authManager = AuthManager(context)
+
     companion object {
         const val PLANNED_WORKOUTS_KEY = "planned_workouts"
     }
-
 
 
     fun saveUserData(firstName: String, lastName: String, birthDay: String) {
@@ -49,10 +49,8 @@ class PreferencesManager(context: Context) {
     }
 
     fun saveAndSendWeight(weight: Float) {
-        // Получаем userId из AuthManager
         val userId = authManager.getUserId() ?: return
 
-        // Отправляем на сервер
         coroutineScope.launch {
             try {
                 val currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
@@ -62,14 +60,9 @@ class PreferencesManager(context: Context) {
                     timeDate = currentTime
                 )
 
-                // Используем ваш существующий ApiService
-                val response = ApiService.weightService.postWeight(weightDto).execute()
+               ApiService.weightService.postWeight(weightDto).execute()
 
-                if (!response.isSuccessful) {
-                    // Можно добавить логирование ошибки
-                }
             } catch (e: Exception) {
-                // Обработка ошибок (можно добавить логирование)
                 e.printStackTrace()
             }
         }
@@ -98,9 +91,6 @@ class PreferencesManager(context: Context) {
     }
 
 
-
-
-
     private fun getWeightsRaw() = getWeights()
         .map { "${it.first}|${it.second}" }
 
@@ -120,18 +110,6 @@ class PreferencesManager(context: Context) {
                 } else null
             }
             ?.sortedBy { it.first } ?: emptyList()
-    }
-
-    fun saveWorkout(date: String, type: String) {
-        val workouts = getWorkouts().toMutableSet()
-        workouts.add("$date|$type")
-        sharedPreferences.edit {
-            putStringSet("workouts", workouts)
-        }
-    }
-
-    fun getWorkouts(): Set<String> {
-        return sharedPreferences.getStringSet("workouts", emptySet()) ?: emptySet()
     }
 
     fun getLocalWorkouts(): List<WorkoutForPageDto> {
@@ -199,7 +177,7 @@ class PreferencesManager(context: Context) {
 
     fun savePlannedWorkouts(workouts: List<PlannedWorkoutDto>) {
         val json = Gson().toJson(workouts)
-        sharedPreferences.edit() { putString(PLANNED_WORKOUTS_KEY, json) }
+        sharedPreferences.edit { putString(PLANNED_WORKOUTS_KEY, json) }
     }
 
     fun getPlannedWorkouts(): List<PlannedWorkoutDto> {

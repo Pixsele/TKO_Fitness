@@ -223,8 +223,6 @@ class FragmentFood : Fragment() {
             date = selectedDate
         )
 
-        val dateStr = selectedDate.format(dateFormatter)
-
         ApiService.kcalTrackerService.createKcalTracker(trackerRequest)
             .enqueue(object : Callback<KcalTrackerDTO> {
                 override fun onResponse(

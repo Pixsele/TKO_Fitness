@@ -1,5 +1,6 @@
 package tk.ssau.fitnesstko.food
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -118,6 +119,7 @@ class AddProductDetailsFragment : Fragment() {
             })
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateUI(count: Int) {
         val calories = product.kcal * count
         val fats = product.fats.multiply(count.toBigDecimal())
