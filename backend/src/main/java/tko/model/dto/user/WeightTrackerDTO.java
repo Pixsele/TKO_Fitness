@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -17,5 +17,5 @@ public class WeightTrackerDTO {
     @NotNull
     private Double weight;
     @NotNull
-    private LocalDate date;
+    private LocalDateTime timeDate;
 }

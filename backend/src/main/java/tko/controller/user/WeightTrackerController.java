@@ -9,6 +9,7 @@ import tko.model.dto.user.WeightTrackerDTO;
 import tko.service.WeightTrackerService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -20,7 +21,8 @@ import java.util.List;
  *     <li>{@link #readWeightTracker(Long)} — получение записи веса по идентификатору</li>
  *     <li>{@link #updateWeightTracker(Long, WeightTrackerDTO)} — обновление записи</li>
  *     <li>{@link #deleteWeightTracker(Long)} — удаление записи</li>
- *     <li>{@link #readWeightTrackerByDate(Long, java.time.LocalDate, java.time.LocalDate)} — список по диапазону дат</li>
+ *     <li>{@link #readWeightTrackerByDate(Long, java.time.LocalDateTime, java.time.LocalDateTime)} — список по диапазону дат</li>
+ *     <li>{@link #readLastWeightTracker(Long)} — список последних 7 записей</li>
  * </ul>
  */
 
@@ -60,8 +62,14 @@ public class WeightTrackerController {
     }
 
     @GetMapping("/list-by-dates/{id}")
-    public ResponseEntity<List<WeightTrackerDTO>> readWeightTrackerByDate(@PathVariable Long id , @RequestParam LocalDate from, @RequestParam LocalDate to) {
+    public ResponseEntity<List<WeightTrackerDTO>> readWeightTrackerByDate(@PathVariable Long id , @RequestParam LocalDateTime from, @RequestParam LocalDateTime to) {
         List<WeightTrackerDTO> weightTrackerDTOList = weightTrackerService.readByDate(id,from,to);
+        return new ResponseEntity<>(weightTrackerDTOList, HttpStatus.OK);
+    }
+
+    @GetMapping("/last/{id}")
+    public ResponseEntity<List<WeightTrackerDTO>> readLastWeightTracker(@PathVariable Long id) {
+        List<WeightTrackerDTO> weightTrackerDTOList = weightTrackerService.readLast(id);
         return new ResponseEntity<>(weightTrackerDTOList, HttpStatus.OK);
     }
 }

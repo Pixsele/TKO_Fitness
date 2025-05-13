@@ -8,7 +8,8 @@ import tko.model.dto.workout.PlannedWorkoutDTO;
 
 @Mapper(componentModel = "spring")
 public interface PlannedWorkoutMapper {
-
+    @Mapping(source = "userId", target = "user.id")
+    @Mapping(source = "workoutId", target = "workout.id")
     PlannedWorkoutEntity toEntity(PlannedWorkoutDTO dto);
 
     @Mapping(source = "user.id", target = "userId")

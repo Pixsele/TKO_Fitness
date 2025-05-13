@@ -6,10 +6,13 @@ import tko.database.entity.user.WeightTrackerEntity;
 import tko.model.dto.user.WeightTrackerDTO;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface WeightTrackerRepository extends JpaRepository<WeightTrackerEntity,Long> {
-    boolean existsByDateAndUser_Id(LocalDate date, Long userId);
+    boolean existsByTimeDateAndUser_Id(LocalDateTime timeDate, Long userId);
 
-    List<WeightTrackerEntity> findAllByUser_IdAndDateBetween(Long userId, LocalDate dateAfter, LocalDate dateBefore);
+    List<WeightTrackerEntity> findAllByUser_IdOrderByTimeDateDesc(Long userId);
+
+    List<WeightTrackerEntity> findAllByUser_IdAndTimeDateBetween(Long userId, LocalDateTime timeDateAfter, LocalDateTime timeDateBefore);
 }

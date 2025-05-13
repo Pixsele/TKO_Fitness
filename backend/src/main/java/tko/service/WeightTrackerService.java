@@ -14,6 +14,7 @@ import tko.model.dto.user.WeightTrackerDTO;
 import tko.model.mapper.WeightTrackerMapper;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
  *     <li>{@link #read(Long)} — получение записи о весе по идентификатору</li>
  *     <li>{@link #update(Long, WeightTrackerDTO)} — обновление записи о весе</li>
  *     <li>{@link #delete(Long)} — удаление записи о весе по идентификатору</li>
- *     <li>{@link #readByDate(Long, LocalDate, LocalDate)} — получение записей веса за период</li>
+ *     <li>{@link #readByDate(Long, LocalDateTime, LocalDateTime)} — получение записей веса за период</li>
  * </ul>
  */
 
@@ -55,7 +56,7 @@ public class WeightTrackerService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
         }
 
-        if(weightTrackerRepository.existsByDateAndUser_Id(weightTrackerDTO.getDate(), weightTrackerDTO.getUserId())) {
+        if(weightTrackerRepository.existsByTimeDateAndUser_Id(weightTrackerDTO.getTimeDate(), weightTrackerDTO.getUserId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Weight tracker already exists by this date");
         }
 
@@ -67,7 +68,7 @@ public class WeightTrackerService {
         WeightTrackerEntity weightTrackerEntity = weightTrackerMapper.toEntity(weightTrackerDTO);
         weightTrackerRepository.save(weightTrackerEntity);
 
-        if(Objects.equals(weightTrackerDTO.getDate(), LocalDate.now())) {
+        if(Objects.equals(weightTrackerDTO.getTimeDate(), LocalDate.now())) {
             usersService.updateWeight(weightTrackerDTO.getWeight(), weightTrackerDTO.getUserId());
         }
 
@@ -90,7 +91,7 @@ public class WeightTrackerService {
         UsersEntity usersEntity = usersRepository.findById(weightTrackerDTO.getUserId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist"));
 
-        if(weightTrackerRepository.existsByDateAndUser_Id(weightTrackerDTO.getDate(), weightTrackerDTO.getUserId())) {
+        if(weightTrackerRepository.existsByTimeDateAndUser_Id(weightTrackerDTO.getTimeDate(), weightTrackerDTO.getUserId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Weight tracker already exists by this date");
         }
 
@@ -98,7 +99,7 @@ public class WeightTrackerService {
                 .orElseThrow(() -> new EntityNotFoundException("Id not found"));
 
         weightTrackerEntity.setWeight(weightTrackerDTO.getWeight());
-        weightTrackerEntity.setDate(weightTrackerDTO.getDate());
+        weightTrackerEntity.setTimeDate(weightTrackerDTO.getTimeDate());
         weightTrackerEntity.setUser(usersEntity);
         WeightTrackerEntity updatedWeightTrackerEntity = weightTrackerRepository.save(weightTrackerEntity);
         return weightTrackerMapper.toDto(updatedWeightTrackerEntity);
@@ -116,7 +117,7 @@ public class WeightTrackerService {
         return weightTrackerMapper.toDto(weightTrackerEntity);
     }
 
-    public List<WeightTrackerDTO> readByDate(Long userId,LocalDate startDate,LocalDate endDate) {
+    public List<WeightTrackerDTO> readByDate(Long userId, LocalDateTime startDate, LocalDateTime endDate) {
         if(userId == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserId must not be null");
         }
@@ -129,20 +130,47 @@ public class WeightTrackerService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start date and end date must not be null");
         }
 
-        List<WeightTrackerEntity> weightTrackerEntityListList = weightTrackerRepository.findAllByUser_IdAndDateBetween(userId, startDate, endDate);
+        List<WeightTrackerEntity> weightTrackerEntityListList = weightTrackerRepository.findAllByUser_IdAndTimeDateBetween(userId, startDate, endDate);
+
 
         List<WeightTrackerDTO> weightTrackerDTOList = weightTrackerEntityListList.stream()
                 .map(entity -> new WeightTrackerDTO(
                         entity.getId(),
                         entity.getUser().getId(),
                         entity.getWeight(),
-                        entity.getDate()
+                        entity.getTimeDate()
                 ))
                 .collect(Collectors.toList());
 
         if(weightTrackerDTOList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No weight records found for the specified period");
         }
+
+        return weightTrackerDTOList;
+    }
+
+    public List<WeightTrackerDTO> readLast(Long userId){
+        if(userId == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserId must not be null");
+        }
+
+        if(!(usersRepository.existsById(userId))){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
+        }
+
+        List<WeightTrackerEntity> weightTrackerEntityListList = weightTrackerRepository.findAllByUser_IdOrderByTimeDateDesc(userId);
+
+
+        List<WeightTrackerEntity> latestSeven = weightTrackerEntityListList.stream().limit(7).toList();
+
+        List<WeightTrackerDTO> weightTrackerDTOList = latestSeven.stream()
+                .map(entity -> new WeightTrackerDTO(
+                        entity.getId(),
+                        entity.getUser().getId(),
+                        entity.getWeight(),
+                        entity.getTimeDate()
+                ))
+                .collect(Collectors.toList());
 
         return weightTrackerDTOList;
     }

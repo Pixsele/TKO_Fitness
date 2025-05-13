@@ -47,7 +47,7 @@ CREATE TABLE kcal_tracker (
 CREATE TABLE weight_tracker (
                                 id SERIAL PRIMARY KEY,
                                 user_id BIGINT NOT NULL,
-                                date DATE NOT NULL,
+                                time_date TIMESTAMP NOT NULL,
                                 weight DOUBLE PRECISION NOT NULL,
                                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

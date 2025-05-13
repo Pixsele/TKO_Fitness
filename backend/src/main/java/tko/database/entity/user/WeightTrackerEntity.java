@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "weight_tracker")
@@ -20,8 +20,8 @@ public class WeightTrackerEntity {
 
     private Double weight;
 
-    @Column(name = "date")
-    private LocalDate date;
+    @Column(name = "time_date")
+    private LocalDateTime timeDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
