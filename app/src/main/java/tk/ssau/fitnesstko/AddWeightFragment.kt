@@ -1,5 +1,6 @@
 package tk.ssau.fitnesstko
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -31,6 +32,7 @@ class AddWeightFragment : Fragment(R.layout.fragment_add_weight) {
      * Настройка UI.
      * Отображение последнего сохранённого веса. Если данных нет, то выводится надпись "Нет предыдущих измерений"
      */
+    @SuppressLint("SetTextI18n")
     private fun setupUI() {
         prefs.getWeights().lastOrNull()?.let { (timestamp, weight) ->
             binding.tvLastWeight.text = "Последнее: %.1f кг\n(%s)".format(

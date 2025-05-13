@@ -83,8 +83,6 @@ class ExerciseDetailFragment : Fragment() {
         val dataSourceFactory = OkHttpDataSource.Factory(ApiService.client)
 
         val mediaItem = MediaItem.fromUri(videoUrl)
-        val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-            .createMediaSource(mediaItem)
 
         val player = ExoPlayer.Builder(requireContext())
             .setMediaSourceFactory(ProgressiveMediaSource.Factory(dataSourceFactory))

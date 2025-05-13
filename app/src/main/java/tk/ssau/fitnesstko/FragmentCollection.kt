@@ -65,40 +65,38 @@ class FragmentCollection(private val authManager: AuthManager) : Fragment() {
             }
         )
     }
+
     private fun showPrograms() {
         binding.rvWorkouts.adapter = programAdapter
         loadPrograms()
-    }
-    private fun syncLikedPrograms(programs: List<TrainingsProgramForPageDTO>): List<TrainingsProgramForPageDTO> {
-        val likedWorkoutIds = getLocalWorkouts().filter { it.liked }.mapNotNull { it.id }.toSet()
-
-        return programs.map { program ->
-            if (program.id in likedWorkoutIds) {
-                program.copy(liked = true)
-            } else {
-                program
-            }
-        }
     }
 
     private fun showWorkouts() {
         binding.rvWorkouts.adapter = workoutAdapter
         loadWorkouts()
     }
-    private fun loadPrograms() {
-        ApiService.programService.getPrograms().enqueue(object : Callback<PagedResponse<TrainingsProgramForPageDTO>> {
-            override fun onResponse(call: Call<PagedResponse<TrainingsProgramForPageDTO>>, response: Response<PagedResponse<TrainingsProgramForPageDTO>>) {
-                response.body()?.let {
-                    programs.clear()
-                    programs.addAll(it.content)
-                    programAdapter.updatePrograms(programs)
-                }
-            }
 
-            override fun onFailure(call: Call<PagedResponse<TrainingsProgramForPageDTO>>, t: Throwable) {
-                Toast.makeText(context, "Ошибка загрузки программ", Toast.LENGTH_SHORT).show()
-            }
-        })
+    private fun loadPrograms() {
+        ApiService.programService.getPrograms()
+            .enqueue(object : Callback<PagedResponse<TrainingsProgramForPageDTO>> {
+                override fun onResponse(
+                    call: Call<PagedResponse<TrainingsProgramForPageDTO>>,
+                    response: Response<PagedResponse<TrainingsProgramForPageDTO>>
+                ) {
+                    response.body()?.let {
+                        programs.clear()
+                        programs.addAll(it.content)
+                        programAdapter.updatePrograms(programs)
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<PagedResponse<TrainingsProgramForPageDTO>>,
+                    t: Throwable
+                ) {
+                    Toast.makeText(context, "Ошибка загрузки программ", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 
     private fun handleProgramLike(program: TrainingsProgramForPageDTO) {
@@ -139,18 +137,20 @@ class FragmentCollection(private val authManager: AuthManager) : Fragment() {
         call.enqueue(object : Callback<Unit> {
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                 if (!response.isSuccessful) {
-                    programs.indexOfFirst { it.id == originalProgram.id }.takeIf { it != -1 }?.let { pos ->
-                        programs[pos] = originalProgram
-                        programAdapter.notifyItemChanged(pos)
-                    }
+                    programs.indexOfFirst { it.id == originalProgram.id }.takeIf { it != -1 }
+                        ?.let { pos ->
+                            programs[pos] = originalProgram
+                            programAdapter.notifyItemChanged(pos)
+                        }
                 }
             }
 
             override fun onFailure(call: Call<Unit>, t: Throwable) {
-                programs.indexOfFirst { it.id == originalProgram.id }.takeIf { it != -1 }?.let { pos ->
-                    programs[pos] = originalProgram
-                    programAdapter.notifyItemChanged(pos)
-                }
+                programs.indexOfFirst { it.id == originalProgram.id }.takeIf { it != -1 }
+                    ?.let { pos ->
+                        programs[pos] = originalProgram
+                        programAdapter.notifyItemChanged(pos)
+                    }
             }
         })
     }

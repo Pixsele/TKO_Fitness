@@ -1,5 +1,6 @@
 package tk.ssau.fitnesstko.food
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,7 +32,6 @@ class AddProductFragment : Fragment() {
 
     private lateinit var etSearch: EditText
     private lateinit var rvProducts: RecyclerView
-    private lateinit var rvSelectedProducts: RecyclerView
     private lateinit var adapter: ProductAdapter
     private lateinit var viewModel: KcalProductViewModel
     private var trackerId: Long = 0
@@ -158,6 +158,7 @@ class AddProductFragment : Fragment() {
             )
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val product = products[position]
             val isSelected = viewModel.products.value?.any {
@@ -186,7 +187,7 @@ class AddProductFragment : Fragment() {
                         }
 
                         val args = Bundle().apply {
-                            putLong("productId", product.id!!)
+                            putLong("productId", product.id)
                             putString("typeMeal", arguments?.getString("typeMeal") ?: "BREAKFAST")
                         }
 
@@ -204,19 +205,13 @@ class AddProductFragment : Fragment() {
     }
 
     private inner class SelectedProductAdapter(
-        private var products: MutableList<KcalProductDTO>,
-        private val onRemove: (KcalProductDTO) -> Unit
+        private var products: MutableList<KcalProductDTO>
     ) : RecyclerView.Adapter<SelectedProductAdapter.ViewHolder>() {
 
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val tvName: TextView = view.findViewById(R.id.tvProductName)
             val tvDetails: TextView = view.findViewById(R.id.tvGrams)
             val btnRemove: Button = view.findViewById(R.id.btnRemove)
-        }
-
-        fun updateProducts(newProducts: MutableList<KcalProductDTO>) {
-            products = newProducts
-            notifyDataSetChanged()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -226,6 +221,7 @@ class AddProductFragment : Fragment() {
             )
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val product = products[position]
             holder.tvName.text = "Продукт #${position + 1}"

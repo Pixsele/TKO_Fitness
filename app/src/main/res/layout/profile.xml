@@ -110,7 +110,6 @@
             android:gravity="left" />
 
 
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"

@@ -13,7 +13,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Toolbar с кнопкой назад -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -31,7 +30,6 @@
             android:clipToOutline="true"
             app:show_buffering="when_playing" />
 
-        <!-- Название упражнения -->
         <TextView
             android:id="@+id/tvExerciseName"
             android:layout_width="match_parent"
@@ -43,7 +41,6 @@
             android:gravity="center"
             android:textColor="@color/white" />
 
-        <!-- Сложность -->
         <TextView
             android:id="@+id/tvDifficulty"
             android:layout_width="match_parent"
@@ -57,7 +54,6 @@
             android:padding="5dp"
             android:textStyle="bold" />
 
-        <!-- Описание -->
         <TextView
             android:id="@+id/tvDescription"
             android:layout_width="match_parent"

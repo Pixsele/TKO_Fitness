@@ -1,5 +1,6 @@
 package tk.ssau.fitnesstko
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +23,11 @@ class FragmentProgramDetail : Fragment() {
     private var programId: Long = -1L
     private var workouts = mutableListOf<WorkoutForPageDto>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentProgramDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -47,7 +52,6 @@ class FragmentProgramDetail : Fragment() {
             workouts = emptyList(),
             fragmentManager = parentFragmentManager,
             onDataUpdated = { updatedWorkout ->
-                // Обработка обновлений, если нужно
             },
             authManager = AuthManager(requireContext())
         )
@@ -56,45 +60,53 @@ class FragmentProgramDetail : Fragment() {
 
     private fun loadProgramData() {
         showLoading(true)
-        // Загрузка деталей программы
-        ApiService.programService.getProgramById(programId).enqueue(object : Callback<TrainingsProgramDto> {
-            override fun onResponse(call: Call<TrainingsProgramDto>, response: Response<TrainingsProgramDto>) {
-                if (response.isSuccessful) {
-                    response.body()?.let { program ->
-                        binding.tvProgramName.text = program.name
-                        binding.tvDescription.text = program.description
-                        binding.tvDifficulty.text = "Сложность: ${program.difficult}"
-                        loadWorkouts()
+        ApiService.programService.getProgramById(programId)
+            .enqueue(object : Callback<TrainingsProgramDto> {
+                @SuppressLint("SetTextI18n")
+                override fun onResponse(
+                    call: Call<TrainingsProgramDto>,
+                    response: Response<TrainingsProgramDto>
+                ) {
+                    if (response.isSuccessful) {
+                        response.body()?.let { program ->
+                            binding.tvProgramName.text = program.name
+                            binding.tvDescription.text = program.description
+                            binding.tvDifficulty.text = "Сложность: ${program.difficult}"
+                            loadWorkouts()
+                        }
+                    } else {
+                        showError("Ошибка загрузки программы")
                     }
-                } else {
-                    showError("Ошибка загрузки программы")
+                    showLoading(false)
                 }
-                showLoading(false)
-            }
 
-            override fun onFailure(call: Call<TrainingsProgramDto>, t: Throwable) {
-                showError("Ошибка соединения")
-                showLoading(false)
-            }
-        })
+                override fun onFailure(call: Call<TrainingsProgramDto>, t: Throwable) {
+                    showError("Ошибка соединения")
+                    showLoading(false)
+                }
+            })
     }
 
     private fun loadWorkouts() {
         // Загрузка списка тренировок программы
-        ApiService.workoutProgramService.getWorkoutsByProgram(programId).enqueue(object : Callback<List<WorkoutProgramDto>> {
-            override fun onResponse(call: Call<List<WorkoutProgramDto>>, response: Response<List<WorkoutProgramDto>>) {
-                if (response.isSuccessful) {
-                    response.body()?.let { workoutPrograms ->
-                        val workoutIds = workoutPrograms.map { it.workoutId }
-                        loadWorkoutDetails(workoutIds)
+        ApiService.workoutProgramService.getWorkoutsByProgram(programId)
+            .enqueue(object : Callback<List<WorkoutProgramDto>> {
+                override fun onResponse(
+                    call: Call<List<WorkoutProgramDto>>,
+                    response: Response<List<WorkoutProgramDto>>
+                ) {
+                    if (response.isSuccessful) {
+                        response.body()?.let { workoutPrograms ->
+                            val workoutIds = workoutPrograms.map { it.workoutId }
+                            loadWorkoutDetails(workoutIds)
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<List<WorkoutProgramDto>>, t: Throwable) {
-                showError("Ошибка загрузки тренировок")
-            }
-        })
+                override fun onFailure(call: Call<List<WorkoutProgramDto>>, t: Throwable) {
+                    showError("Ошибка загрузки тренировок")
+                }
+            })
     }
 
     private fun loadWorkoutDetails(workoutIds: List<Long>) {
@@ -109,7 +121,7 @@ class FragmentProgramDetail : Fragment() {
                                     id = workout.id,
                                     name = workout.name,
                                     likeCount = workout.likeCount,
-                                    liked = false // Здесь можно добавить проверку лайков
+                                    liked = false
                                 )
                             )
                             if (workouts.size == workoutIds.size) {

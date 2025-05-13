@@ -91,10 +91,12 @@ class CreateWorkoutFragment : Fragment() {
                 showError("Введите название тренировки")
                 false
             }
+
             viewModel.selectedExercises.value.isNullOrEmpty() -> {
                 showError("Добавьте хотя бы одно упражнение")
                 false
             }
+
             else -> true
         }
     }
