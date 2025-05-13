@@ -28,8 +28,10 @@ import tk.ssau.fitnesstko.model.dto.nutrition.ProductDTO
 import java.io.EOFException
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
 
 class FragmentFood : Fragment() {
 
@@ -73,7 +75,6 @@ class FragmentFood : Fragment() {
         setupDates()
         setupRadioGroup()
         setupSections()
-        loadKcalData()
     }
 
     private fun setupDates() {
@@ -83,7 +84,11 @@ class FragmentFood : Fragment() {
             prefs.saveSelectedDate(today)
             today
         }
-        currentWeekDates = (0..6).map { selectedDate.plusDays(it.toLong()) }.toMutableList()
+        val startOfWeek = selectedDate.with(
+            TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)
+        )
+        currentWeekDates = (0..6).map { startOfWeek.plusDays(it.toLong()) }
+            .toMutableList()
     }
 
     private fun setupRadioGroup() {
@@ -444,11 +449,8 @@ class FragmentFood : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        clearSections()
+        loadKcalData()
     }
 
 }
-/*
-GET http://85.236.187.180:8080/api/kcal-tracker/by-date/2025-05-12
-<-- 200 http://85.236.187.180:8080/api/kcal-tracker/by-date/2025-05-12 (76ms)
-
- */

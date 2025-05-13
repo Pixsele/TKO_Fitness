@@ -1,15 +1,15 @@
 package tk.ssau.fitnesstko.profile
-
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import tk.ssau.fitnesstko.AddWeightFragment
@@ -22,27 +22,28 @@ import tk.ssau.fitnesstko.databinding.ProfileBinding
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
-import androidx.core.net.toUri
 
 class FragmentProfile : Fragment(R.layout.profile) {
-
-    private lateinit var binding: ProfileBinding
+    private var _binding: ProfileBinding? = null
+    private val binding get() = _binding!!
     private lateinit var prefs: PreferencesManager
-
     private lateinit var requestPermission: ActivityResultLauncher<String>
     private lateinit var pickImage: ActivityResultLauncher<Array<String>>
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = ProfileBinding.bind(view)
-        prefs = (activity as MainActivity).prefs
+        _binding = ProfileBinding.bind(view)
+        prefs = (activity as? MainActivity)?.prefs
+            ?: throw IllegalStateException("PreferencesManager not available")
 
-        registerActivityResultLaunchers()
-
-        initViews()
-        loadUserData()
-        loadAvatar()
+        try {
+            registerActivityResultLaunchers()
+            initViews()
+            loadUserData()
+            loadAvatar()
+        } catch (e: Exception) {
+            Log.e("ProfileFrag", "Error initializing profile view", e)
+        }
     }
 
     private fun registerActivityResultLaunchers() {
@@ -61,59 +62,56 @@ class FragmentProfile : Fragment(R.layout.profile) {
 
     override fun onResume() {
         super.onResume()
-        loadUserData()
-        loadAvatar()
-        binding.btnProfileAddWeighing.text = "Добавить взвешивание"
+        try {
+            loadUserData()
+            loadAvatar()
+        } catch (e: Exception) {
+            Log.e("ProfileFrag", "Error in onResume", e)
+        }
     }
 
     private fun initViews() {
         binding.btnProfileChangeFIO.setOnClickListener {
-            (activity as MainActivity).supportFragmentManager.beginTransaction()
-                .replace(R.id.flFragment, EditProfileFragment())
-                .addToBackStack(null)
-                .commit()
+            safeFragmentTransaction { EditProfileFragment() }
         }
 
         binding.btnProfileAddWeighing.setOnClickListener {
-            (activity as MainActivity).supportFragmentManager.beginTransaction()
-                .replace(R.id.flFragment, AddWeightFragment())
-                .addToBackStack(null)
-                .commit()
+            safeFragmentTransaction { AddWeightFragment() }
         }
 
         binding.btnProfileChangeAvatar.setOnClickListener {
             checkPermissionsAndOpenPicker()
         }
+
         binding.btnProfileResultKcal.setOnClickListener {
-            (activity as MainActivity).supportFragmentManager.beginTransaction()
-                .replace(R.id.flFragment, CalculateCaloriesFragment())
-                .addToBackStack(null)
-                .commit()
+            safeFragmentTransaction { CalculateCaloriesFragment() }
         }
+
         binding.btnLogout.setOnClickListener {
             performLogout()
         }
     }
 
     private fun performLogout() {
-        AuthManager(requireContext()).logout()
-        PreferencesManager(requireContext()).clearUserData()
-
-        startActivity(Intent(requireContext(), AuthActivity::class.java))
-        activity?.finish()
+        try {
+            AuthManager(requireContext()).logout()
+            prefs.clearUserData()
+            startActivity(Intent(requireContext(), AuthActivity::class.java))
+            activity?.finish()
+        } catch (e: Exception) {
+            Log.e("ProfileFrag", "Logout failed", e)
+        }
     }
 
     private fun checkPermissionsAndOpenPicker() {
-        when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
-                requestPermission.launch(Manifest.permission.READ_MEDIA_IMAGES)
+        try {
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> requestPermission.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> requestPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                else -> pickImage.launch(arrayOf("image/*"))
             }
-
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
-                requestPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-            }
-
-            else -> pickImage.launch(arrayOf("image/*"))
+        } catch (e: Exception) {
+            Log.e("ProfileFrag", "Error requesting permissions", e)
         }
     }
 
@@ -123,34 +121,32 @@ class FragmentProfile : Fragment(R.layout.profile) {
                 uri,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
-
             prefs.saveAvatarUri(uri.toString())
-
             loadAvatar()
-        } catch (_: SecurityException) {
-            showError("Нет прав доступа к файлу")
-        } catch (_: Exception) {
-            showError("Ошибка загрузки изображения")
+        } catch (e: SecurityException) {
+            Log.e("ProfileFrag", "SecurityException on image selection", e)
+        } catch (e: Exception) {
+            Log.e("ProfileFrag", "Image loading error", e)
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun loadUserData() {
-        val firstName = prefs.getString("firstName", "")
-        val lastName = prefs.getString("lastName", "")
-        val birthDate = prefs.getString("birthDay", "")
-
-        binding.fio.text =
-            "$firstName $lastName"
-
-        binding.age.text = calculateAge(birthDate)
+        try {
+            val firstName = prefs.getString("firstName", "")
+            val lastName = prefs.getString("lastName", "")
+            val birthDate = prefs.getString("birthDay", "")
+            binding.fio.text = "$firstName $lastName"
+            binding.age.text = calculateAge(birthDate)
+        } catch (e: Exception) {
+            Log.e("ProfileFrag", "Error loading user data", e)
+        }
     }
 
     private fun loadAvatar() {
         prefs.getAvatarUri()?.let { uriString ->
             try {
                 val uri = uriString.toUri()
-
                 if (isUriValid(uri)) {
                     Glide.with(this)
                         .load(uri)
@@ -158,37 +154,47 @@ class FragmentProfile : Fragment(R.layout.profile) {
                         .into(binding.imageAvatar)
                     return
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                Log.e("ProfileFrag", "Invalid avatar URI", e)
             }
         }
-
         binding.imageAvatar.setImageResource(R.drawable.cat)
     }
 
     private fun isUriValid(uri: Uri): Boolean {
         return try {
-            val permissions = requireContext().contentResolver
-                .persistedUriPermissions
-
-            permissions.any { it.uri == uri }
-        } catch (_: Exception) {
+            requireContext().contentResolver.persistedUriPermissions
+                .any { it.uri == uri }
+        } catch (e: Exception) {
             false
         }
-    }
-
-    private fun showError(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
     private fun calculateAge(birthDate: String): String {
         return try {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            val birthDate = LocalDate.parse(birthDate, formatter)
-            val currentDate = LocalDate.now()
-            val age = Period.between(birthDate, currentDate).years
-            "$age лет"
-        } catch (_: Exception) {
-            "Возраст не указан"
+            val date = LocalDate.parse(birthDate, formatter)
+            val age = Period.between(date, LocalDate.now()).years
+            "$age"
+        } catch (e: Exception) {
+            Log.e("ProfileFrag", "Age parse error", e)
+        }.toString()
+    }
+
+    private fun safeFragmentTransaction(createFragment: () -> Fragment) {
+        try {
+            val fragment = createFragment()
+            (activity as? MainActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.flFragment, fragment)
+                ?.addToBackStack(null)
+                ?.commit()
+        } catch (e: Exception) {
+            Log.e("ProfileFrag", "Fragment transaction failed", e)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
