@@ -43,23 +43,24 @@
                         android:textSize="24sp"
                         android:textStyle="bold"
                         android:layout_marginHorizontal="16dp"
+                        android:layout_marginLeft="20sp"
                         android:textColor="@color/white" />
 
                     <ImageButton
                         android:id="@+id/btnPrevMonth"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
                         android:src="@drawable/ic_arrow_left"
                         android:background="?selectableItemBackgroundBorderless"
-                        app:tint="#FFFFFF" />
+                        app:tint="@color/TKO_gray" />
 
                     <ImageButton
                         android:id="@+id/btnNextMonth"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
                         android:src="@drawable/ic_arrow_right"
                         android:background="?selectableItemBackgroundBorderless"
-                        app:tint="#FFFFFF" />
+                        app:tint="@color/TKO_gray" />
                 </LinearLayout>
 
                 <View
