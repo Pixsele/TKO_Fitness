@@ -39,6 +39,7 @@ class WorkoutDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentWorkoutDetailBinding.bind(view)
         workoutId = arguments?.getLong("workoutId") ?: -1L
 
         setupToolbar()

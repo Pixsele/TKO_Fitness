@@ -122,10 +122,7 @@ class WorkoutExecutionFragment : Fragment(R.layout.fragment_workout_execution) {
         if (remainingSets > 0) {
             remainingSets--
             binding.tvSets.text = remainingSets.toString()
-
-            if (remainingSets == 0) {
-                startRestTimer(exercises[currentExerciseIndex].restTime * 1000L)
-            }
+            startRestTimer(exercises[currentExerciseIndex].restTime * 1000L)
         }
     }
 
@@ -140,12 +137,15 @@ class WorkoutExecutionFragment : Fragment(R.layout.fragment_workout_execution) {
             override fun onFinish() {
                 isResting = false
                 binding.tvTimer.text = "00:00"
-                handleExerciseChange(currentExerciseIndex + 1)
+                if (remainingSets == 0) {
+                    handleExerciseChange(currentExerciseIndex + 1)
+                }
             }
         }.start()
     }
 
     private fun handleExerciseChange(newIndex: Int) {
+        if (!isAdded || isRemoving) return
         timer?.cancel()
         isResting = false
         currentExerciseRequest?.cancel()
@@ -162,7 +162,11 @@ class WorkoutExecutionFragment : Fragment(R.layout.fragment_workout_execution) {
     }
 
     private fun exitWorkout() {
-        parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        if (parentFragmentManager.backStackEntryCount > 0) {
+            parentFragmentManager.popBackStack()
+        } else {
+            requireActivity().onBackPressed()
+        }
     }
 
     private fun Long.toTimeFormat() = String.format(
