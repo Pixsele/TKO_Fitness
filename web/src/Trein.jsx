@@ -23,7 +23,18 @@ const Trein = () => {
                 const exercisesResponse = await axios.get(`http://85.236.187.180:8080/api/workout-program/workout/${id}`, {
                     headers: { Authorization: `Bearer ${user.token}` }
                 });
-                setExercises(exercisesResponse.data);
+                const modifiedExercises = exercisesResponse.data.map(exercise => ({
+                    exerciseId: exercise.exerciseId,  // Используем 'exerciseId' вместо 'id'
+                    workoutId: exercise.workoutId,
+                    sets: exercise.sets,
+                    reps: exercise.reps,
+                    distance: exercise.distance,
+                    duration: exercise.duration,
+                    restTime: exercise.restTime,
+                    exerciseOrder: exercise.exerciseOrder
+                }));
+
+                setExercises(modifiedExercises);  // Сохраняем измененные данные
 
             } catch (error) {
                 console.error('Ошибка при загрузке данных о тренировке:', error);
@@ -63,7 +74,7 @@ const Trein = () => {
                     <button className="slozn"><strong></strong> {workout.difficult}</button>
                     <div className="exercise-list">
                         {exercises.map(ex => (
-                            <TreinCard key={ex.id} ex={ex} />
+                            <TreinCard key={ex.exerciseId} ex={ex} />
                         ))}
                     </div>
                 </div>

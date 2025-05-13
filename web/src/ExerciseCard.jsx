@@ -11,7 +11,7 @@ const ExerciseCard = ({ ex }) => {
     useEffect(() => {
         const fetchExerciseDetails = async () => {
             try {
-                const response = await axios.get(`http://85.236.187.180:8080/api/exercise/${ex.id}`, {
+                const response = await axios.get(`http://85.236.187.180:8080/api/exercise/${ex.exerciseId}`, {
                     headers: {
                         'Authorization': `Bearer ${user.token}`
                     }
@@ -25,7 +25,7 @@ const ExerciseCard = ({ ex }) => {
 
         const fetchImage = async () => {
             try {
-                const response = await axios.get(`http://85.236.187.180:8080/api/exercise/image/${ex.id}`, {
+                const response = await axios.get(`http://85.236.187.180:8080/api/exercise/image/${ex.exerciseId}`, {
                     responseType: 'blob',
                     headers: {
                         'Authorization': `Bearer ${user.token}`
@@ -50,7 +50,7 @@ const ExerciseCard = ({ ex }) => {
     }, [ex.id, user.token]);
 
     return (
-        <Link to={`/exercise/${ex.id}`} className="exercise-link">
+        <Link to={`/exercise/${ex.exerciseId}`} className="exercise-link">
             <div className="exercise-card">
                 <img src={imageSrc} alt={ex.name} />
                 <p>{exerciseName}</p>

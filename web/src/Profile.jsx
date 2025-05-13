@@ -66,7 +66,7 @@ const Profile = () => {
 
             <button className="profile-content">
                 <img
-                    src="/assets/Mask%20group.svg"
+                    src="/assets/image4.svg"
                     alt="Avatar"
                     className="profile-avatar"
                 />
