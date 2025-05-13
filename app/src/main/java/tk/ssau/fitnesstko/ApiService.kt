@@ -22,11 +22,15 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import tk.ssau.fitnesstko.model.dto.ExerciseDto
 import tk.ssau.fitnesstko.model.dto.ExerciseForPageDto
+import tk.ssau.fitnesstko.model.dto.LikesTrainingsProgramDto
 import tk.ssau.fitnesstko.model.dto.LikesWorkoutDto
 import tk.ssau.fitnesstko.model.dto.PersonSvgDto
+import tk.ssau.fitnesstko.model.dto.TrainingsProgramDto
+import tk.ssau.fitnesstko.model.dto.TrainingsProgramForPageDTO
 import tk.ssau.fitnesstko.model.dto.WorkoutDto
 import tk.ssau.fitnesstko.model.dto.WorkoutExerciseDto
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
+import tk.ssau.fitnesstko.model.dto.WorkoutProgramDto
 import tk.ssau.fitnesstko.model.dto.nutrition.KcalProductDTO
 import tk.ssau.fitnesstko.model.dto.nutrition.KcalTrackerDTO
 import tk.ssau.fitnesstko.model.dto.nutrition.ProductDTO
@@ -78,8 +82,9 @@ object ApiService {
     val authService: AuthApi by lazy { retrofit.create(AuthApi::class.java) }
     val kcalTrackerService: KcalTrackerApi by lazy { retrofit.create(KcalTrackerApi::class.java) }
     val productService: ProductApi by lazy { retrofit.create(ProductApi::class.java) }
+    val programService: ProgramApi by lazy { retrofit.create(ProgramApi::class.java) }
+    val workoutProgramService: WorkoutProgramApi by lazy { retrofit.create(WorkoutProgramApi::class.java) }
     val weightService: WeightApi by lazy { retrofit.create(WeightApi::class.java) }
-
     /**
      * Интерфейс для работы с тренировками
      */
@@ -180,6 +185,12 @@ object ApiService {
          */
         @HTTP(method = "DELETE", path = "api/like-workout", hasBody = true)
         fun deleteLikeWorkout(@Body like: LikesWorkoutDto): Call<Unit>
+
+        @POST("api/like-program")
+        fun likeProgram(@Body like: LikesTrainingsProgramDto): Call<Unit>
+
+        @HTTP(method = "DELETE", path = "api/like-program", hasBody = true)
+        fun deleteLikeProgram(@Body like: LikesTrainingsProgramDto): Call<Unit>
     }
 
     interface AuthApi {
@@ -224,6 +235,22 @@ object ApiService {
         fun createProduct(@Body product: ProductDTO): Call<ProductDTO>
     }
 
+    interface ProgramApi {
+        @GET("api/program/page")
+        fun getPrograms(
+            @Query("page") page: Int = 0,
+            @Query("size") size: Int = 200
+        ): Call<PagedResponse<TrainingsProgramForPageDTO>>
+
+        @GET("api/program/{id}")
+        fun getProgramById(@Path("id") id: Long): Call<TrainingsProgramDto>
+    }
+
+    interface WorkoutProgramApi {
+        @GET("api/workout-program/workout/{id}")
+        fun getWorkoutsByProgram(@Path("id") programId: Long): Call<List<WorkoutProgramDto>>
+    }
+
     interface WeightApi {
         @POST("/api/weight")
         fun postWeight(@Body weight: WeightDto): Call<WeightDto>
@@ -231,6 +258,8 @@ object ApiService {
         @GET("/api/weight/last/{userId}")
         fun getUserWeights(@Path("userId") userId: Long): Call<List<WeightDto>>
     }
+
+
 }
 
 /**
