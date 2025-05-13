@@ -46,14 +46,15 @@
             app:boxCornerRadiusBottomStart="18sp"
             app:boxCornerRadiusBottomEnd="18sp"
             app:boxStrokeColor="#D6FFA4"
-            app:hintTextColor="#FFFFFF">>
+            app:hintTextColor="#FFFFFF">
 
             <AutoCompleteTextView
                 android:id="@+id/actvWorkout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
-                android:clickable="true" />
+                android:clickable="true"
+                android:backgroundTint="@color/TKO_gray"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 

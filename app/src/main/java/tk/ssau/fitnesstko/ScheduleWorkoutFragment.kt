@@ -70,7 +70,7 @@ class ScheduleWorkoutFragment : Fragment(R.layout.fragment_schedule_workout) {
 
                         val adapter = ArrayAdapter(
                             requireContext(),
-                            R.layout.spinner_item,
+                            R.layout.spiner_white,
                             workoutNames
                         )
 
