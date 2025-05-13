@@ -2,10 +2,12 @@ package tk.ssau.fitnesstko
 
 import android.content.Context
 import androidx.core.content.edit
+import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import tk.ssau.fitnesstko.model.dto.PlannedWorkoutDto
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 import tk.ssau.fitnesstko.model.dto.user.WeightDto
 import java.time.LocalDate
@@ -18,6 +20,10 @@ class PreferencesManager(context: Context) {
     private val gson = Gson()
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
     private val authManager = AuthManager(context)
+    companion object {
+        const val PLANNED_WORKOUTS_KEY = "planned_workouts"
+    }
+
 
 
     fun saveUserData(firstName: String, lastName: String, birthDay: String) {
@@ -188,6 +194,20 @@ class PreferencesManager(context: Context) {
         sharedPreferences.edit {
             clear()
             apply()
+        }
+    }
+
+    fun savePlannedWorkouts(workouts: List<PlannedWorkoutDto>) {
+        val json = Gson().toJson(workouts)
+        sharedPreferences.edit() { putString(PLANNED_WORKOUTS_KEY, json) }
+    }
+
+    fun getPlannedWorkouts(): List<PlannedWorkoutDto> {
+        val json = sharedPreferences.getString(PLANNED_WORKOUTS_KEY, null)
+        return if (json != null) {
+            Gson().fromJson(json, object : TypeToken<List<PlannedWorkoutDto>>() {}.type)
+        } else {
+            emptyList()
         }
     }
 }

@@ -25,6 +25,7 @@ import tk.ssau.fitnesstko.model.dto.ExerciseForPageDto
 import tk.ssau.fitnesstko.model.dto.LikesTrainingsProgramDto
 import tk.ssau.fitnesstko.model.dto.LikesWorkoutDto
 import tk.ssau.fitnesstko.model.dto.PersonSvgDto
+import tk.ssau.fitnesstko.model.dto.PlannedWorkoutDto
 import tk.ssau.fitnesstko.model.dto.TrainingsProgramDto
 import tk.ssau.fitnesstko.model.dto.TrainingsProgramForPageDTO
 import tk.ssau.fitnesstko.model.dto.WorkoutDto
@@ -124,6 +125,16 @@ object ApiService {
             @Path("id") id: Long,
             @Query("gender") gender: String
         ): Call<PersonSvgDto>
+
+        @GET("api/planned-workout/list-by-dates/{userId}")
+        fun getPlannedWorkouts(
+            @Path("userId") userId: Long?,
+            @Query("from") from: String,
+            @Query("to") to: String
+        ): Call<List<PlannedWorkoutDto>>
+
+        @POST("api/planned-workout")
+        fun createPlannedWorkout(@Body request: PlannedWorkoutDto): Call<PlannedWorkoutDto>
     }
 
     /**
