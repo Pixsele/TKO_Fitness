@@ -21,23 +21,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+
+
     <TextView
         android:id="@+id/tvLikeCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:textColor="@color/white"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/ivLike"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ivLike"/>
+        app:layout_constraintEnd_toStartOf="@+id/ivLike"
+        app:layout_constraintTop_toTopOf="@id/ivLike"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/ivLike"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/ic_not_liked"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
