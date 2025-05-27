@@ -115,9 +115,8 @@ const Kcal = () => {
                     </div>
 
                     <button
-                        className="calculate-button"
                         onClick={calculateCalories}
-                        className="calculate-button"
+                        className="kcal-calculate-button"
                     >
                         Рассчитать
                     </button>

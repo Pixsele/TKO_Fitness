@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Home.css';
 import { useAuth } from './contexts/AuthContext.jsx';
 import AuthModal from './AuthModal.jsx';
 
 const Home = () => {
-    const { user, isAuthenticated, login, logout } = useAuth();
+    const { user, isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
 
-    // Состояние для модального окна с режимом (login или register)
-    const [authModalMode, setAuthModalMode] = useState(null);  // null - закрыто, 'login' - вход, 'register' - регистрация
+    const [authModalMode, setAuthModalMode] = useState(null); // null, 'login', 'register'
 
-    // Открытие и закрытие модального окна
     const openLoginModal = () => {
         setAuthModalMode('login');
     };
@@ -20,7 +19,17 @@ const Home = () => {
     };
 
     const closeAuthModal = () => {
-        setAuthModalMode(null);  // Закрытие модалки
+        setAuthModalMode(null);
+    };
+
+    // Обработчик для защищенных ссылок
+    const handleProtectedLink = (e, path) => {
+        if (!isAuthenticated) {
+            e.preventDefault();
+            openLoginModal();
+        } else {
+            navigate(path);
+        }
     };
 
     return (
@@ -33,9 +42,27 @@ const Home = () => {
                 </div>
 
                 <div className="navigation-links">
-                    <Link to="/catalog" className="nav-link">Тренировки</Link>
-                    <Link to="/programm" className="nav-link">Программы</Link>
-                    <Link to="/kcal" className="nav-link">Расчет ккал</Link>
+                    <Link
+                        to="/catalog"
+                        className="nav-link"
+                        onClick={(e) => handleProtectedLink(e, '/catalog')}
+                    >
+                        Тренировки
+                    </Link>
+                    <Link
+                        to="/programm"
+                        className="nav-link"
+                        onClick={(e) => handleProtectedLink(e, '/programm')}
+                    >
+                        Программы
+                    </Link>
+                    <Link
+                        to="/kcal"
+                        className="nav-link"
+                        onClick={(e) => handleProtectedLink(e, '/kcal')}
+                    >
+                        Расчет ккал
+                    </Link>
                 </div>
 
                 {isAuthenticated ? (
@@ -52,13 +79,13 @@ const Home = () => {
                 )}
             </div>
 
-            {/* Модальное окно */}
+            {/* Модальное окно авторизации */}
             {authModalMode && (
                 <AuthModal
                     mode={authModalMode}
                     onClose={closeAuthModal}
                     onSwitchMode={setAuthModalMode}
-                    onSuccess={closeAuthModal}// Передаем функцию для изменения режима
+                    onSuccess={closeAuthModal}
                 />
             )}
 

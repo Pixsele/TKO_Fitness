@@ -103,27 +103,19 @@
     color: #d6ffa4;
 }
 
-.main {
-    background-color: #2c2c2c;
-    border: none;
-    padding: 30px;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 800px;              /* Ширина блока */
-    height: 380px;
-    margin-left: 160px;        /* Смещение влево */
-    margin-top: 50px;
-    cursor: default;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-}
 
 .profile-content {
     display: flex;
     align-items: flex-start;
     gap: 40px;
-    width: 100%;
+    background-color: #2e2e2e;
+    border-radius: 15px;
+    width: 780px;
+    margin-left: 260px;
+    margin-top: 20px;
+    border: none;
+    outline: none;
+    box-shadow: none;
 }
 
 .profile-avatar {
@@ -131,6 +123,8 @@
     height: auto;
     border-radius: 50%;
     object-fit: cover;
+    margin-top: 20px;
+    margin-left: 20px;
 }
 
 .profile-info {
@@ -139,6 +133,8 @@
     font-family: 'Montserrat', sans-serif;
     flex: 1;
     text-align: left;
+    margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 .profile-info p {
@@ -150,11 +146,11 @@
     font-family: 'Montserrat', sans-serif;
     margin-top: 16px;
     color: #d6ffa4;
-    font-weight: 500;
+    font-weight: 600;
     text-decoration: none;
     cursor: pointer;
     transition: color 0.3s ease;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .edit-link:hover {
