@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:background="@color/TKO_dark_gray">
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        app:boxBackgroundColor="@color/TKO_gray"
+        android:textColorHint="#FFFFFF"
+        app:boxCornerRadiusTopStart="12sp"
+        app:boxCornerRadiusTopEnd="12sp"
+        app:boxCornerRadiusBottomStart="12sp"
+        app:boxCornerRadiusBottomEnd="12sp"
+        app:boxStrokeColor="#D6FFA4"
+        app:hintTextColor="#FFFFFF">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPortionCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Количество порций"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:alignmentMode="alignMargins"
+        android:rowOrderPreserved="false"
+        android:useDefaultMargins="true"
+        android:layout_marginTop="18dp">
+
+        <TextView
+            android:id="@+id/tvCalories"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="Калории: 0"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_bg"
+            android:padding="10dp"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvFats"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="Жиры: 0 г"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_bg"
+            android:padding="10dp"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvCarbs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="Углеводы: 0 г"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_bg"
+            android:padding="10dp"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvProtein"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="Белки: 0 г"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_bg"
+            android:padding="10dp"
+            android:textSize="18sp" />
+    </GridLayout>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Сохранить"
+        android:textColor="@color/TKO_gray"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"
+        app:cornerRadius="12dp"
+        app:backgroundTint="@color/TKO_green" />
+
+</LinearLayout>

@@ -1,0 +1,11 @@
+<resources>
+
+    <style name="Base.Theme.FitnessTKO" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="android:statusBarColor">@color/TKO_dark_gray</item>
+        <item name="android:navigationBarColor">@color/TKO_dark_gray</item>
+        <item name="android:windowBackground">@color/TKO_dark_gray</item>
+    </style>
+
+    <style name="Theme.FitnessTKO" parent="Base.Theme.FitnessTKO" />
+</resources>
