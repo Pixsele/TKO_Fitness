@@ -7,8 +7,14 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import tk.ssau.fitnesstko.model.dto.PlannedWorkoutDto
+import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -17,6 +23,8 @@ class ScheduleWorkoutFragment : Fragment(R.layout.fragment_schedule_workout) {
 
     private var selectedDate: Long? = null
     private lateinit var prefs: PreferencesManager
+    private var workoutsList = emptyList<WorkoutForPageDto>()
+    private var currentCall: Call<PagedResponse<WorkoutForPageDto>>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,8 +38,12 @@ class ScheduleWorkoutFragment : Fragment(R.layout.fragment_schedule_workout) {
     private fun setupDatePicker(view: View) {
         val etDate = view.findViewById<TextInputEditText>(R.id.etDate)
         etDate.setOnClickListener {
+            val constraintsBuilder = CalendarConstraints.Builder()
+                .setStart(MaterialDatePicker.todayInUtcMilliseconds())
+
             val datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Выберите дату")
+                .setCalendarConstraints(constraintsBuilder.build())
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .build()
 
@@ -45,33 +57,41 @@ class ScheduleWorkoutFragment : Fragment(R.layout.fragment_schedule_workout) {
     }
 
     private fun setupWorkoutSpinner(view: View) {
-        val workouts = arrayOf(
-            "Силовая тренировка",
-            "Кардио",
-            "Йога",
-            "Кроссфит",
-            "Плавание",
-            "Стретчинг"
-        )
+        currentCall = ApiService.workoutService.getWorkouts()
+        currentCall?.enqueue(object : Callback<PagedResponse<WorkoutForPageDto>> {
+            override fun onResponse(
+                call: Call<PagedResponse<WorkoutForPageDto>>,
+                response: Response<PagedResponse<WorkoutForPageDto>>
+            ) {
+                if (response.isSuccessful && isAdded) {
+                    response.body()?.content?.let { workouts ->
+                        workoutsList = workouts
+                        val workoutNames = workouts.map { it.name }
 
-        val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_dropdown_item_1line,
-            workouts
-        )
+                        val adapter = ArrayAdapter(
+                            requireContext(),
+                            R.layout.spiner_white,
+                            workoutNames
+                        )
 
-        val actvWorkout = view.findViewById<AutoCompleteTextView>(R.id.actvWorkout)
-        actvWorkout.setAdapter(adapter)
-        actvWorkout.setOnItemClickListener { _, _, position, _ ->
-            actvWorkout.setText(workouts[position], false)
-        }
+                        val actvWorkout = view.findViewById<AutoCompleteTextView>(R.id.actvWorkout)
+                        actvWorkout.setAdapter(adapter)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<PagedResponse<WorkoutForPageDto>>, t: Throwable) {
+                if (isAdded) {
+                    showToast("Ошибка загрузки списка тренировок")
+                }
+            }
+        })
     }
 
     private fun setupSaveButton(view: View) {
         view.findViewById<Button>(R.id.btnSave).setOnClickListener {
             if (validateInput()) {
                 saveWorkout()
-                parentFragmentManager.popBackStack()
             }
         }
     }
@@ -93,13 +113,38 @@ class ScheduleWorkoutFragment : Fragment(R.layout.fragment_schedule_workout) {
     }
 
     private fun saveWorkout() {
-        selectedDate?.let { date ->
-            val workoutType =
-                view?.findViewById<AutoCompleteTextView>(R.id.actvWorkout)?.text.toString()
-            val formattedDate = formatDate(date)
+        val selectedWorkoutName =
+            view?.findViewById<AutoCompleteTextView>(R.id.actvWorkout)?.text.toString()
+        val selectedWorkout = workoutsList.find { it.name == selectedWorkoutName }
 
-            prefs.saveWorkout(formattedDate, workoutType)
-        }
+        selectedWorkout?.let { workout ->
+            val plannedWorkout = PlannedWorkoutDto(
+                id = null,
+                userId = AuthManager(requireContext()).getUserId(),
+                workoutId = workout.id,
+                date = formatDate(selectedDate!!),
+                status = "PLANNED"
+            )
+
+            ApiService.workoutService.createPlannedWorkout(plannedWorkout)
+                .enqueue(object : Callback<PlannedWorkoutDto> {
+                    override fun onResponse(
+                        call: Call<PlannedWorkoutDto>,
+                        response: Response<PlannedWorkoutDto>
+                    ) {
+                        if (response.isSuccessful && isAdded) {
+                            showToast("Тренировка запланирована")
+                            parentFragmentManager.popBackStack()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<PlannedWorkoutDto>, t: Throwable) {
+                        if (isAdded) {
+                            showToast("Ошибка сохранения")
+                        }
+                    }
+                })
+        } ?: showToast("Тренировка не найдена")
     }
 
     private fun formatDate(timestamp: Long): String {
@@ -108,5 +153,10 @@ class ScheduleWorkoutFragment : Fragment(R.layout.fragment_schedule_workout) {
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        currentCall?.cancel()
     }
 }

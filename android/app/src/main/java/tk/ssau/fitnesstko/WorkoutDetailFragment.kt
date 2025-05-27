@@ -87,6 +87,7 @@ class WorkoutDetailFragment : Fragment() {
     private fun loadWorkoutDetails() {
         ApiService.workoutService.getWorkoutById(workoutId).enqueue(object : Callback<WorkoutDto> {
             override fun onResponse(call: Call<WorkoutDto>, response: Response<WorkoutDto>) {
+                if (!isAdded) return
                 if (response.isSuccessful) {
                     response.body()?.let { workout ->
                         updateWorkoutUI(workout)
@@ -121,6 +122,7 @@ class WorkoutDetailFragment : Fragment() {
                     call: Call<List<WorkoutExerciseDto>>,
                     response: Response<List<WorkoutExerciseDto>>
                 ) {
+                    if (!isAdded) return
                     if (response.isSuccessful) {
                         response.body()?.let { exercises ->
                             workoutExercises = exercises
@@ -166,6 +168,7 @@ class WorkoutDetailFragment : Fragment() {
                     call: Call<PersonSvgDto>,
                     response: Response<PersonSvgDto>
                 ) {
+                    if (!isAdded) return
                     response.body()?.front?.let { svgContent ->
                         try {
                             val svg = SVG.getFromString(svgContent)

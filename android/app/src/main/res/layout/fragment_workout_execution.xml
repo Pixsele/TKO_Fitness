@@ -35,7 +35,6 @@
             app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Название тренировки НИЖЕ topBar -->
     <TextView
         android:id="@+id/tvWorkoutName"
         android:layout_width="match_parent"
@@ -49,7 +48,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Видеоплеер -->
     <androidx.media3.ui.PlayerView
         android:id="@+id/playerView"
         android:layout_width="match_parent"
@@ -61,7 +59,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Название упражнения -->
     <TextView
         android:id="@+id/tvExerciseName"
         android:layout_width="match_parent"
@@ -75,7 +72,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Панель управления (без изменений) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

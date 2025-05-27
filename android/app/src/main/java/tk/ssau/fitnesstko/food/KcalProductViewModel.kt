@@ -12,14 +12,10 @@ class KcalProductViewModel : ViewModel() {
 
     fun addProduct(product: KcalProductDTO) {
         val currentList = _products.value ?: mutableListOf()
-        if (currentList.none { it.productId == product.productId }) { // Проверка на дубликаты
+        if (currentList.none { it.productId == product.productId }) {
             currentList.add(product)
-            _products.postValue(currentList) // Асинхронное обновление
+            _products.postValue(currentList)
             Log.d("ViewModel", "Добавлен продукт: ${product.productId}")
         }
-    }
-
-    fun clearProducts() {
-        _products.postValue(mutableListOf())
     }
 }

@@ -1,34 +1,96 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/TKO_dark_gray">
+    android:background="@color/TKO_dark_gray"
+    android:padding="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:orientation="vertical">
 
-        <TextView
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Параметры упражнения"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="28dp"
-            android:textColor="@color/white"
-            android:gravity="center" />
+            android:background="@color/TKO_dark_gray"
+            app:title="Расчёт ккал"
+            app:titleTextColor="@color/white"
+            app:navigationIcon="@drawable/ic_arrow_left"
+            app:navigationContentDescription="Назад" />
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            app:boxBackgroundColor="@color/TKO_gray"
+            android:textColorHint="#FFFFFF"
+            app:boxCornerRadiusTopStart="18sp"
+            app:boxCornerRadiusTopEnd="18sp"
+            app:boxCornerRadiusBottomStart="18sp"
+            app:boxCornerRadiusBottomEnd="18sp"
+            app:boxStrokeColor="#D6FFA4"
+            app:hintTextColor="#FFFFFF">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Возвраст"
+                android:inputType="number"
+                android:textColor="#FFFFFF" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <RadioGroup
+            android:id="@+id/rgGender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbMale"
+                android:text="Мужской"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:id="@+id/rbFemale"
+                android:text="Женский"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RadioGroup>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:boxBackgroundColor="@color/TKO_gray"
+            android:textColorHint="#FFFFFF"
+            app:boxCornerRadiusTopStart="18sp"
+            app:boxCornerRadiusTopEnd="18sp"
+            app:boxCornerRadiusBottomStart="18sp"
+            app:boxCornerRadiusBottomEnd="18sp"
+            app:boxStrokeColor="#D6FFA4"
+            app:hintTextColor="#FFFFFF">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etWeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Вес (кг)"
+                android:inputType="numberDecimal"
+                android:textColor="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="Подходы"
             app:boxBackgroundColor="@color/TKO_gray"
             android:textColorHint="#FFFFFF"
             app:boxCornerRadiusTopStart="18sp"
@@ -39,74 +101,55 @@
             app:hintTextColor="#FFFFFF">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etSets"
+                android:id="@+id/etHeight"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Рост (см)"
                 android:inputType="number"
-                android:maxLines="1"
-                tools:text="3"
-                android:textColor="@color/white" />
+                android:textColor="#FFFFFF" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
             android:layout_marginBottom="16dp"
-            android:hint="Повторения"
-            app:boxBackgroundColor="@color/TKO_gray"
-            android:textColorHint="#FFFFFF"
-            app:boxCornerRadiusTopStart="18sp"
-            app:boxCornerRadiusTopEnd="18sp"
-            app:boxCornerRadiusBottomStart="18sp"
-            app:boxCornerRadiusBottomEnd="18sp"
-            app:boxStrokeColor="#D6FFA4"
-            app:hintTextColor="#FFFFFF">
+            app:cardCornerRadius="18dp"
+            app:strokeColor="@color/TKO_gray"
+            app:cardBackgroundColor="@color/TKO_gray">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etReps"
+            <Spinner
+                android:id="@+id/spActivity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:maxLines="1"
-                tools:text="12"
-                android:textColor="@color/white" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:background="@android:color/transparent"
+                android:backgroundTint="@color/white"
+                android:layout_margin="4dp" />
+        </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:hint="Отдых между подходами (сек)"
-            app:boxBackgroundColor="@color/TKO_gray"
-            android:textColorHint="#FFFFFF"
-            app:boxCornerRadiusTopStart="18sp"
-            app:boxCornerRadiusTopEnd="18sp"
-            app:boxCornerRadiusBottomStart="18sp"
-            app:boxCornerRadiusBottomEnd="18sp"
-            app:boxStrokeColor="#D6FFA4"
-            app:hintTextColor="#FFFFFF">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etRest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:maxLines="1"
-                tools:text="60"
-                android:textColor="@color/white" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSaveParams"
+
+            android:id="@+id/btnCalculate"
             android:layout_width="match_parent"
             android:layout_height="60sp"
-            android:text="Сохранить"
+            android:text="Рассчитать"
             android:textColor="#D6FFA4"
             android:textSize="22sp"
             android:backgroundTint="#353535"
             app:cornerRadius="18sp" />
 
+        <TextView
+            android:id="@+id/tvResult"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textSize="18sp"
+            android:text="Ваша суточная норма:"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_bg" />
     </LinearLayout>
 </ScrollView>

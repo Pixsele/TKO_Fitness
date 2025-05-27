@@ -51,7 +51,7 @@ class ExercisePickerFragment : Fragment(R.layout.fragment_exercise_picker) {
                     call: Call<PagedResponse<ExerciseForPageDto>>,
                     t: Throwable
                 ) {
-                    showError("Ошибка загрузки упражнений")
+                    showError()
                 }
             }
         )
@@ -69,7 +69,7 @@ class ExercisePickerFragment : Fragment(R.layout.fragment_exercise_picker) {
 
     private fun openExerciseParamsFragment(exercise: ExerciseForPageDto) {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.flFragment, ExerciseParamsFragment().apply {
+            .add(R.id.flFragment, ExerciseParamsFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("selected_exercise", exercise)
                 }
@@ -78,7 +78,7 @@ class ExercisePickerFragment : Fragment(R.layout.fragment_exercise_picker) {
             .commit()
     }
 
-    private fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    private fun showError() {
+        Toast.makeText(requireContext(), "Ошибка загрузки упражнений", Toast.LENGTH_SHORT).show()
     }
 }

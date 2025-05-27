@@ -46,7 +46,7 @@
             app:boxCornerRadiusBottomStart="18sp"
             app:boxCornerRadiusBottomEnd="18sp"
             app:boxStrokeColor="#D6FFA4"
-            app:hintTextColor="#FFFFFF">>
+            app:hintTextColor="#FFFFFF">
 
             <AutoCompleteTextView
                 android:id="@+id/actvWorkout"

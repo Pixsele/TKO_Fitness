@@ -3,7 +3,7 @@ package tk.ssau.fitnesstko
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.gridlayout.widget.GridLayout
@@ -12,7 +12,11 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import tk.ssau.fitnesstko.databinding.WorkoutBinding
+import tk.ssau.fitnesstko.model.dto.PlannedWorkoutDto
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -25,16 +29,20 @@ class FragmentWorkout : Fragment(R.layout.workout) {
     private val currentCalendar: Calendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    private var plannedWorkoutsCall: Call<List<PlannedWorkoutDto>>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = WorkoutBinding.bind(view)
         prefs = (activity as MainActivity).prefs
 
+        currentCalendar.timeInMillis = System.currentTimeMillis()
+
         initializeChart()
         setupCalendar()
         setupNavigation()
         setupPlanWorkoutButton()
+        refreshCalendarData()
     }
 
     private fun initializeChart() {
@@ -59,7 +67,7 @@ class FragmentWorkout : Fragment(R.layout.workout) {
                         return try {
                             timeFormat.format(Date(value.toLong())) + "\n" +
                                     dateFormat.format(Date(value.toLong()))
-                        } catch (e: Exception) {
+                        } catch (_: Exception) {
                             ""
                         }
                     }
@@ -109,8 +117,8 @@ class FragmentWorkout : Fragment(R.layout.workout) {
             lineWidth = 5f
             valueTextSize = 10f
             setDrawCircles(true)
-            setCircleColor(Color.parseColor("#9BFF20"))
-            circleHoleColor = Color.parseColor("#9BFF20")
+            setCircleColor("#9BFF20".toColorInt())
+            circleHoleColor = "#9BFF20".toColorInt()
             circleRadius = 6f
             mode = LineDataSet.Mode.LINEAR
             setDrawValues(true)
@@ -148,6 +156,7 @@ class FragmentWorkout : Fragment(R.layout.workout) {
         updateMonthHeader()
         setupDaysOfWeekHeader()
         fillCalendarDays()
+        binding.weightChart.invalidate()
     }
 
     private fun updateMonthHeader() {
@@ -159,8 +168,7 @@ class FragmentWorkout : Fragment(R.layout.workout) {
         listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс").forEach { day ->
             DayView(requireContext()).apply {
                 text = day
-                setTextAppearance(android.R.style.TextAppearance_Medium)
-                setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                setTextColor(Color.WHITE)
                 addToGrid()
             }
         }
@@ -176,7 +184,7 @@ class FragmentWorkout : Fragment(R.layout.workout) {
             DayView(requireContext()).apply {
                 text = day.toString()
                 state = calculateDayState(day)
-                setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                setTextColor(Color.WHITE)
                 setOnClickListener { handleDayClick(day) }
                 addToGrid()
             }
@@ -203,9 +211,7 @@ class FragmentWorkout : Fragment(R.layout.workout) {
         }
     }
 
-    private fun today(): Calendar {
-        return Calendar.getInstance().apply { normalizeDate() }
-    }
+    private fun today(): Calendar = Calendar.getInstance().apply { normalizeDate() }
 
     private fun Calendar.normalizeDate() {
         set(Calendar.HOUR_OF_DAY, 0)
@@ -215,7 +221,7 @@ class FragmentWorkout : Fragment(R.layout.workout) {
     }
 
     private fun hasWorkout(date: Calendar): Boolean {
-        return prefs.getWorkouts().any { it.startsWith(dateFormat.format(date.time)) }
+        return prefs.getPlannedWorkouts().any { it.date == dateFormat.format(date.time) }
     }
 
     private fun addEmptyView() {
@@ -233,18 +239,10 @@ class FragmentWorkout : Fragment(R.layout.workout) {
             width = 0
             height = GridLayout.LayoutParams.WRAP_CONTENT
             columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
-            setMargins(4, 4, 4, 4)
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-        refreshChartData()
-        setupCalendar()
-    }
-
     private fun setupPlanWorkoutButton() {
-
         binding.btnPlanWorkout.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.flFragment, ScheduleWorkoutFragment())
@@ -260,10 +258,65 @@ class FragmentWorkout : Fragment(R.layout.workout) {
 
     private fun changeMonth(monthsToAdd: Int) {
         currentCalendar.add(Calendar.MONTH, monthsToAdd)
-        setupCalendar()
+        currentCalendar.set(Calendar.DAY_OF_MONTH, 1)
+        refreshCalendarData()
+    }
+
+    private fun refreshCalendarData() {
+        // Создаем копии календаря для расчетов
+        val tempFromCalendar = currentCalendar.clone() as Calendar
+        tempFromCalendar.set(Calendar.DAY_OF_MONTH, 1)
+        val from = dateFormat.format(tempFromCalendar.time)
+
+        val tempToCalendar = currentCalendar.clone() as Calendar
+        tempToCalendar.add(Calendar.MONTH, 1)
+        val to = dateFormat.format(tempToCalendar.time)
+
+        plannedWorkoutsCall = ApiService.workoutService.getPlannedWorkouts(
+            AuthManager(requireContext()).getUserId(),
+            from,
+            to
+        )
+
+        plannedWorkoutsCall?.enqueue(object : Callback<List<PlannedWorkoutDto>> {
+            override fun onResponse(
+                call: Call<List<PlannedWorkoutDto>>,
+                response: Response<List<PlannedWorkoutDto>>
+            ) {
+                response.body()?.let {
+                    prefs.savePlannedWorkouts(it)
+                    setupCalendar() // Обновляем отображение
+                }
+            }
+
+            override fun onFailure(call: Call<List<PlannedWorkoutDto>>, t: Throwable) {
+                Toast.makeText(context, "Ошибка загрузки данных", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun handleDayClick(day: Int) {
-        // Реализация клика по дню
+        currentCalendar.set(Calendar.DAY_OF_MONTH, day)
+        val date = dateFormat.format(currentCalendar.time)
+
+        prefs.getPlannedWorkouts().find { it.date == date }?.let { plannedWorkout ->
+            parentFragmentManager.beginTransaction()
+                .replace(
+                    R.id.flFragment,
+                    WorkoutDetailFragment().apply {
+                        arguments = Bundle().apply {
+                            plannedWorkout.workoutId?.let { putLong("workoutId", it) }
+                            putString("date", date)
+                        }
+                    }
+                )
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        plannedWorkoutsCall?.cancel()
     }
 }

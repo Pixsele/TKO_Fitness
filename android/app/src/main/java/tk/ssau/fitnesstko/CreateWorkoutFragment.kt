@@ -1,5 +1,6 @@
 package tk.ssau.fitnesstko
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,16 +9,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import retrofit2.Call
-import retrofit2.Callback
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import tk.ssau.fitnesstko.databinding.FragmentCreateWorkoutBinding
 import tk.ssau.fitnesstko.model.dto.WorkoutDto
 import tk.ssau.fitnesstko.model.dto.WorkoutExerciseDto
 
-/**
- * Фрагмент для создания новой тренировки
- */
 class CreateWorkoutFragment : Fragment() {
 
     private var _binding: FragmentCreateWorkoutBinding? = null
@@ -37,7 +37,6 @@ class CreateWorkoutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-
         setupUI()
         setupObservers()
         setupDifficultyGroup()
@@ -46,30 +45,29 @@ class CreateWorkoutFragment : Fragment() {
     private fun setupUI() {
         binding.btnAddExercise.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.flFragment, ExercisePickerFragment())
-                .addToBackStack("create_workout").commit()
+                .add(R.id.flFragment, ExercisePickerFragment())
+                .addToBackStack("create_workout")
+                .commit()
         }
 
         binding.btnSave.setOnClickListener {
-            if (validateForm()) {
-                createWorkout()
-            }
+            if (validateForm()) createWorkout()
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupObservers() {
         viewModel.selectedExercises.observe(viewLifecycleOwner) { exercises ->
             binding.containerExercises.removeAllViews()
-            exercises.forEach { exerciseWithParams ->
+            exercises.forEach { exercise ->
                 val view = layoutInflater.inflate(
                     R.layout.item_selected_exercise_params,
                     binding.containerExercises,
                     false
                 ).apply {
-                    findViewById<TextView>(R.id.tvExerciseName).text =
-                        exerciseWithParams.exercise.name
+                    findViewById<TextView>(R.id.tvExerciseName).text = exercise.exercise.name
                     findViewById<TextView>(R.id.tvParams).text =
-                        "Подходы: ${exerciseWithParams.sets}, Повторения: ${exerciseWithParams.reps}"
+                        "Подходы: ${exercise.sets}, Повторения: ${exercise.reps}"
                 }
                 binding.containerExercises.addView(view)
             }
@@ -104,75 +102,105 @@ class CreateWorkoutFragment : Fragment() {
     }
 
     private fun createWorkout() {
-        val workoutDto = WorkoutDto(
-            name = binding.etWorkoutName.text.toString(),
-            description = binding.etDescription.text.toString(),
-            difficult = difficulty,
-            likeCount = null,
-            id = null
-        )
-
-        ApiService.workoutService.createWorkout(workoutDto).enqueue(
-            object : Callback<WorkoutDto> {
-                override fun onResponse(call: Call<WorkoutDto>, response: Response<WorkoutDto>) {
-                    if (response.isSuccessful) {
-                        response.body()?.id?.let { workoutId ->
-                            linkExercisesToWorkout(workoutId)
-                        }
-                    } else {
-                        showError("Ошибка создания тренировки")
-                    }
+        lifecycleScope.launch {
+            try {
+                val workoutResponse = withContext(Dispatchers.IO) {
+                    ApiService.workoutService.createWorkout(
+                        WorkoutDto(
+                            name = binding.etWorkoutName.text.toString(),
+                            description = binding.etDescription.text.toString(),
+                            difficult = difficulty,
+                            likeCount = null,
+                            id = null
+                        )
+                    ).execute()
                 }
 
-                override fun onFailure(call: Call<WorkoutDto>, t: Throwable) {
-                    showError("Ошибка сети: ${t.message}")
+                if (workoutResponse.isSuccessful) {
+                    workoutResponse.body()?.id?.let { workoutId ->
+                        linkExercises(workoutId)
+                    } ?: showError("Ошибка создания тренировки")
+                } else {
+                    showError("Ошибка сервера: ${workoutResponse.code()}")
                 }
+            } catch (e: Exception) {
+                showError("Сетевая ошибка: ${e.message}")
             }
-        )
+        }
     }
 
-    private fun linkExercisesToWorkout(workoutId: Long) {
-        viewModel.selectedExercises.value?.forEach { exerciseWithParams ->
-            val dto = exerciseWithParams.exercise.id?.toLong()?.let {
-                WorkoutExerciseDto(
-                    workoutId = workoutId,
-                    exerciseId = it,
-                    sets = exerciseWithParams.sets,
-                    reps = exerciseWithParams.reps,
-                    distance = 0.0,
-                    duration = 1.0,
-                    id = null,
-                    restTime = exerciseWithParams.rest,
-                    exerciseOrder = null
-                )
-            }
+    private suspend fun linkExercises(workoutId: Long) {
+        withContext(Dispatchers.IO) {
+            try {
+                val exercises = viewModel.selectedExercises.value ?: return@withContext
+                var allSuccess = true
 
-            dto?.let { ApiService.workoutExerciseService.createWorkoutExercise(it) }?.enqueue(
-                object : Callback<Unit> {
-                    override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                        if (!response.isSuccessful) {
-                            showError("Ошибка привязки упражнений")
-                        }
+                for (exercise in exercises) {
+                    val response = retryOnFailure(times = 3) {
+                        ApiService.workoutExerciseService.createWorkoutExercise(
+                            WorkoutExerciseDto(
+                                workoutId = workoutId,
+                                exerciseId = exercise.exercise.id?.toLong() ?: -1,
+                                sets = exercise.sets,
+                                reps = exercise.reps,
+                                restTime = exercise.rest,
+                                distance = 0.0,
+                                duration = 0.0,
+                                id = null,
+                                exerciseOrder = null
+                            )
+                        ).execute()
                     }
 
-                    override fun onFailure(call: Call<Unit>, t: Throwable) {
-                        showError("Ошибка сети: ${t.message}")
+                    if (!response.isSuccessful) {
+                        allSuccess = false
+                        withContext(Dispatchers.Main) {
+                            showError("Ошибка сохранения: ${exercise.exercise.name}")
+                        }
+                        break
                     }
                 }
-            )
-        }
 
-        parentFragmentManager.popBackStack()
-        (activity as? MainActivity)?.refreshWorkouts()
+                if (allSuccess) {
+                    withContext(Dispatchers.Main) {
+                        (activity as? MainActivity)?.refreshWorkouts()
+                        parentFragmentManager.popBackStack()
+                        viewModel.clearSelectedExercises()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    showError("Ошибка: ${e.message}")
+                }
+            }
+        }
+    }
+
+    private suspend fun <T> retryOnFailure(
+        times: Int = 3,
+        initialDelay: Long = 1000,
+        maxDelay: Long = 10000,
+        block: suspend () -> Response<T>
+    ): Response<T> {
+        var currentDelay = initialDelay
+        repeat(times - 1) {
+            val response = block()
+            if (response.isSuccessful) return response
+            kotlinx.coroutines.delay(currentDelay)
+            currentDelay = (currentDelay * 2).coerceAtMost(maxDelay)
+        }
+        return block()
     }
 
     private fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        if (isAdded && context != null) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         viewModel.clearSelectedExercises()
+        _binding = null
     }
 }

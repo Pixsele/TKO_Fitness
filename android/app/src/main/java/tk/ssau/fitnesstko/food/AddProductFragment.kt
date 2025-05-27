@@ -1,5 +1,6 @@
 package tk.ssau.fitnesstko.food
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,9 +32,7 @@ class AddProductFragment : Fragment() {
 
     private lateinit var etSearch: EditText
     private lateinit var rvProducts: RecyclerView
-    private lateinit var rvSelectedProducts: RecyclerView
     private lateinit var adapter: ProductAdapter
-    private lateinit var selectedAdapter: SelectedProductAdapter
     private lateinit var viewModel: KcalProductViewModel
     private var trackerId: Long = 0
 
@@ -59,25 +58,6 @@ class AddProductFragment : Fragment() {
         adapter = ProductAdapter(emptyList())
         rvProducts.adapter = adapter
 
-        rvSelectedProducts = view.findViewById(R.id.rvSelectedProducts)
-        rvSelectedProducts.layoutManager = LinearLayoutManager(context)
-        selectedAdapter = SelectedProductAdapter(
-            viewModel.products.value ?: mutableListOf()
-        ) { product ->
-            viewModel.products.value?.remove(product)
-            selectedAdapter.notifyDataSetChanged()
-        }
-        rvSelectedProducts.adapter = selectedAdapter
-
-        viewModel.products.observe(viewLifecycleOwner) { products ->
-            selectedAdapter.updateProducts(products)
-            view.findViewById<TextView>(R.id.tvSelectedCount).text =
-                "Выбрано: ${products.size}"
-            rvSelectedProducts.post {
-                selectedAdapter.notifyDataSetChanged()
-            }
-        }
-
         view.findViewById<View>(R.id.btnSave).setOnClickListener {
             if (viewModel.products.value.isNullOrEmpty()) {
                 Toast.makeText(context, "Нет продуктов для сохранения", Toast.LENGTH_SHORT).show()
@@ -102,7 +82,8 @@ class AddProductFragment : Fragment() {
         }
 
         if (!selectedDate.isEqual(LocalDate.now())) {
-            Toast.makeText(context, "Добавление невозможно для выбранной даты", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Добавление невозможно для выбранной даты", Toast.LENGTH_SHORT)
+                .show()
             requireActivity().onBackPressed()
         }
         val date = prefs.getSelectedDate()?.format(DateTimeFormatter.ISO_LOCAL_DATE) ?: run {
@@ -114,6 +95,12 @@ class AddProductFragment : Fragment() {
             Toast.makeText(context, "Трекер не найден", Toast.LENGTH_SHORT).show()
             requireActivity().onBackPressed()
             return
+        }
+        view.findViewById<Button>(R.id.btnAddNew).setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.flFragment, CreateProductFragment())
+                .addToBackStack("createProduct")
+                .commit()
         }
     }
 
@@ -155,7 +142,7 @@ class AddProductFragment : Fragment() {
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val tvName: TextView = view.findViewById(R.id.tvProductName)
             val tvGrams: TextView = view.findViewById(R.id.tvGrams)
-            val tvRKS: TextView = view.findViewById(R.id.tvRKS)
+            val tvRSK: TextView = view.findViewById(R.id.tvRSK)
             val rbSelect: RadioButton = view.findViewById(R.id.rbSelect)
         }
 
@@ -171,6 +158,7 @@ class AddProductFragment : Fragment() {
             )
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val product = products[position]
             val isSelected = viewModel.products.value?.any {
@@ -180,7 +168,7 @@ class AddProductFragment : Fragment() {
             with(holder) {
                 tvName.text = product.name
                 tvGrams.text = "${product.grams.setScale(1, RoundingMode.HALF_UP)} гр"
-                tvRKS.text = "РКС ${product.percentOfTarget}% - ${product.calories} ккал"
+                tvRSK.text = "РСК ${product.percentOfTarget}% - ${product.calories} ккал"
                 rbSelect.isChecked = isSelected
 
                 itemView.setOnClickListener {
@@ -188,10 +176,10 @@ class AddProductFragment : Fragment() {
                         viewModel.products.value?.removeAll { it.productId == product.id }
                     } else {
                         if (viewModel.products.value?.any { it.productId == product.id } == true) {
-                            Toast.makeText(context, "Продукт уже добавлен", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Продукт уже добавлен", Toast.LENGTH_SHORT)
+                                .show()
                             return@setOnClickListener
                         }
-                        // Переместил код перехода на фрагмент сюда
                         if (product.id == null) {
                             Toast.makeText(context, "Ошибка: продукт не выбран", Toast.LENGTH_SHORT)
                                 .show()
@@ -199,7 +187,7 @@ class AddProductFragment : Fragment() {
                         }
 
                         val args = Bundle().apply {
-                            putLong("productId", product.id!!)
+                            putLong("productId", product.id)
                             putString("typeMeal", arguments?.getString("typeMeal") ?: "BREAKFAST")
                         }
 
@@ -217,19 +205,13 @@ class AddProductFragment : Fragment() {
     }
 
     private inner class SelectedProductAdapter(
-        private var products: MutableList<KcalProductDTO>,
-        private val onRemove: (KcalProductDTO) -> Unit
+        private var products: MutableList<KcalProductDTO>
     ) : RecyclerView.Adapter<SelectedProductAdapter.ViewHolder>() {
 
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val tvName: TextView = view.findViewById(R.id.tvProductName)
             val tvDetails: TextView = view.findViewById(R.id.tvGrams)
             val btnRemove: Button = view.findViewById(R.id.btnRemove)
-        }
-
-        fun updateProducts(newProducts: MutableList<KcalProductDTO>) {
-            products = newProducts
-            notifyDataSetChanged()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -239,6 +221,7 @@ class AddProductFragment : Fragment() {
             )
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val product = products[position]
             holder.tvName.text = "Продукт #${position + 1}"
@@ -263,7 +246,6 @@ class AddProductFragment : Fragment() {
                         ) {
                             if (response.isSuccessful) {
                                 viewModel.products.value?.remove(product)
-                                selectedAdapter.notifyDataSetChanged()
                             }
                         }
 
@@ -277,14 +259,6 @@ class AddProductFragment : Fragment() {
                     })
             }
             requireActivity().onBackPressed()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.products.value?.let {
-            selectedAdapter.updateProducts(it)
-            rvSelectedProducts.post { selectedAdapter.notifyDataSetChanged() }
         }
     }
 }

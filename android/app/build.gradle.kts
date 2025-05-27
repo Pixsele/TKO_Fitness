@@ -17,6 +17,10 @@ android {
         }
     }
 
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
+
     defaultConfig {
         applicationId = "tk.ssau.fitnesstko"
         minSdk = 29

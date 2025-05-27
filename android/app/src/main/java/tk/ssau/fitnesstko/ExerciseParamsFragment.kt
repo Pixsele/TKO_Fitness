@@ -40,9 +40,8 @@ class ExerciseParamsFragment : Fragment() {
 
         exercise?.let {
             viewModel.addExerciseWithParams(it, sets, reps, rest)
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.flFragment, CreateWorkoutFragment())
-                .commit()
+            parentFragmentManager.popBackStack()
+            parentFragmentManager.popBackStack()
         }
     }
 }

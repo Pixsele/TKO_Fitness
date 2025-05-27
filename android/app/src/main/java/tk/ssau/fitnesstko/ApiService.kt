@@ -17,21 +17,29 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 import tk.ssau.fitnesstko.model.dto.ExerciseDto
 import tk.ssau.fitnesstko.model.dto.ExerciseForPageDto
+import tk.ssau.fitnesstko.model.dto.LikesTrainingsProgramDto
 import tk.ssau.fitnesstko.model.dto.LikesWorkoutDto
 import tk.ssau.fitnesstko.model.dto.PersonSvgDto
+import tk.ssau.fitnesstko.model.dto.PlannedWorkoutDto
+import tk.ssau.fitnesstko.model.dto.TrainingsProgramDto
+import tk.ssau.fitnesstko.model.dto.TrainingsProgramForPageDTO
 import tk.ssau.fitnesstko.model.dto.WorkoutDto
 import tk.ssau.fitnesstko.model.dto.WorkoutExerciseDto
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
+import tk.ssau.fitnesstko.model.dto.WorkoutProgramDto
 import tk.ssau.fitnesstko.model.dto.nutrition.KcalProductDTO
 import tk.ssau.fitnesstko.model.dto.nutrition.KcalTrackerDTO
 import tk.ssau.fitnesstko.model.dto.nutrition.ProductDTO
 import tk.ssau.fitnesstko.model.dto.nutrition.ProductForPageDTO
 import tk.ssau.fitnesstko.model.dto.user.AuthRequest
 import tk.ssau.fitnesstko.model.dto.user.RegisterUsersDTO
+import tk.ssau.fitnesstko.model.dto.user.UserDTO
+import tk.ssau.fitnesstko.model.dto.user.WeightDto
 import java.lang.reflect.Type
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -75,6 +83,9 @@ object ApiService {
     val authService: AuthApi by lazy { retrofit.create(AuthApi::class.java) }
     val kcalTrackerService: KcalTrackerApi by lazy { retrofit.create(KcalTrackerApi::class.java) }
     val productService: ProductApi by lazy { retrofit.create(ProductApi::class.java) }
+    val programService: ProgramApi by lazy { retrofit.create(ProgramApi::class.java) }
+    val workoutProgramService: WorkoutProgramApi by lazy { retrofit.create(WorkoutProgramApi::class.java) }
+    val weightService: WeightApi by lazy { retrofit.create(WeightApi::class.java) }
 
     /**
      * Интерфейс для работы с тренировками
@@ -88,7 +99,7 @@ object ApiService {
         @GET("api/workout/page")
         fun getWorkouts(
             @Query("page") page: Int = 0,
-            @Query("size") size: Int = 10
+            @Query("size") size: Int = 200
         ): Call<PagedResponse<WorkoutForPageDto>>
 
         /**
@@ -115,6 +126,16 @@ object ApiService {
             @Path("id") id: Long,
             @Query("gender") gender: String
         ): Call<PersonSvgDto>
+
+        @GET("api/planned-workout/list-by-dates/{userId}")
+        fun getPlannedWorkouts(
+            @Path("userId") userId: Long?,
+            @Query("from") from: String,
+            @Query("to") to: String
+        ): Call<List<PlannedWorkoutDto>>
+
+        @POST("api/planned-workout")
+        fun createPlannedWorkout(@Body request: PlannedWorkoutDto): Call<PlannedWorkoutDto>
     }
 
     /**
@@ -129,7 +150,7 @@ object ApiService {
         @GET("api/exercise/page")
         fun getExercises(
             @Query("page") page: Int = 0,
-            @Query("size") size: Int = 20
+            @Query("size") size: Int = 200
         ): Call<PagedResponse<ExerciseForPageDto>>
 
         /**
@@ -176,6 +197,12 @@ object ApiService {
          */
         @HTTP(method = "DELETE", path = "api/like-workout", hasBody = true)
         fun deleteLikeWorkout(@Body like: LikesWorkoutDto): Call<Unit>
+
+        @POST("api/like-program")
+        fun likeProgram(@Body like: LikesTrainingsProgramDto): Call<Unit>
+
+        @HTTP(method = "DELETE", path = "api/like-program", hasBody = true)
+        fun deleteLikeProgram(@Body like: LikesTrainingsProgramDto): Call<Unit>
     }
 
     interface AuthApi {
@@ -184,6 +211,15 @@ object ApiService {
 
         @POST("api/login")
         fun login(@Body authRequest: AuthRequest): Call<AuthResponse>
+
+        @PUT("api/user/{id}")
+        fun updateUser(
+            @Path("id") id: Long,
+            @Body userData: UpdateUserRequest
+        ): Call<UserDTO>
+
+        @GET("api/user/{id}")
+        fun getUser(@Path("id") id: Long): Call<UserDTO>
     }
 
     interface KcalTrackerApi {
@@ -206,7 +242,35 @@ object ApiService {
 
         @GET("api/product/search")
         fun searchProducts(@Query("keyword") keyword: String): Call<List<ProductForPageDTO>>
+
+        @POST("api/product")
+        fun createProduct(@Body product: ProductDTO): Call<ProductDTO>
     }
+
+    interface ProgramApi {
+        @GET("api/program/page")
+        fun getPrograms(
+            @Query("page") page: Int = 0,
+            @Query("size") size: Int = 200
+        ): Call<PagedResponse<TrainingsProgramForPageDTO>>
+
+        @GET("api/program/{id}")
+        fun getProgramById(@Path("id") id: Long): Call<TrainingsProgramDto>
+    }
+
+    interface WorkoutProgramApi {
+        @GET("api/workout-program/workout/{id}")
+        fun getWorkoutsByProgram(@Path("id") programId: Long): Call<List<WorkoutProgramDto>>
+    }
+
+    interface WeightApi {
+        @POST("/api/weight")
+        fun postWeight(@Body weight: WeightDto): Call<WeightDto>
+
+        @GET("/api/weight/last/{userId}")
+        fun getUserWeights(@Path("userId") userId: Long): Call<List<WeightDto>>
+    }
+
 
 }
 
@@ -244,7 +308,7 @@ private class LocalDateSerializer : JsonSerializer<LocalDate>, JsonDeserializer<
         typeOfSrc: Type,
         context: JsonSerializationContext
     ): JsonElement {
-        return JsonPrimitive(src.toString()) // Формат "yyyy-MM-dd"
+        return JsonPrimitive(src.toString())
     }
 
     override fun deserialize(
@@ -255,3 +319,9 @@ private class LocalDateSerializer : JsonSerializer<LocalDate>, JsonDeserializer<
         return LocalDate.parse(json.asString, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
     }
 }
+
+data class UpdateUserRequest(
+    val name: String,
+    val login: String,
+    val birthDay: String
+)

@@ -2,25 +2,36 @@ package tk.ssau.fitnesstko
 
 import android.content.Context
 import androidx.core.content.edit
+import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import tk.ssau.fitnesstko.model.dto.PlannedWorkoutDto
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
-import java.text.SimpleDateFormat
+import tk.ssau.fitnesstko.model.dto.user.WeightDto
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
 
 class PreferencesManager(context: Context) {
     private val sharedPreferences =
         context.getSharedPreferences("fitness_prefs", Context.MODE_PRIVATE)
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     private val gson = Gson()
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+    private val authManager = AuthManager(context)
 
-    fun saveUserData(firstName: String, lastName: String, age: String) {
+    companion object {
+        const val PLANNED_WORKOUTS_KEY = "planned_workouts"
+    }
+
+
+    fun saveUserData(firstName: String, lastName: String, birthDay: String) {
         sharedPreferences.edit {
             putString("firstName", firstName)
             putString("lastName", lastName)
-            putString("age", age)
+            putString("birthDay", birthDay)
+            apply()
         }
     }
 
@@ -37,6 +48,35 @@ class PreferencesManager(context: Context) {
         }
     }
 
+    fun saveAndSendWeight(weight: Float) {
+        val userId = authManager.getUserId() ?: return
+
+        coroutineScope.launch {
+            try {
+                val currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                val weightDto = WeightDto(
+                    userId = userId,
+                    weight = weight,
+                    timeDate = currentTime
+                )
+
+               ApiService.weightService.postWeight(weightDto).execute()
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun saveWeightsBatch(weightEntries: List<String>) {
+        sharedPreferences.edit {
+            val currentWeights = getWeightsRaw().toMutableSet()
+            currentWeights.addAll(weightEntries)
+            putStringSet("weightHistory", currentWeights)
+            apply()
+        }
+    }
+
     fun saveWeight(weight: Float) {
         val currentTime = System.currentTimeMillis()
 
@@ -47,7 +87,9 @@ class PreferencesManager(context: Context) {
             )
             apply()
         }
+        saveAndSendWeight(weight)
     }
+
 
     private fun getWeightsRaw() = getWeights()
         .map { "${it.first}|${it.second}" }
@@ -62,45 +104,13 @@ class PreferencesManager(context: Context) {
                         val timestamp = parts[0].toLong()
                         val weight = parts[1].toFloat()
                         Pair(timestamp, weight)
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         null
                     }
                 } else null
             }
             ?.sortedBy { it.first } ?: emptyList()
     }
-
-    fun getLastWeight(): String {
-        return getWeights().lastOrNull()?.let {
-            "%.1f кг (${dateFormat.format(Date(it.first))})".format(it.second)
-        } ?: "Нет данных"
-    }
-
-    fun saveWorkout(date: String, type: String) {
-        val workouts = getWorkouts().toMutableSet()
-        workouts.add("$date|$type")
-        sharedPreferences.edit {
-            putStringSet("workouts", workouts)
-        }
-    }
-
-    fun getWorkouts(): Set<String> {
-        return sharedPreferences.getStringSet("workouts", emptySet()) ?: emptySet()
-    }
-
-    fun getFirstName() = sharedPreferences.getString("firstName", "") ?: ""
-    fun getLastName() = sharedPreferences.getString("lastName", "") ?: ""
-    fun getAge() = sharedPreferences.getString("age", "") ?: ""
-
-
-    fun saveLocalWorkout(workout: WorkoutForPageDto) {
-        val workouts = getLocalWorkouts().toMutableList()
-        workouts.add(workout)
-        sharedPreferences.edit {
-            putString("local_workouts", gson.toJson(workouts))
-        }
-    }
-
 
     fun getLocalWorkouts(): List<WorkoutForPageDto> {
         val json = sharedPreferences.getString("local_workouts", null)
@@ -142,9 +152,40 @@ class PreferencesManager(context: Context) {
         }
     }
 
-    // Получить сохраненную дату
     fun getSelectedDate(): LocalDate? {
         val dateStr = sharedPreferences.getString("selectedDate", null)
         return dateStr?.let { LocalDate.parse(it) }
+    }
+
+    fun saveAvatarUri(uri: String) {
+        sharedPreferences.edit {
+            putString("avatar_uri", uri)
+            apply()
+        }
+    }
+
+    fun getAvatarUri(): String? {
+        return sharedPreferences.getString("avatar_uri", null)
+    }
+
+    fun clearUserData() {
+        sharedPreferences.edit {
+            clear()
+            apply()
+        }
+    }
+
+    fun savePlannedWorkouts(workouts: List<PlannedWorkoutDto>) {
+        val json = Gson().toJson(workouts)
+        sharedPreferences.edit { putString(PLANNED_WORKOUTS_KEY, json) }
+    }
+
+    fun getPlannedWorkouts(): List<PlannedWorkoutDto> {
+        val json = sharedPreferences.getString(PLANNED_WORKOUTS_KEY, null)
+        return if (json != null) {
+            Gson().fromJson(json, object : TypeToken<List<PlannedWorkoutDto>>() {}.type)
+        } else {
+            emptyList()
+        }
     }
 }

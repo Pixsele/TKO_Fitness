@@ -10,7 +10,8 @@ import tk.ssau.fitnesstko.databinding.ItemCategoryBinding
  * @param categories Список названий категорий для отображения
  */
 class CategoriesAdapter(
-    val categories: List<String>
+    val categories: List<String>,
+    private val onCategorySelected: (String) -> Unit
 ) : RecyclerView.Adapter<CategoriesAdapter.CategoriesViewHolder>() {
     inner class CategoriesViewHolder(private val binding: ItemCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -32,6 +33,9 @@ class CategoriesAdapter(
 
     override fun onBindViewHolder(holder: CategoriesViewHolder, position: Int) {
         holder.bind(categories[position])
+        holder.itemView.setOnClickListener {
+            onCategorySelected(categories[position])
+        }
     }
 
     override fun getItemCount(): Int = categories.size

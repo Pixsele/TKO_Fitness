@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:hint="Количество порций"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <GridLayout
@@ -49,7 +49,7 @@
             android:textColor="@color/white"
             android:background="@drawable/rounded_bg"
             android:padding="10dp"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvFats"
@@ -60,7 +60,7 @@
             android:textColor="@color/white"
             android:background="@drawable/rounded_bg"
             android:padding="10dp"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvCarbs"
@@ -71,7 +71,7 @@
             android:textColor="@color/white"
             android:background="@drawable/rounded_bg"
             android:padding="10dp"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvProtein"
@@ -82,7 +82,7 @@
             android:textColor="@color/white"
             android:background="@drawable/rounded_bg"
             android:padding="10dp"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
     </GridLayout>
 
 

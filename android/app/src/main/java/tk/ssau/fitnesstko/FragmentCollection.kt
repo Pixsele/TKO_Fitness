@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import tk.ssau.fitnesstko.databinding.CollectionBinding
+import tk.ssau.fitnesstko.model.dto.LikesTrainingsProgramDto
+import tk.ssau.fitnesstko.model.dto.TrainingsProgramForPageDTO
 import tk.ssau.fitnesstko.model.dto.WorkoutForPageDto
 
 class FragmentCollection(private val authManager: AuthManager) : Fragment() {
@@ -18,6 +20,8 @@ class FragmentCollection(private val authManager: AuthManager) : Fragment() {
     private val binding get() = _binding!!
     private lateinit var workoutAdapter: WorkoutAdapter
     private var workouts = mutableListOf<WorkoutForPageDto>()
+    private lateinit var programAdapter: ProgramAdapter
+    private var programs = mutableListOf<TrainingsProgramForPageDTO>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,15 +41,12 @@ class FragmentCollection(private val authManager: AuthManager) : Fragment() {
 
     private fun setupRecyclers() {
         val categories = listOf("Тренировки", "Программы")
-        binding.rvCategories.apply {
-            adapter = CategoriesAdapter(categories)
-            layoutManager = LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
+        binding.rvCategories.adapter = CategoriesAdapter(categories) { selectedCategory ->
+            when (selectedCategory) {
+                "Тренировки" -> showWorkouts()
+                "Программы" -> showPrograms()
+            }
         }
-
         workoutAdapter = WorkoutAdapter(
             workouts = emptyList(),
             fragmentManager = parentFragmentManager,
@@ -54,11 +55,116 @@ class FragmentCollection(private val authManager: AuthManager) : Fragment() {
             },
             authManager = authManager
         )
+        programAdapter = ProgramAdapter(
+            programs = emptyList(),
+            onProgramClick = { program ->
+                program.id?.let { openProgramDetails(it) }
+            },
+            onLikeClick = { program ->
+                handleProgramLike(program)
+            }
+        )
+    }
 
-        binding.rvWorkouts.apply {
-            adapter = workoutAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+    private fun showPrograms() {
+        binding.rvWorkouts.adapter = programAdapter
+        loadPrograms()
+    }
+
+    private fun showWorkouts() {
+        binding.rvWorkouts.adapter = workoutAdapter
+        loadWorkouts()
+    }
+
+    private fun loadPrograms() {
+        ApiService.programService.getPrograms()
+            .enqueue(object : Callback<PagedResponse<TrainingsProgramForPageDTO>> {
+                override fun onResponse(
+                    call: Call<PagedResponse<TrainingsProgramForPageDTO>>,
+                    response: Response<PagedResponse<TrainingsProgramForPageDTO>>
+                ) {
+                    response.body()?.let {
+                        programs.clear()
+                        programs.addAll(it.content)
+                        programAdapter.updatePrograms(programs)
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<PagedResponse<TrainingsProgramForPageDTO>>,
+                    t: Throwable
+                ) {
+                    Toast.makeText(context, "Ошибка загрузки программ", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+    private fun handleProgramLike(program: TrainingsProgramForPageDTO) {
+        val newLikedState = !program.liked
+        val newLikeCount = (program.likeCount ?: 0) + if (newLikedState) 1 else -1
+
+        val updatedProgram = program.copy(
+            liked = newLikedState,
+            likeCount = newLikeCount
+        )
+
+        val position = programs.indexOfFirst { it.id == updatedProgram.id }
+        if (position != -1) {
+            programs[position] = updatedProgram
+            programAdapter.notifyItemChanged(position)
+            sendLikeRequest(originalProgram = program, updatedProgram = updatedProgram)
         }
+    }
+
+    private fun sendLikeRequest(
+        originalProgram: TrainingsProgramForPageDTO,
+        updatedProgram: TrainingsProgramForPageDTO
+    ) {
+        val userId = authManager.getUserId() ?: return
+
+        val likeDto = LikesTrainingsProgramDto(
+            id = null,
+            userId = userId,
+            trainingsProgramId = updatedProgram.id!!
+        )
+
+        val call = if (updatedProgram.liked) {
+            ApiService.likesService.likeProgram(likeDto)
+        } else {
+            ApiService.likesService.deleteLikeProgram(likeDto)
+        }
+
+        call.enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                if (!response.isSuccessful) {
+                    programs.indexOfFirst { it.id == originalProgram.id }.takeIf { it != -1 }
+                        ?.let { pos ->
+                            programs[pos] = originalProgram
+                            programAdapter.notifyItemChanged(pos)
+                        }
+                }
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                programs.indexOfFirst { it.id == originalProgram.id }.takeIf { it != -1 }
+                    ?.let { pos ->
+                        programs[pos] = originalProgram
+                        programAdapter.notifyItemChanged(pos)
+                    }
+            }
+        })
+    }
+
+    private fun openProgramDetails(programId: Long) {
+        val fragment = FragmentProgramDetail().apply {
+            arguments = Bundle().apply {
+                putLong("programId", programId)
+            }
+        }
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.flFragment, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setupClickListeners() {
@@ -101,19 +207,6 @@ class FragmentCollection(private val authManager: AuthManager) : Fragment() {
         workouts.clear()
         workouts.addAll(serverWorkouts + localWorkouts)
         workoutAdapter.updateWorkouts(workouts)
-    }
-
-    private fun handleLikeClick(workout: WorkoutForPageDto) {
-        (activity as? MainActivity)?.prefs?.updateLocalWorkout(workout)
-        updateWorkoutInList(workout)
-    }
-
-    private fun updateWorkoutInList(updatedWorkout: WorkoutForPageDto) {
-        val position = workouts.indexOfFirst { it.id == updatedWorkout.id }
-        if (position != -1) {
-            workouts[position] = updatedWorkout
-            workoutAdapter.notifyItemChanged(position)
-        }
     }
 
     private fun getLocalWorkouts(): List<WorkoutForPageDto> {
